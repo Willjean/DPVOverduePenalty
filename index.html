@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>分布式光伏并网超期惩罚系统 - 原型导航</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+        h1 {
+            color: white;
+            text-align: center;
+            margin-bottom: 40px;
+            font-size: 28px;
+        }
+        h1 small {
+            display: block;
+            font-size: 16px;
+            margin-top: 10px;
+            opacity: 0.9;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        .module {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .module h2 {
+            color: #667eea;
+            margin-bottom: 16px;
+            font-size: 20px;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 8px;
+        }
+        .sub-section {
+            margin-bottom: 20px;
+        }
+        .sub-section h3 {
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 12px;
+            padding-left: 12px;
+            border-left: 3px solid #667eea;
+        }
+        .link-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 10px;
+        }
+        a {
+            display: flex;
+            align-items: center;
+            padding: 10px 14px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            text-decoration: none;
+            color: #333;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+        a:hover {
+            background: #667eea;
+            color: white;
+            transform: translateX(4px);
+        }
+        .icon {
+            font-size: 16px;
+            margin-right: 10px;
+        }
+        .info {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 20px;
+            color: #856404;
+            font-size: 14px;
+        }
+        .breadcrumb {
+            color: rgba(255,255,255,0.8);
+            font-size: 14px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .breadcrumb a {
+            color: rgba(255,255,255,0.9);
+            text-decoration: underline;
+            background: none;
+            padding: 0;
+        }
+        .breadcrumb a:hover {
+            color: white;
+            transform: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📊 分布式光伏并网超期惩罚系统<small>原型页面导航</small></h1>
+        
+        <div class="info">
+            <strong>📂 项目结构：</strong>本项目包含多个模块，按照目录层级组织，点击链接可访问各原型页面。
+        </div>
+        
+        <div class="module">
+            <h2>📱 APP代理端&管理端</h2>
+            <div class="link-grid">
+                <a href="01prd/APP代理端&管理端/order_detail.html"><span class="icon">📋</span>订单详情</a>
+            </div>
+        </div>
+        
+        <div class="module">
+            <h2>📱 app管理端</h2>
+            <div class="link-grid">
+                <a href="01prd/app管理端/并网超期初审.html"><span class="icon">✅</span>并网超期初审</a>
+                <a href="01prd/app管理端/已处理-并网超期初审.html"><span class="icon">📝</span>已处理-并网超期初审</a>
+                <a href="01prd/app管理端/并网超期驳回.html"><span class="icon">❌</span>并网超期驳回</a>
+                <a href="01prd/app管理端/拒绝弹窗.html"><span class="icon">🚫</span>拒绝弹窗</a>
+            </div>
+        </div>
+        
+        <div class="module">
+            <h2>🌐 开放平台</h2>
+            
+            <div class="sub-section">
+                <h3>超期管理</h3>
+                <div class="link-grid">
+                    <a href="01prd/开放平台/超期管理/order_overdue_agent.html"><span class="icon">⚡</span>超期订单管理</a>
+                    <a href="01prd/开放平台/超期管理/submit_exemption.html"><span class="icon">📤</span>提交申诉</a>
+                    <a href="01prd/开放平台/超期管理/申诉列表.html"><span class="icon">📑</span>申诉列表</a>
+                    <a href="01prd/开放平台/超期管理/申诉详情.html"><span class="icon">🔍</span>申诉详情</a>
+                    <a href="01prd/开放平台/超期管理/超期详情.html"><span class="icon">📊</span>超期详情</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="module">
+            <h2>🏢 数字平台 - 运营系统</h2>
+            
+            <div class="sub-section">
+                <h3>申诉审核记录</h3>
+                <div class="link-grid">
+                    <a href="01prd/数字平台/运营系统/申诉审核记录/approval_list.html"><span class="icon">📋</span>申诉审核记录列表</a>
+                    <a href="01prd/数字平台/运营系统/申诉审核记录/approval_detail.html"><span class="icon">🔬</span>申诉审核详情</a>
+                    <a href="01prd/数字平台/运营系统/申诉审核记录/approve_exemption.html"><span class="icon">⚖️</span>申诉审批</a>
+                    <a href="01prd/数字平台/运营系统/申诉审核记录/审核弹窗.html"><span class="icon">📦</span>审核弹窗</a>
+                    <a href="01prd/数字平台/运营系统/申诉审核记录/申诉复审.html"><span class="icon">🔄</span>申诉复审</a>
+                    <a href="01prd/数字平台/运营系统/申诉审核记录/申诉详情.html"><span class="icon">📄</span>申诉详情</a>
+                    <a href="01prd/数字平台/运营系统/申诉审核记录/转单弹窗.html"><span class="icon">📤</span>转单弹窗</a>
+                </div>
+            </div>
+            
+            <div class="sub-section">
+                <h3>超期管理 - 并网超期订单</h3>
+                <div class="link-grid">
+                    <a href="01prd/数字平台/运营系统/超期管理/并网超期订单/并网超期订单(新).html"><span class="icon">📊</span>并网超期订单</a>
+                    <a href="01prd/数字平台/运营系统/超期管理/并网超期订单/超期详情.html"><span class="icon">🔍</span>超期详情</a>
+                    <a href="01prd/数字平台/运营系统/超期管理/并网超期订单/回购宽限.html"><span class="icon">💰</span>回购宽限</a>
+                </div>
+            </div>
+            
+            <div class="sub-section">
+                <h3>超期管理 - 超期策略管理</h3>
+                <div class="link-grid">
+                    <a href="01prd/数字平台/运营系统/超期管理/超期策略管理/并网超期策略.html"><span class="icon">📋</span>并网超期策略</a>
+                    <a href="01prd/数字平台/运营系统/超期管理/超期策略管理/新增策略.html"><span class="icon">➕</span>新增策略</a>
+                    <a href="01prd/数字平台/运营系统/超期管理/超期策略管理/编辑策略.html"><span class="icon">✏️</span>编辑策略</a>
+                    <a href="01prd/数字平台/运营系统/超期管理/超期策略管理/编辑未来生效策略.html"><span class="icon">🔮</span>编辑未来生效策略</a>
+                    <a href="01prd/数字平台/运营系统/超期管理/超期策略管理/confirm_delete.html"><span class="icon">🗑️</span>确认删除</a>
+                    <a href="01prd/数字平台/运营系统/超期管理/超期策略管理/confirm_delete_future.html"><span class="icon">⏳</span>确认删除(未来)</a>
+                    <a href="01prd/数字平台/运营系统/超期管理/超期策略管理/confirm_exit.html"><span class="icon">🚪</span>确认退出</a>
+                    <a href="01prd/数字平台/运营系统/超期管理/超期策略管理/delete_modal.html"><span class="icon">❌</span>删除弹窗</a>
+                    <a href="01prd/数字平台/运营系统/超期管理/超期策略管理/detail_modal.html"><span class="icon">🔍</span>详情弹窗</a>
+                    <a href="01prd/数字平台/运营系统/超期管理/超期策略管理/log_modal.html"><span class="icon">📝</span>日志弹窗</a>
+                </div>
+            </div>
+            
+            <div class="sub-section">
+                <h3>超期管理 - 申诉原因管理</h3>
+                <div class="link-grid">
+                    <a href="01prd/数字平台/运营系统/超期管理/申诉原因管理/审核原因列表.html"><span class="icon">📋</span>审核原因列表</a>
+                    <a href="01prd/数字平台/运营系统/超期管理/申诉原因管理/新增申诉原因.html"><span class="icon">➕</span>新增申诉原因</a>
+                    <a href="01prd/数字平台/运营系统/超期管理/申诉原因管理/编辑申诉原因.html"><span class="icon">✏️</span>编辑申诉原因</a>
+                    <a href="01prd/数字平台/运营系统/超期管理/申诉原因管理/日志.html"><span class="icon">📝</span>日志</a>
+                    <a href="01prd/数字平台/运营系统/超期管理/申诉原因管理/申诉原因创建-删除确认.html"><span class="icon">⚠️</span>申诉原因删除确认</a>
+                </div>
+            </div>
+        </div>
+        
+        <div style="text-align: center; color: white; margin-top: 40px; padding: 20px;">
+            <p>📅 最后更新: 2026-05-08</p>
+            <p style="margin-top: 8px; font-size: 14px; opacity: 0.8;">共收录 37 个原型页面</p>
+        </div>
+    </div>
+</body>
+</html>
