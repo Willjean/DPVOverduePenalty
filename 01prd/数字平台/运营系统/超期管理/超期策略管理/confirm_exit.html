@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>存在内容未提交 - TCL数字化运营平台</title>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            font-size: 14px;
+            line-height: 1.5;
+            color: #2C3038;
+            background-color: rgba(0, 0, 0, 0.5);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-container {
+            background-color: #FFFFFF;
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 420px;
+            padding: 24px;
+            position: relative;
+        }
+
+        .modal-header {
+            text-align: center;
+            margin-bottom: 16px;
+        }
+
+        .modal-icon {
+            width: 64px;
+            height: 64px;
+            background-color: rgba(245, 46, 46, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+            font-size: 28px;
+            color: #F52E2E;
+        }
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2C3038;
+        }
+
+        .modal-body {
+            text-align: center;
+            padding: 8px 0 24px;
+        }
+
+        .modal-message {
+            font-size: 14px;
+            color: #5B5E64;
+            line-height: 1.6;
+        }
+
+        .modal-footer {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 10px 16px;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .btn-secondary {
+            background-color: #F5F5F8;
+            color: #2C3038;
+            border: 1px solid #DFE1E5;
+        }
+
+        .btn-secondary:hover {
+            background-color: #E8E8EB;
+        }
+
+        .btn-primary {
+            background-color: #F52E2E;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #E02929;
+        }
+
+        .feature-marker {
+            position: absolute;
+            width: 28px;
+            height: 28px;
+            background-color: #F52E2E;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+            z-index: 1000;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .feature-marker:hover {
+            transform: scale(1.1);
+        }
+
+        .feature-tooltip {
+            position: fixed;
+            background-color: rgba(44, 48, 56, 0.95);
+            color: white;
+            padding: 16px;
+            border-radius: 8px;
+            max-width: 320px;
+            z-index: 1000;
+            display: none;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        .feature-tooltip h4 {
+            color: #F52E2E;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .feature-tooltip.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="modal-container" id="modal">
+        <!-- 功能点1：标题 -->
+        <div class="modal-header" id="titleSection">
+            <div class="modal-icon">
+                <i class="fa fa-exclamation-circle"></i>
+            </div>
+            <h3 class="modal-title">存在未提交</h3>
+        </div>
+        
+        <!-- 功能点2：内容 -->
+        <div class="modal-body" id="contentSection">
+            <p class="modal-message">离开后将会丢失未提交信息！</p>
+        </div>
+        
+        <!-- 功能点3：按钮 -->
+        <div class="modal-footer" id="buttonSection">
+            <button class="btn btn-secondary" id="stayBtn">
+                <i class="fa fa-arrow-left"></i>
+                再看看
+            </button>
+            <button class="btn btn-primary" id="leaveBtn">
+                <i class="fa fa-sign-out"></i>
+                离开
+            </button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 再看看按钮 - 关闭弹窗
+            const stayBtn = document.getElementById('stayBtn');
+            stayBtn.addEventListener('click', function() {
+                window.history.back();
+            });
+
+            // 离开按钮 - 关闭新增页面，退出到列表
+            const leaveBtn = document.getElementById('leaveBtn');
+            leaveBtn.addEventListener('click', function() {
+                window.location.href = '超期策略管理.html';
+            });
+
+            // 添加功能点标记
+            const featureElements = [
+                { element: document.getElementById('titleSection'), feature: 1, title: '标题', content: ['存在未提交'] },
+                { element: document.getElementById('contentSection'), feature: 2, title: '内容', content: ['离开后将会丢失未提交信息！'] },
+                { element: document.getElementById('buttonSection'), feature: 3, title: '按钮', content: ['1. 再看看-关闭弹窗', '2. 离开-关闭新增页面，退出新增页面'] }
+            ];
+
+            featureElements.forEach(item => {
+                if (item.element) {
+                    item.element.style.position = 'relative';
+                    
+                    const marker = document.createElement('div');
+                    marker.className = 'feature-marker';
+                    marker.dataset.feature = item.feature;
+                    marker.textContent = item.feature;
+                    marker.style.cssText = 'position: absolute; top: -10px; left: -10px; z-index: 1000;';
+                    item.element.appendChild(marker);
+
+                    const tooltip = document.createElement('div');
+                    tooltip.className = 'feature-tooltip';
+                    tooltip.id = `tooltip-${item.feature}`;
+                    tooltip.innerHTML = `<h4>功能点 ${item.feature}: ${item.title}</h4>`;
+                    item.content.forEach(line => {
+                        tooltip.innerHTML += `<p>${line}</p>`;
+                    });
+                    document.body.appendChild(tooltip);
+                }
+            });
+
+            // 悬停事件
+            const markers = document.querySelectorAll('.feature-marker');
+            markers.forEach(marker => {
+                marker.addEventListener('mouseenter', function() {
+                    const feature = this.dataset.feature;
+                    const tooltip = document.getElementById(`tooltip-${feature}`);
+                    if (tooltip) {
+                        const rect = this.getBoundingClientRect();
+                        tooltip.style.left = `${rect.left}px`;
+                        tooltip.style.top = `${rect.bottom + 10}px`;
+                        tooltip.style.display = 'block';
+                    }
+                });
+
+                marker.addEventListener('mouseleave', function() {
+                    const feature = this.dataset.feature;
+                    const tooltip = document.getElementById(`tooltip-${feature}`);
+                    if (tooltip) {
+                        tooltip.style.display = 'none';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

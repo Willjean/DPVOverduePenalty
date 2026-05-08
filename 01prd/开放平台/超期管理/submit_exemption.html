@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>发起申诉 - TCL光伏开放平台</title>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --color-primary: #F52E2E;
+            --color-warning: #FF982F;
+            --color-success: #1DDA1D;
+            --color-info: #4D79FF;
+            --color-text-title: #000000;
+            --color-text-primary: #2C3038;
+            --color-text-secondary: #5B5E64;
+            --color-text-tertiary: #8A8C90;
+            --color-text-hint: #B9BABD;
+            --color-bg-body: #F5F5F8;
+            --color-bg-card: #FFFFFF;
+            --color-bg-border: #DFE1E5;
+            --spacing-xs: 4px;
+            --spacing-sm: 8px;
+            --spacing-md: 16px;
+            --spacing-lg: 24px;
+            --spacing-xl: 32px;
+            --font-size-xs: 12px;
+            --font-size-sm: 14px;
+            --font-size-md: 16px;
+            --font-size-lg: 18px;
+            --font-size-xl: 20px;
+            --font-size-xxl: 24px;
+            --border-radius-sm: 4px;
+            --border-radius-md: 8px;
+            --border-radius-lg: 12px;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            font-size: 14px;
+            line-height: 1.5;
+            color: var(--color-text-primary);
+            background-color: var(--color-bg-body);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header-bg {
+            background-color: var(--color-bg-card);
+        }
+
+        .header-shadow {
+            box-shadow: var(--shadow-sm);
+        }
+
+        .header-title {
+            font-size: var(--font-size-lg);
+            font-weight: 700;
+            color: var(--color-text-title);
+        }
+
+        .btn {
+            padding: var(--spacing-sm) var(--spacing-md);
+            border-radius: var(--border-radius-sm);
+            border: none;
+            cursor: pointer;
+            font-size: var(--font-size-sm);
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary {
+            background-color: var(--color-bg-body);
+            color: var(--color-text-secondary);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--color-bg-border);
+        }
+
+        .btn-primary {
+            background-color: var(--color-primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #d32f2f;
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--color-bg-border);
+            color: var(--color-text-secondary);
+        }
+
+        .btn-outline:hover {
+            border-color: var(--color-primary);
+            color: var(--color-primary);
+        }
+
+        .btn-sm {
+            padding: var(--spacing-xs) var(--spacing-sm);
+            font-size: var(--font-size-xs);
+        }
+
+        .card {
+            background-color: var(--color-bg-card);
+            border-radius: var(--border-radius-md);
+            box-shadow: var(--shadow-sm);
+            padding: var(--spacing-lg);
+        }
+
+        .section-title {
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+            color: var(--color-text-title);
+        }
+
+        .form-label {
+            display: block;
+            font-size: var(--font-size-xs);
+            color: var(--color-text-secondary);
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: var(--spacing-sm);
+            border: 1px solid var(--color-bg-border);
+            border-radius: var(--border-radius-sm);
+            font-size: var(--font-size-sm);
+            color: var(--color-text-primary);
+            background-color: var(--color-bg-body);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--color-primary);
+        }
+
+        .form-textarea {
+            width: 100%;
+            padding: var(--spacing-sm);
+            border: 1px solid var(--color-bg-border);
+            border-radius: var(--border-radius-sm);
+            font-size: var(--font-size-sm);
+            color: var(--color-text-primary);
+            background-color: var(--color-bg-body);
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--color-primary);
+        }
+
+        .grid {
+            display: grid;
+        }
+
+        .grid-cols-1 {
+            grid-template-columns: 1fr;
+        }
+
+        .grid-cols-3 {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        .md-grid-cols-3 {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        .gap-4 {
+            gap: var(--spacing-md);
+        }
+
+        .flex {
+            display: flex;
+        }
+
+        .flex-col {
+            flex-direction: column;
+        }
+
+        .justify-between {
+            justify-content: space-between;
+        }
+
+        .items-center {
+            align-items: center;
+        }
+
+        .space-x-2 {
+            gap: var(--spacing-sm);
+        }
+
+        .space-x-4 {
+            gap: var(--spacing-md);
+        }
+
+        .mb-4 {
+            margin-bottom: var(--spacing-md);
+        }
+
+        .mb-8 {
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .mt-4 {
+            margin-top: var(--spacing-md);
+        }
+
+        .text-sm {
+            font-size: var(--font-size-sm);
+        }
+
+        .text-lg {
+            font-size: var(--font-size-lg);
+        }
+
+        .font-semibold {
+            font-weight: 600;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .text-primary {
+            color: var(--color-primary);
+        }
+
+        .bg-gray-100 {
+            background-color: var(--color-bg-body);
+        }
+
+        .rounded-md {
+            border-radius: var(--border-radius-md);
+        }
+
+        .px-3 {
+            padding-left: var(--spacing-sm);
+            padding-right: var(--spacing-sm);
+        }
+
+        .py-2 {
+            padding-top: var(--spacing-xs);
+            padding-bottom: var(--spacing-xs);
+        }
+
+        .overflow-x-auto {
+            overflow-x: auto;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table-header {
+            background-color: var(--color-bg-body);
+        }
+
+        .table-cell {
+            padding: var(--spacing-sm);
+            text-align: left;
+            border-bottom: 1px solid var(--color-bg-border);
+            font-size: var(--font-size-sm);
+        }
+
+        .text-xs {
+            font-size: var(--font-size-xs);
+        }
+
+        .inline-flex {
+            display: inline-flex;
+        }
+
+        .text-gray-500 {
+            color: var(--color-text-secondary);
+        }
+
+        .file-upload-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--spacing-sm);
+            margin-top: var(--spacing-sm);
+        }
+
+        .file-upload-item {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+            padding: var(--spacing-sm);
+            background-color: var(--color-bg-body);
+            border-radius: var(--border-radius-sm);
+            border: 1px dashed var(--color-bg-border);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .file-upload-item:hover {
+            border-color: var(--color-primary);
+        }
+
+        .image-preview-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--spacing-md);
+            margin-top: var(--spacing-md);
+        }
+
+        .image-preview-item {
+            position: relative;
+        }
+
+        .image-thumbnail {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: var(--border-radius-sm);
+            border: 1px solid var(--color-bg-border);
+            cursor: pointer;
+        }
+
+        .remove-btn {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background-color: var(--color-primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .side-menu-container {
+            width: 240px;
+            flex-shrink: 0;
+        }
+
+        .side-menu {
+            background-color: var(--color-bg-card);
+            border-radius: var(--border-radius-md);
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+        }
+
+        .side-menu-header {
+            padding: var(--spacing-md);
+            border-bottom: 1px solid var(--color-bg-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .side-menu-title {
+            font-size: var(--font-size-md);
+            font-weight: 700;
+            color: var(--color-text-title);
+        }
+
+        .side-menu-list {
+            list-style: none;
+        }
+
+        .side-menu-item {
+            position: relative;
+        }
+
+        .side-menu-item.active {
+            background-color: rgba(245, 46, 46, 0.05);
+        }
+
+        .side-menu-item.active::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background-color: var(--color-primary);
+        }
+
+        .side-menu-link {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: var(--spacing-sm) var(--spacing-md);
+            color: var(--color-text-primary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .side-menu-link:hover {
+            background-color: var(--color-bg-body);
+        }
+
+        .side-menu-arrow {
+            font-size: var(--font-size-xs);
+            transition: transform 0.3s ease;
+        }
+
+        .main-layout {
+            display: flex;
+            gap: var(--spacing-md);
+        }
+
+        .main-content {
+            flex: 1;
+        }
+
+        .pl-4 {
+            padding-left: 16px;
+        }
+
+        .pl-6 {
+            padding-left: 24px;
+        }
+
+        .mt-2 {
+            margin-top: 8px;
+        }
+
+        .feature-container {
+            position: relative;
+        }
+
+        .feature-marker {
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            background-color: #F52E2E;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            z-index: 100;
+        }
+    </style>
+</head>
+<body class="body-bg">
+    <header class="header-bg header-shadow">
+        <div class="px-4 py-3 flex justify-between items-center">
+            <h1 class="header-title">TCL光伏开放平台</h1>
+            <div class="flex items-center space-x-4">
+                <span class="text-sm">代理商</span>
+                <button class="btn btn-secondary btn-sm">退出</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-1 px-4 py-6">
+        <div class="main-layout">
+            <div id="sidebar"></div>
+            <div class="main-content">
+                <section class="mb-12">
+                    <div class="card">
+                        <div class="flex justify-between items-center mb-8">
+                            <h2 class="section-title flex-1">发起申诉</h2>
+                            <div class="feature-container">
+                                <div class="feature-marker" style="top: -10px; right: -10px;" data-feature="1">1</div>
+                                <button class="btn btn-outline flex items-center space-x-2" onclick="window.history.back()">
+                                    <i class="fa fa-arrow-left"></i>
+                                    <span>返回</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="mb-8">
+                            <h3 class="text-lg font-semibold mb-4">申诉信息</h3>
+                            <div class="mt-4">
+                                <div class="feature-container">
+                                    <div class="feature-marker" style="top: 0; left: -40px;" data-feature="17">17</div>
+                                    <label class="form-label">申诉分类</label>
+                                    <select class="form-input">
+                                        <option value="">请选择申诉分类</option>
+                                        <option value="power">供电所问题</option>
+                                        <option value="capacity">等容量</option>
+                                        <option value="application">等下表</option>
+                                        <option value="control">风管管控</option>
+                                        <option value="suspend">暂停申报</option>
+                                        <option value="stop">停止备案</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="mt-4">
+                                <div class="feature-container">
+                                    <div class="feature-marker" style="top: 0; left: -40px;" data-feature="18">18</div>
+                                    <label class="form-label">申诉描述</label>
+                                    <textarea class="form-textarea" placeholder="请输入申诉描述（最多1000字符）"></textarea>
+                                </div>
+                            </div>
+                            <div class="mt-4">
+                                <div class="feature-container">
+                                    <div class="feature-marker" style="top: 0; left: -40px;" data-feature="19">19</div>
+                                    <label class="form-label">申诉附件</label>
+                                    <div class="file-upload-container">
+                                        <div class="file-upload-item">
+                                            <i class="fa fa-plus"></i>
+                                            <span>添加附件</span>
+                                        </div>
+                                        <div class="image-preview-item">
+                                            <img src="https://via.placeholder.com/100" class="image-thumbnail">
+                                            <div class="remove-btn"><i class="fa fa-times"></i></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-8">
+                            <h3 class="text-lg font-semibold mb-4">订单信息</h3>
+                            <div class="grid grid-cols-3 gap-4">
+                                <div class="feature-container">
+                                    <div class="feature-marker" style="top: 0; left: -40px;" data-feature="2">2</div>
+                                    <label class="form-label">订单编号</label>
+                                    <div class="px-3 py-2 bg-gray-100 rounded-md">GF260324102106071241</div>
+                                </div>
+                                <div class="feature-container">
+                                    <div class="feature-marker" style="top: 0; left: -40px;" data-feature="3">3</div>
+                                    <label class="form-label">代理商</label>
+                                    <div class="px-3 py-2 bg-gray-100 rounded-md">高州新易新能源科技有限公司</div>
+                                </div>
+                                <div class="feature-container">
+                                    <div class="feature-marker" style="top: 0; left: -40px;" data-feature="4">4</div>
+                                    <label class="form-label">装机容量</label>
+                                    <div class="px-3 py-2 bg-gray-100 rounded-md">30.66 kW</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-8">
+                            <h3 class="text-lg font-semibold mb-4">超期信息</h3>
+                            <div class="grid grid-cols-3 gap-4">
+                                <div class="feature-container">
+                                    <div class="feature-marker" style="top: 0; left: -40px;" data-feature="5">5</div>
+                                    <label class="form-label">并网时长</label>
+                                    <div class="px-3 py-2 bg-gray-100 rounded-md">45天</div>
+                                </div>
+                                <div class="feature-container">
+                                    <div class="feature-marker" style="top: 0; left: -40px;" data-feature="6">6</div>
+                                    <label class="form-label">申请时间</label>
+                                    <div class="px-3 py-2 bg-gray-100 rounded-md">2026-04-27 16:24:00</div>
+                                </div>
+                                <div class="feature-container">
+                                    <div class="feature-marker" style="top: 0; left: -40px;" data-feature="7">7</div>
+                                    <label class="form-label">申诉开始时间</label>
+                                    <div class="px-3 py-2 bg-gray-100 rounded-md">2026-04-27 09:00:00</div>
+                                </div>
+                                <div class="feature-container">
+                                    <div class="feature-marker" style="top: 0; left: -40px;" data-feature="8">8</div>
+                                    <label class="form-label">申诉结束时间</label>
+                                    <div class="px-3 py-2 bg-gray-100 rounded-md">2026-05-06 16:24:00</div>
+                                </div>
+                                <div class="feature-container">
+                                    <div class="feature-marker" style="top: 0; left: -40px;" data-feature="9">9</div>
+                                    <label class="form-label">并网开始时间</label>
+                                    <div class="px-3 py-2 bg-gray-100 rounded-md">2026-04-27 09:00:00</div>
+                                </div>
+                                <div class="feature-container">
+                                    <div class="feature-marker" style="top: 0; left: -40px;" data-feature="10">10</div>
+                                    <label class="form-label">并网超期开始时间</label>
+                                    <div class="px-3 py-2 bg-gray-100 rounded-md">2026-03-15 09:00:00</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-8">
+                            <h3 class="text-lg font-semibold mb-4">超期计划</h3>
+                            <div class="overflow-x-auto">
+                                <table class="table">
+                                    <thead class="table-header">
+                                        <tr>
+                                            <th class="table-cell feature-container">
+                                                <div class="feature-marker" style="top: -10px; left: -10px;" data-feature="11">11</div>
+                                                梯度
+                                            </th>
+                                            <th class="table-cell feature-container">
+                                                <div class="feature-marker" style="top: -10px; left: -10px;" data-feature="12">12</div>
+                                                并网时长
+                                            </th>
+                                            <th class="table-cell feature-container">
+                                                <div class="feature-marker" style="top: -10px; left: -10px;" data-feature="13">13</div>
+                                                梯度触发时间
+                                            </th>
+                                            <th class="table-cell feature-container">
+                                                <div class="feature-marker" style="top: -10px; left: -10px;" data-feature="14">14</div>
+                                                超期动作
+                                            </th>
+                                            <th class="table-cell feature-container">
+                                                <div class="feature-marker" style="top: -10px; left: -10px;" data-feature="15">15</div>
+                                                降价幅度(元/W)
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td class="table-cell">梯度1</td>
+                                            <td class="table-cell">≥120天</td>
+                                            <td class="table-cell">2026-08-26 00:00:00</td>
+                                            <td class="table-cell">降价</td>
+                                            <td class="table-cell">0.1</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="table-cell">梯度2</td>
+                                            <td class="table-cell">≥150天</td>
+                                            <td class="table-cell">2026-09-25 00:00:00</td>
+                                            <td class="table-cell">降价</td>
+                                            <td class="table-cell">0.01</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="table-cell">梯度3</td>
+                                            <td class="table-cell">≥180天</td>
+                                            <td class="table-cell">2026-10-25 00:00:00</td>
+                                            <td class="table-cell">降价</td>
+                                            <td class="table-cell">0.01</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="table-cell">梯度4</td>
+                                            <td class="table-cell">≥210天</td>
+                                            <td class="table-cell">2026-11-24 00:00:00</td>
+                                            <td class="table-cell">降价</td>
+                                            <td class="table-cell">0.01</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="table-cell">梯度5</td>
+                                            <td class="table-cell">≥240天</td>
+                                            <td class="table-cell">2026-12-24 00:00:00</td>
+                                            <td class="table-cell">回购</td>
+                                            <td class="table-cell">-</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="flex justify-end space-x-4">
+                            <button class="btn btn-outline">暂存</button>
+                            <div class="feature-container">
+                                <div class="feature-marker" style="top: -10px; right: -10px;" data-feature="20">20</div>
+                                <button class="btn btn-primary">提交</button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const markers = document.querySelectorAll('.feature-marker');
+            
+            markers.forEach(marker => {
+                marker.addEventListener('mouseenter', function() {
+                    const featureId = this.getAttribute('data-feature');
+                    const tooltip = document.getElementById(`tooltip-${featureId}`);
+                    
+                    if (tooltip) {
+                        const rect = this.getBoundingClientRect();
+                        tooltip.style.left = `${rect.left}px`;
+                        tooltip.style.top = `${rect.bottom + 10}px`;
+                        tooltip.style.display = 'block';
+                        tooltip.style.position = 'fixed';
+                        tooltip.style.zIndex = '1000';
+                        tooltip.style.background = 'rgba(0,0,0,0.8)';
+                        tooltip.style.color = 'white';
+                        tooltip.style.padding = '12px';
+                        tooltip.style.borderRadius = '4px';
+                        tooltip.style.maxWidth = '300px';
+                        tooltip.style.fontSize = '14px';
+                    }
+                });
+                
+                marker.addEventListener('mouseleave', function() {
+                    const featureId = this.getAttribute('data-feature');
+                    const tooltip = document.getElementById(`tooltip-${featureId}`);
+                    
+                    if (tooltip) {
+                        tooltip.style.display = 'none';
+                    }
+                });
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const fileUploadItems = document.querySelectorAll('.file-upload-item');
+            
+            fileUploadItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    if (document.querySelectorAll('.image-preview-item').length < 5) {
+                        alert('请选择要上传的文件');
+                    } else {
+                        alert('最多只能上传5个附件');
+                    }
+                });
+            });
+
+            const removeBtns = document.querySelectorAll('.remove-btn');
+            removeBtns.forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    this.closest('.image-preview-item').remove();
+                });
+            });
+        });
+
+        function renderOpenPlatformSidebar(activeItem = 'order_overdue') {
+            return `
+            <div class="side-menu-container">
+                <div class="side-menu">
+                    <div class="side-menu-header">
+                        <h4 class="side-menu-title">业务管理</h4>
+                    </div>
+                    <ul class="side-menu-list">
+                        <li class="side-menu-item">
+                            <a href="#" class="side-menu-link">
+                                订单管理
+                                <i class="fa fa-angle-right side-menu-arrow"></i>
+                            </a>
+                            <ul class="side-menu-list pl-4 mt-2">
+                                <li class="side-menu-item">
+                                    <a href="#" class="side-menu-link">
+                                        超期管理
+                                        <i class="fa fa-angle-right side-menu-arrow"></i>
+                                    </a>
+                                    <ul class="side-menu-list pl-6 mt-2">
+                                        <li class="side-menu-item ${activeItem === 'overdue_list' ? 'active' : ''}">
+                                            <a href="#" class="side-menu-link">并网超期订单</a>
+                                        </li>
+                                        <li class="side-menu-item ${activeItem === 'order_overdue' ? 'active' : ''}">
+                                            <a href="#" class="side-menu-link">申诉审核记录</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            `;
+        }
+
+        function initSidebar(activeItem = 'order_overdue') {
+            const sidebarContainer = document.getElementById('sidebar');
+            if (sidebarContainer) {
+                sidebarContainer.innerHTML = renderOpenPlatformSidebar(activeItem);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            initSidebar('order_overdue');
+        });
+    </script>
+</body>
+</html>

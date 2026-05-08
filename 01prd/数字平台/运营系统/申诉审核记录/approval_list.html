@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>申诉审核记录 - TCL数字化运营平台</title>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            font-size: 14px;
+            line-height: 1.5;
+            color: #2C3038;
+            background-color: #F5F5F8;
+        }
+
+        :root {
+            --color-primary: #F52E2E;
+            --color-warning: #FF982F;
+            --color-success: #1DDA1D;
+            --color-info: #4D79FF;
+            --color-text-title: #000000;
+            --color-text-primary: #2C3038;
+            --color-text-secondary: #5B5E64;
+            --color-text-tertiary: #8A8C90;
+            --color-text-hint: #B9BABD;
+            --color-bg-body: #F5F5F8;
+            --color-bg-card: #FFFFFF;
+            --color-bg-border: #DFE1E5;
+            --spacing-xs: 4px;
+            --spacing-sm: 8px;
+            --spacing-md: 16px;
+            --spacing-lg: 24px;
+            --spacing-xl: 32px;
+            --font-size-xs: 12px;
+            --font-size-sm: 14px;
+            --font-size-md: 16px;
+            --font-size-lg: 18px;
+            --font-size-xl: 20px;
+            --font-size-xxl: 24px;
+            --border-radius-sm: 4px;
+            --border-radius-md: 8px;
+            --border-radius-lg: 12px;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 var(--spacing-md);
+        }
+
+        .flex { display: flex; }
+        .flex-col { flex-direction: column; }
+        .justify-between { justify-content: space-between; }
+        .items-center { align-items: center; }
+        .space-x-4 { gap: var(--spacing-md); }
+        .space-x-8 { gap: var(--spacing-xl); }
+        .grid { display: grid; }
+        .grid-cols-1 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
+        .md\:grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .md\:grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+        .md\:grid-cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+        .gap-4 { gap: var(--spacing-md); }
+        .gap-6 { gap: var(--spacing-lg); }
+        .px-4 { padding-left: var(--spacing-md); padding-right: var(--spacing-md); }
+        .py-3 { padding-top: var(--spacing-sm); padding-bottom: var(--spacing-sm); }
+        .py-8 { padding-top: var(--spacing-xl); padding-bottom: var(--spacing-xl); }
+        .mb-4 { margin-bottom: var(--spacing-md); }
+        .mb-6 { margin-bottom: var(--spacing-lg); }
+        .mb-8 { margin-bottom: var(--spacing-xl); }
+        .mb-12 { margin-bottom: calc(var(--spacing-xl) * 1.5); }
+        .mt-4 { margin-top: var(--spacing-md); }
+        .mt-8 { margin-top: var(--spacing-xl); }
+        .text-sm { font-size: var(--font-size-xs); }
+        .text-lg { font-size: var(--font-size-lg); }
+        .font-semibold { font-weight: 600; }
+        .text-center { text-align: center; }
+        .text-gray-500 { color: var(--color-text-tertiary); }
+        .body-bg { background-color: var(--color-bg-body); }
+        .header-bg { background-color: var(--color-bg-card); }
+        .header-shadow { box-shadow: var(--shadow-sm); }
+        .border { border: 1px solid var(--color-bg-border); }
+        .rounded { border-radius: var(--border-radius-sm); }
+        .rounded-md { border-radius: var(--border-radius-md); }
+
+        .card {
+            background-color: var(--color-bg-card);
+            border-radius: var(--border-radius-md);
+            box-shadow: var(--shadow-sm);
+            padding: var(--spacing-lg);
+        }
+
+        .header-title {
+            font-size: var(--font-size-xl);
+            font-weight: 700;
+            color: var(--color-text-title);
+        }
+
+        .section-title {
+            font-size: var(--font-size-lg);
+            font-weight: 700;
+            color: var(--color-text-primary);
+            margin-bottom: var(--spacing-lg);
+            padding-bottom: var(--spacing-sm);
+            border-bottom: 1px solid var(--color-bg-border);
+        }
+
+        .nav-link {
+            color: var(--color-text-secondary);
+            text-decoration: none;
+            padding: var(--spacing-sm) var(--spacing-md);
+            border-radius: var(--border-radius-sm);
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .nav-link:hover { color: var(--color-primary); }
+        .nav-link-active { color: var(--color-primary); font-weight: 600; }
+
+        .btn {
+            padding: var(--spacing-sm) var(--spacing-md);
+            border-radius: var(--border-radius-sm);
+            font-size: var(--font-size-sm);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+        }
+
+        .btn-primary { background-color: var(--color-primary); color: white; }
+        .btn-primary:hover { background-color: #E02929; }
+        .btn-secondary { background-color: var(--color-bg-body); color: var(--color-text-primary); border: 1px solid var(--color-bg-border); }
+        .btn-secondary:hover { background-color: #E8E8EB; }
+        .btn-outline { background-color: transparent; color: var(--color-text-primary); border: 1px solid var(--color-bg-border); }
+        .btn-outline:hover { background-color: var(--color-bg-body); }
+        .btn-sm { padding: var(--spacing-xs) var(--spacing-sm); font-size: var(--font-size-xs); }
+
+        .text-link { color: var(--color-info); text-decoration: none; transition: color 0.3s ease; }
+        .text-link:hover { color: var(--color-primary); text-decoration: underline; }
+
+        .tag {
+            padding: 2px 8px;
+            border-radius: var(--border-radius-sm);
+            font-size: var(--font-size-xs);
+            font-weight: 500;
+            display: inline-block;
+        }
+
+        .tag-success { background-color: rgba(29, 218, 29, 0.1); color: var(--color-success); }
+        .tag-info { background-color: rgba(77, 121, 255, 0.1); color: var(--color-info); }
+        .tag-warning { background-color: rgba(255, 152, 47, 0.1); color: var(--color-warning); }
+        .tag-danger { background-color: rgba(245, 46, 46, 0.1); color: var(--color-primary); }
+
+        .pagination-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: var(--spacing-lg);
+            padding: 0 var(--spacing-md);
+        }
+
+        .pagination-item {
+            padding: var(--spacing-xs) var(--spacing-md);
+            border: 1px solid var(--color-bg-border);
+            border-radius: var(--border-radius-sm);
+            background-color: var(--color-bg-card);
+            color: var(--color-text-primary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .pagination-item:hover:not(.pagination-item-disabled) { border-color: var(--color-primary); color: var(--color-primary); }
+        .pagination-item-active { background-color: var(--color-primary); color: white; border-color: var(--color-primary); }
+        .pagination-item-disabled { color: var(--color-text-hint); cursor: not-allowed; border-color: var(--color-bg-border); }
+
+        .min-h-screen { min-height: 100vh; }
+        .flex-1 { flex: 1; }
+        .text-gray-400 { color: var(--color-text-tertiary); }
+        .text-gray-600 { color: var(--color-text-secondary); }
+        .font-medium { font-weight: 500; }
+
+        .form-label { font-size: var(--font-size-sm); color: var(--color-text-primary); font-weight: 500; }
+
+        .form-input {
+            width: 100%;
+            padding: var(--spacing-sm) var(--spacing-md);
+            border: 1px solid var(--color-bg-border);
+            border-radius: var(--border-radius-sm);
+            font-size: var(--font-size-sm);
+            color: var(--color-text-primary);
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus { outline: none; border-color: var(--color-primary); box-shadow: 0 0 0 2px rgba(245, 46, 46, 0.1); }
+
+        .table-wrapper {
+            overflow-x: auto;
+            max-width: 100%;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: var(--font-size-sm);
+            min-width: 1600px;
+        }
+
+        .table-header { background-color: var(--color-bg-body); }
+
+        .table-row {
+            border-bottom: 1px solid var(--color-bg-border);
+            transition: background-color 0.3s ease;
+        }
+
+        .table-row:hover { background-color: rgba(245, 46, 46, 0.02); }
+
+        .table-cell {
+            padding: var(--spacing-sm) var(--spacing-md);
+            text-align: left;
+            color: var(--color-text-primary);
+            white-space: nowrap;
+        }
+
+        .table-header .table-cell { 
+            font-weight: 600; 
+            color: var(--color-text-secondary);
+            position: relative;
+        }
+
+        .col-1 { width: 140px; }
+        .col-2 { width: 140px; }
+        .col-3 { width: 180px; }
+        .col-4 { width: 140px; }
+        .col-5 { width: 180px; }
+        .col-6 { width: 100px; }
+        .col-7 { width: 80px; }
+        .col-8 { width: 100px; }
+        .col-9 { width: 150px; }
+        .col-10 { width: 280px; }
+
+        .table-cell.fixed-right {
+            position: sticky;
+            right: 0;
+            background-color: var(--color-bg-card);
+            z-index: 10;
+            border-left: 1px solid var(--color-bg-border);
+            width: 160px;
+        }
+
+        .footer {
+            background-color: var(--color-bg-card);
+            border-top: 1px solid var(--color-bg-border);
+            padding: var(--spacing-lg) 0;
+            margin-top: var(--spacing-xl);
+        }
+
+        .footer p { color: var(--color-text-secondary); font-size: var(--font-size-sm); }
+
+        .side-menu-container { 
+            width: 240px; 
+            flex-shrink: 0;
+            background-color: #FFFFFF;
+            border-radius: var(--border-radius-md);
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+            height: fit-content;
+            position: sticky;
+            top: var(--spacing-lg);
+        }
+
+        .side-menu-header {
+            padding: var(--spacing-md);
+            border-bottom: 1px solid var(--color-bg-border);
+        }
+
+        .side-menu-title {
+            font-size: var(--font-size-md);
+            font-weight: 700;
+            color: var(--color-text-title);
+        }
+
+        .side-menu-list {
+            list-style: none;
+            padding: var(--spacing-sm);
+        }
+
+        .side-menu-item {
+            position: relative;
+        }
+
+        .side-menu-item.active {
+            background-color: rgba(245, 46, 46, 0.05);
+        }
+
+        .side-menu-item.active::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background-color: var(--color-primary);
+        }
+
+        .side-menu-link {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: var(--spacing-sm) var(--spacing-md);
+            color: var(--color-text-primary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border-radius: var(--border-radius-sm);
+        }
+
+        .side-menu-link:hover {
+            background-color: var(--color-bg-body);
+        }
+
+        .side-menu-arrow {
+            font-size: var(--font-size-xs);
+            transition: transform 0.3s ease;
+        }
+
+        .side-menu-submenu {
+            list-style: none;
+            background-color: rgba(245, 245, 248, 0.5);
+            border-radius: var(--border-radius-sm);
+            margin: 0 var(--spacing-xs);
+            overflow: hidden;
+        }
+
+        .side-menu-subitem {
+            padding-left: 0;
+        }
+
+        .side-menu-subitem.active {
+            background-color: rgba(245, 46, 46, 0.05);
+        }
+
+        .side-menu-subitem.active::before {
+            content: '';
+            position: absolute;
+            left: var(--spacing-md);
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background-color: var(--color-primary);
+        }
+
+        .side-menu-sublink {
+            display: block;
+            padding: var(--spacing-xs) var(--spacing-md);
+            color: var(--color-text-secondary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            padding-left: calc(var(--spacing-md) * 2);
+        }
+
+        .side-menu-sublink:hover {
+            color: var(--color-primary);
+            background-color: rgba(245, 46, 46, 0.05);
+        }
+
+        .side-menu-sublink.active {
+            color: var(--color-primary);
+            font-weight: 500;
+        }
+
+        .main-content { flex: 1; }
+
+        .feature-container { 
+            position: relative;
+        }
+
+        .feature-marker {
+            position: absolute;
+            top: -14px;
+            right: -14px;
+            width: 30px;
+            height: 30px;
+            background-color: var(--color-primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: bold;
+            z-index: 100;
+            cursor: pointer;
+            transition: transform 0.2s;
+            border: 2px solid white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .feature-marker:hover { 
+            transform: scale(1.15); 
+        }
+
+        .feature-marker-left {
+            right: auto;
+            left: -14px;
+        }
+
+        .feature-tooltip {
+            position: absolute;
+            background-color: rgba(44, 48, 56, 0.95);
+            color: white;
+            border-radius: 8px;
+            padding: 16px;
+            max-width: 320px;
+            z-index: 1000;
+            display: none;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            left: 40px;
+            top: 0;
+            pointer-events: none;
+        }
+
+        .feature-tooltip.active {
+            display: block;
+        }
+
+        .feature-tooltip h4 {
+            color: var(--color-primary);
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .feature-tooltip p {
+            font-size: 12px;
+            line-height: 1.5;
+            margin-bottom: 4px;
+        }
+
+        .header-row {
+            position: relative;
+        }
+
+        @media (max-width: 768px) {
+            .md\:grid-cols-2, .md\:grid-cols-3, .md\:grid-cols-4 { grid-template-columns: 1fr; }
+            .flex { flex-direction: column; }
+            .side-menu-container { width: 100%; margin-bottom: var(--spacing-md); position: static; }
+        }
+    </style>
+</head>
+<body class="body-bg min-h-screen flex flex-col">
+    <header class="header-bg header-shadow">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <h1 class="header-title">TCL数字化运营平台</h1>
+            <div class="flex items-center space-x-4">
+                <span class="text-sm">管理员</span>
+                <button class="btn btn-secondary btn-sm">退出</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-1 flex" style="padding: var(--spacing-md); gap: var(--spacing-md);">
+        <div id="sidebar" class="side-menu-container"></div>
+        <div class="main-content">
+            <div class="mb-6 flex justify-between items-center">
+                <h2 class="section-title flex-1">申诉审核记录</h2>
+                <button class="btn btn-outline flex items-center space-x-2" onclick="window.history.back()">
+                    <i class="fa fa-arrow-left"></i>
+                    <span>返回</span>
+                </button>
+            </div>
+
+            <div class="card mb-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div id="feature1" class="feature-container">
+                        <label class="form-label">订单编号</label>
+                        <input type="text" placeholder="请输入订单编号" class="form-input">
+                    </div>
+                    <div id="feature2" class="feature-container">
+                        <label class="form-label">所属组织</label>
+                        <select class="form-input">
+                            <option value="">全部</option>
+                            <option value="广东TCL光伏科技有限公司">广东TCL光伏科技有限公司</option>
+                            <option value="江苏TCL光伏科技有限公司">江苏TCL光伏科技有限公司</option>
+                            <option value="山东TCL光伏科技有限公司">山东TCL光伏科技有限公司</option>
+                        </select>
+                    </div>
+                    <div id="feature3" class="feature-container">
+                        <label class="form-label">安装地区</label>
+                        <select class="form-input">
+                            <option value="">全部</option>
+                            <option value="广东省">广东省</option>
+                            <option value="江苏省">江苏省</option>
+                            <option value="山东省">山东省</option>
+                        </select>
+                    </div>
+                    <div id="feature4" class="feature-container">
+                        <label class="form-label">订单状态</label>
+                        <select class="form-input">
+                            <option value="">全部</option>
+                            <option value="待并网领单">待并网领单</option>
+                            <option value="施工验收退回">施工验收退回</option>
+                            <option value="已并网">已并网</option>
+                        </select>
+                    </div>
+                    <div class="lg:col-span-4 flex justify-end space-x-2 pt-2">
+                        <button class="btn btn-primary">查询</button>
+                        <button class="btn btn-outline">重置</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-6 border-b border-gray-200 pb-2">
+                <nav class="flex space-x-4">
+                    <span id="feature5" class="nav-link nav-link-active feature-container">全部 <span class="ml-2 bg-gray-100 text-gray-600 text-xs px-2 py-0.5 rounded-full">12</span></span>
+                    <span id="feature6" class="nav-link feature-container">待初审 <span class="ml-2 bg-gray-100 text-gray-600 text-xs px-2 py-0.5 rounded-full">3</span></span>
+                    <span id="feature7" class="nav-link feature-container">待复审 <span class="ml-2 bg-gray-100 text-gray-600 text-xs px-2 py-0.5 rounded-full">2</span></span>
+                    <span id="feature8" class="nav-link feature-container">待终审 <span class="ml-2 bg-gray-100 text-gray-600 text-xs px-2 py-0.5 rounded-full">1</span></span>
+                    <span id="feature9" class="nav-link feature-container">已通过 <span class="ml-2 bg-gray-100 text-gray-600 text-xs px-2 py-0.5 rounded-full">4</span></span>
+                    <span id="feature10" class="nav-link feature-container">已拒绝 <span class="ml-2 bg-gray-100 text-gray-600 text-xs px-2 py-0.5 rounded-full">2</span></span>
+                </nav>
+            </div>
+
+            <div class="card">
+                <div class="table-wrapper">
+                    <table class="table">
+                        <thead class="table-header">
+                            <tr>
+                                <th id="feature11" class="table-cell col-1 feature-container">申诉记录编号</th>
+                                <th id="feature12" class="table-cell col-2 feature-container">订单编号</th>
+                                <th id="feature13" class="table-cell col-3 feature-container">代理商</th>
+                                <th id="feature14" class="table-cell col-4 feature-container">安装地区</th>
+                                <th id="feature15" class="table-cell col-5 feature-container">并网超期开始时间</th>
+                                <th id="feature16" class="table-cell col-6 feature-container">申诉原因</th>
+                                <th id="feature17" class="table-cell col-7 feature-container">延长天数</th>
+                                <th id="feature18" class="table-cell col-8 feature-container">审核状态</th>
+                                <th id="feature19" class="table-cell col-9 feature-container">发起时间</th>
+                                <th id="feature20" class="table-cell col-10 feature-container fixed-right">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody class="table-body">
+                            <tr class="table-row">
+                                <td class="table-cell col-1">SP2026042700001</td>
+                                <td class="table-cell col-2"><a href="#" class="text-link">GF260324102106071241</a></td>
+                                <td class="table-cell col-3">广东TCL光伏科技有限公司</td>
+                                <td class="table-cell col-4">广东省深圳市</td>
+                                <td class="table-cell col-5">2026-04-27 09:00:00</td>
+                                <td class="table-cell col-6">天气原因</td>
+                                <td class="table-cell col-7">7</td>
+                                <td class="table-cell col-8">待初审领单</td>
+                                <td class="table-cell col-9">2026-04-27 10:30:00</td>
+                                <td class="table-cell fixed-right">
+                                    <span id="feature23" class="feature-container" style="display: inline-block;">
+                                        <a href="#" class="text-link mr-3">领单</a>
+                                    </span>
+                                    <span id="feature24" class="feature-container" style="display: inline-block;">
+                                        <a href="#" class="text-link mr-3">转单</a>
+                                    </span>
+                                    <a href="#" class="text-link">申诉详情</a>
+                                </td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="table-cell col-1">SP2026042700002</td>
+                                <td class="table-cell col-2"><a href="#" class="text-link">GF260325091512345678</a></td>
+                                <td class="table-cell col-3">江苏TCL光伏科技有限公司</td>
+                                <td class="table-cell col-4">江苏省南京市</td>
+                                <td class="table-cell col-5">2026-04-26 09:00:00</td>
+                                <td class="table-cell col-6">电网原因</td>
+                                <td class="table-cell col-7">14</td>
+                                <td class="table-cell col-8">待复审领单</td>
+                                <td class="table-cell col-9">2026-04-27 09:20:00</td>
+                                <td class="table-cell fixed-right">
+                                    <span id="feature23" class="feature-container" style="display: inline-block;">
+                                        <a href="#" class="text-link mr-3">领单</a>
+                                    </span>
+                                    <span id="feature24" class="feature-container" style="display: inline-block;">
+                                        <a href="#" class="text-link mr-3">转单</a>
+                                    </span>
+                                    <a href="#" class="text-link">申诉详情</a>
+                                </td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="table-cell col-1">SP2026042700003</td>
+                                <td class="table-cell col-2"><a href="#" class="text-link">GF260326143098765432</a></td>
+                                <td class="table-cell col-3">山东TCL光伏科技有限公司</td>
+                                <td class="table-cell col-4">山东省济南市</td>
+                                <td class="table-cell col-5">2026-04-25 09:00:00</td>
+                                <td class="table-cell col-6">客户原因</td>
+                                <td class="table-cell col-7">3</td>
+                                <td class="table-cell col-8">待终审领单</td>
+                                <td class="table-cell col-9">2026-04-26 14:15:00</td>
+                                <td class="table-cell fixed-right">
+                                    <span id="feature23" class="feature-container" style="display: inline-block;">
+                                        <a href="#" class="text-link mr-3">领单</a>
+                                    </span>
+                                    <span id="feature24" class="feature-container" style="display: inline-block;">
+                                        <a href="#" class="text-link mr-3">转单</a>
+                                    </span>
+                                    <a href="#" class="text-link">申诉详情</a>
+                                </td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="table-cell col-1">SP2026042700004</td>
+                                <td class="table-cell col-2"><a href="#" class="text-link">GF260327164565432109</a></td>
+                                <td class="table-cell col-3">浙江TCL光伏科技有限公司</td>
+                                <td class="table-cell col-4">浙江省杭州市</td>
+                                <td class="table-cell col-5">2026-04-24 09:00:00</td>
+                                <td class="table-cell col-6">施工原因</td>
+                                <td class="table-cell col-7">10</td>
+                                <td class="table-cell col-8">待复审</td>
+                                <td class="table-cell col-9">2026-04-25 11:20:00</td>
+                                <td class="table-cell fixed-right">
+                                    <span id="feature22" class="feature-container" style="display: inline-block;">
+                                        <a href="#" class="text-link mr-3">复审</a>
+                                    </span>
+                                    <span id="feature24" class="feature-container" style="display: inline-block;">
+                                        <a href="#" class="text-link mr-3">转单</a>
+                                    </span>
+                                    <a href="#" class="text-link">申诉详情</a>
+                                </td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="table-cell col-1">SP2026042700005</td>
+                                <td class="table-cell col-2"><a href="#" class="text-link">GF260328081513579246</a></td>
+                                <td class="table-cell col-3">河南TCL光伏科技有限公司</td>
+                                <td class="table-cell col-4">河南省郑州市</td>
+                                <td class="table-cell col-5">2026-04-23 09:00:00</td>
+                                <td class="table-cell col-6">天气原因</td>
+                                <td class="table-cell col-7">7</td>
+                                <td class="table-cell col-8">已通过</td>
+                                <td class="table-cell col-9">2026-04-24 09:45:00</td>
+                                <td class="table-cell fixed-right">
+                                    <a href="#" class="text-link">申诉详情</a>
+                                </td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="table-cell col-1">SP2026042700006</td>
+                                <td class="table-cell col-2"><a href="#" class="text-link">GF260329152012345678</a></td>
+                                <td class="table-cell col-3">福建TCL光伏科技有限公司</td>
+                                <td class="table-cell col-4">福建省福州市</td>
+                                <td class="table-cell col-5">2026-04-22 09:00:00</td>
+                                <td class="table-cell col-6">电网原因</td>
+                                <td class="table-cell col-7">14</td>
+                                <td class="table-cell col-8">待初审</td>
+                                <td class="table-cell col-9">2026-04-23 13:30:00</td>
+                                <td class="table-cell fixed-right">
+                                    <span id="feature21" class="feature-container" style="display: inline-block;">
+                                        <a href="#" class="text-link mr-3">初审</a>
+                                    </span>
+                                    <span id="feature24" class="feature-container" style="display: inline-block;">
+                                        <a href="#" class="text-link mr-3">转单</a>
+                                    </span>
+                                    <a href="#" class="text-link">申诉详情</a>
+                                </td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="table-cell col-1">SP2026042700007</td>
+                                <td class="table-cell col-2"><a href="#" class="text-link">GF260330124598765432</a></td>
+                                <td class="table-cell col-3">湖北TCL光伏科技有限公司</td>
+                                <td class="table-cell col-4">湖北省武汉市</td>
+                                <td class="table-cell col-5">2026-04-21 09:00:00</td>
+                                <td class="table-cell col-6">施工原因</td>
+                                <td class="table-cell col-7">10</td>
+                                <td class="table-cell col-8">已拒绝</td>
+                                <td class="table-cell col-9">2026-04-22 10:00:00</td>
+                                <td class="table-cell fixed-right">
+                                    <a href="#" class="text-link">申诉详情</a>
+                                </td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="table-cell col-1">SP2026042700008</td>
+                                <td class="table-cell col-2"><a href="#" class="text-link">GF260331091065432109</a></td>
+                                <td class="table-cell col-3">湖南TCL光伏科技有限公司</td>
+                                <td class="table-cell col-4">湖南省长沙市</td>
+                                <td class="table-cell col-5">2026-04-20 09:00:00</td>
+                                <td class="table-cell col-6">客户原因</td>
+                                <td class="table-cell col-7">3</td>
+                                <td class="table-cell col-8">已拒绝</td>
+                                <td class="table-cell col-9">2026-04-21 08:30:00</td>
+                                <td class="table-cell fixed-right">
+                                    <a href="#" class="text-link">申诉详情</a>
+                                </td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="table-cell col-1">SP2026042700009</td>
+                                <td class="table-cell col-2"><a href="#" class="text-link">GF260401145513579246</a></td>
+                                <td class="table-cell col-3">四川TCL光伏科技有限公司</td>
+                                <td class="table-cell col-4">四川省成都市</td>
+                                <td class="table-cell col-5">2026-04-19 09:00:00</td>
+                                <td class="table-cell col-6">天气原因</td>
+                                <td class="table-cell col-7">7</td>
+                                <td class="table-cell col-8">待终审</td>
+                                <td class="table-cell col-9">2026-04-20 11:15:00</td>
+                                <td class="table-cell fixed-right">
+                                    <span id="feature25" class="feature-container" style="display: inline-block;">
+                                        <a href="#" class="text-link mr-3">终审</a>
+                                    </span>
+                                    <span id="feature24" class="feature-container" style="display: inline-block;">
+                                        <a href="#" class="text-link mr-3">转单</a>
+                                    </span>
+                                    <a href="#" class="text-link">申诉详情</a>
+                                </td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="table-cell col-1">SP2026042700010</td>
+                                <td class="table-cell col-2"><a href="#" class="text-link">GF260402100013579246</a></td>
+                                <td class="table-cell col-3">陕西TCL光伏科技有限公司</td>
+                                <td class="table-cell col-4">陕西省西安市</td>
+                                <td class="table-cell col-5">2026-04-18 09:00:00</td>
+                                <td class="table-cell col-6">电网原因</td>
+                                <td class="table-cell col-7">14</td>
+                                <td class="table-cell col-8">待初审</td>
+                                <td class="table-cell col-9">2026-04-19 14:00:00</td>
+                                <td class="table-cell fixed-right">
+                                    <span id="feature21" class="feature-container" style="display: inline-block;">
+                                        <a href="#" class="text-link mr-3">初审</a>
+                                    </span>
+                                    <span id="feature24" class="feature-container" style="display: inline-block;">
+                                        <a href="#" class="text-link mr-3">转单</a>
+                                    </span>
+                                    <a href="#" class="text-link">申诉详情</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="feature27" class="pagination-container feature-container">
+                <div class="text-sm text-gray-500">共 <span class="font-medium">12</span> 条记录</div>
+                <div class="flex space-x-1">
+                    <button class="pagination-item pagination-item-disabled">上一页</button>
+                    <button class="pagination-item pagination-item-active">1</button>
+                    <button class="pagination-item">2</button>
+                    <button class="pagination-item">下一页</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container mx-auto px-4 text-center">
+            <p>© 2026 TCL数字化运营平台</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const featureElements = [
+                { element: document.getElementById('feature1'), feature: 1, title: '订单编号查询', content: ['业务逻辑：用户输入订单编号，精确查询'] },
+                { element: document.getElementById('feature2'), feature: 2, title: '所属组织查询', content: ['输入规则：多级级联；支持模糊输入进行关联；支持多选', '查询规则：支持精确匹配'] },
+                { element: document.getElementById('feature3'), feature: 3, title: '安装地区查询', content: ['输入规则：多级级联；支持模糊输入进行关联；支持多选', '查询规则：支持精确匹配'] },
+                { element: document.getElementById('feature4'), feature: 4, title: '订单状态查询', content: ['输入规则：多级级联；支持模糊输入进行关联；支持多选', '查询规则：支持精确匹配'] },
+                { element: document.getElementById('feature5'), feature: 5, title: '全部', content: ['统计该状态的审核记录数', '用户点击该tab，系统显示对应审核记录'] },
+                { element: document.getElementById('feature6'), feature: 6, title: '待初审', content: ['统计该状态的审核记录数', '用户点击该tab，系统显示对应审核记录'] },
+                { element: document.getElementById('feature7'), feature: 7, title: '待复审', content: ['统计该状态的审核记录数', '用户点击该tab，系统显示对应审核记录'] },
+                { element: document.getElementById('feature8'), feature: 8, title: '待终审', content: ['统计该状态的审核记录数', '用户点击该tab，系统显示对应审核记录'] },
+                { element: document.getElementById('feature9'), feature: 9, title: '已通过', content: ['统计该状态的审核记录数', '用户点击该tab，系统显示对应审核记录'] },
+                { element: document.getElementById('feature10'), feature: 10, title: '已拒绝', content: ['统计该状态的审核记录数', '用户点击该tab，系统显示对应审核记录'] },
+                { element: document.getElementById('feature11'), feature: 11, title: '申诉记录编号', content: ['1. 显示审核记录的唯一标识符，生成规则SP+年月日+五位流水号，如SP2026042700001', '2. 按照该字段倒序排序，最新在前'] },
+                { element: document.getElementById('feature12'), feature: 12, title: '订单编号', content: ['业务逻辑：显示审核记录对应的订单编号'] },
+                { element: document.getElementById('feature13'), feature: 13, title: '代理商', content: ['业务逻辑：显示审核记录对应的代理商信息'] },
+                { element: document.getElementById('feature14'), feature: 14, title: '安装地区', content: ['业务逻辑：显示审核记录对应的安装地区'] },
+                { element: document.getElementById('feature15'), feature: 15, title: '并网超期开始时间', content: ['业务逻辑：显示审核记录对应的并网超期开始时间，具体到年月日时分秒，如2026-04-27 09:00:00'] },
+                { element: document.getElementById('feature16'), feature: 16, title: '申诉原因', content: ['显示代理商选择的申诉原因'] },
+                { element: document.getElementById('feature17'), feature: 17, title: '延长天数', content: ['展示申诉原因对应的天数'] },
+                { element: document.getElementById('feature18'), feature: 18, title: '审核状态', content: ['全部审核状态如下：待初审领单、待初审、待复审领单、待复审、待终审领单、待终审、已通过、已拒绝', '示例数据需要包含全部'] },
+                { element: document.getElementById('feature19'), feature: 19, title: '发起时间', content: ['业务逻辑：显示审核记录的发起时间'] },
+                { element: document.getElementById('feature20'), feature: 20, title: '操作列', content: ['包含审核、领单、转单和申诉详情操作按钮'] },
+                { element: document.getElementById('feature21'), feature: 21, title: '初审', content: ['业务逻辑：仅当审核状态为待初审时显示，用户点击跳转到初审页面'] },
+                { element: document.getElementById('feature22'), feature: 22, title: '复审', content: ['业务逻辑：仅当审核状态为待复审时显示，用户点击跳转到复审页面'] },
+                { element: document.getElementById('feature23'), feature: 23, title: '领单', content: ['支持待初审领单、待复审领单、待终审领单审核状态下进行领单，展示该按钮'] },
+                { element: document.getElementById('feature24'), feature: 24, title: '转单', content: ['支持待初审、待复审、待终审进行转单，展示该按钮'] },
+                { element: document.getElementById('feature25'), feature: 25, title: '终审', content: ['业务逻辑：仅当审核状态为待终审时显示，用户点击跳转到终审页面'] },
+                { element: document.getElementById('feature26'), feature: 26, title: '申诉详情', content: ['业务逻辑：用户点击查看申诉详情按钮，系统跳转到申诉详情页面'] },
+                { element: document.getElementById('feature27'), feature: 27, title: '分页控件', content: ['业务逻辑：用户点击分页控件，系统显示不同页的审核记录'] }
+            ];
+
+            featureElements.forEach(item => {
+                if (item.element) {
+                    item.element.classList.add('feature-container');
+
+                    const marker = document.createElement('div');
+                    marker.className = 'feature-marker';
+                    marker.dataset.feature = item.feature;
+                    marker.textContent = item.feature;
+                    item.element.appendChild(marker);
+
+                    const tooltip = document.createElement('div');
+                    tooltip.className = 'feature-tooltip';
+                    tooltip.id = `tooltip-${item.feature}`;
+                    tooltip.innerHTML = `<h4>功能点 ${item.feature}: ${item.title}</h4>`;
+                    item.content.forEach(line => {
+                        tooltip.innerHTML += `<p>${line}</p>`;
+                    });
+                    item.element.appendChild(tooltip);
+                }
+            });
+
+            const markers = document.querySelectorAll('.feature-marker');
+            markers.forEach(marker => {
+                marker.addEventListener('mouseenter', function() {
+                    const feature = this.dataset.feature;
+                    const tooltip = document.getElementById(`tooltip-${feature}`);
+                    if (tooltip) {
+                        tooltip.classList.add('active');
+                    }
+                });
+
+                marker.addEventListener('mouseleave', function() {
+                    const feature = this.dataset.feature;
+                    const tooltip = document.getElementById(`tooltip-${feature}`);
+                    if (tooltip) {
+                        tooltip.classList.remove('active');
+                    }
+                });
+            });
+        });
+    </script>
+
+    <script src="./components.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            initSidebar('approval_list', 'approval');
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1002 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>超期详情 - TCL数字化运营平台</title>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            font-size: 14px;
+            line-height: 1.5;
+            color: #2C3038;
+            background-color: #F5F5F8;
+        }
+
+        :root {
+            --color-primary: #F52E2E;
+            --color-warning: #FF982F;
+            --color-success: #1DDA1D;
+            --color-info: #4D79FF;
+            
+            --color-text-title: #000000;
+            --color-text-primary: #2C3038;
+            --color-text-secondary: #5B5E64;
+            --color-text-tertiary: #8A8C90;
+            --color-text-hint: #B9BABD;
+            
+            --color-bg-body: #F5F5F8;
+            --color-bg-card: #FFFFFF;
+            --color-bg-border: #DFE1E5;
+            
+            --spacing-xs: 4px;
+            --spacing-sm: 8px;
+            --spacing-md: 16px;
+            --spacing-lg: 24px;
+            --spacing-xl: 32px;
+            
+            --font-size-xs: 12px;
+            --font-size-sm: 14px;
+            --font-size-md: 16px;
+            --font-size-lg: 18px;
+            --font-size-xl: 20px;
+            --font-size-xxl: 24px;
+            
+            --border-radius-sm: 4px;
+            --border-radius-md: 8px;
+            --border-radius-lg: 12px;
+            
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 var(--spacing-md);
+        }
+
+        .flex {
+            display: flex;
+        }
+
+        .flex-col {
+            flex-direction: column;
+        }
+
+        .justify-between {
+            justify-content: space-between;
+        }
+
+        .items-center {
+            align-items: center;
+        }
+
+        .space-x-4 {
+            gap: var(--spacing-md);
+        }
+
+        .space-x-8 {
+            gap: var(--spacing-xl);
+        }
+
+        .grid {
+            display: grid;
+        }
+
+        .grid-cols-1 {
+            grid-template-columns: repeat(1, minmax(0, 1fr));
+        }
+
+        .md\:grid-cols-3 {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+
+        .md\:grid-cols-4 {
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+        }
+
+        .md\:grid-cols-5 {
+            grid-template-columns: repeat(5, minmax(0, 1fr));
+        }
+
+        .gap-4 {
+            gap: var(--spacing-md);
+        }
+
+        .gap-6 {
+            gap: var(--spacing-lg);
+        }
+
+        .px-4 {
+            padding-left: var(--spacing-md);
+            padding-right: var(--spacing-md);
+        }
+
+        .py-3 {
+            padding-top: var(--spacing-sm);
+            padding-bottom: var(--spacing-sm);
+        }
+
+        .py-8 {
+            padding-top: var(--spacing-xl);
+            padding-bottom: var(--spacing-xl);
+        }
+
+        .mb-4 {
+            margin-bottom: var(--spacing-md);
+        }
+
+        .mb-6 {
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .mb-8 {
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .mb-12 {
+            margin-bottom: calc(var(--spacing-xl) * 1.5);
+        }
+
+        .mt-4 {
+            margin-top: var(--spacing-md);
+        }
+
+        .mt-8 {
+            margin-top: var(--spacing-xl);
+        }
+
+        .text-sm {
+            font-size: var(--font-size-xs);
+        }
+
+        .text-lg {
+            font-size: var(--font-size-lg);
+        }
+
+        .font-semibold {
+            font-weight: 600;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .text-gray-500 {
+            color: var(--color-text-tertiary);
+        }
+
+        .body-bg {
+            background-color: var(--color-bg-body);
+        }
+
+        .header-bg {
+            background-color: var(--color-bg-card);
+        }
+
+        .header-shadow {
+            box-shadow: var(--shadow-sm);
+        }
+
+        .border {
+            border: 1px solid var(--color-bg-border);
+        }
+
+        .rounded {
+            border-radius: var(--border-radius-sm);
+        }
+
+        .rounded-md {
+            border-radius: var(--border-radius-md);
+        }
+
+        .card {
+            background-color: var(--color-bg-card);
+            border-radius: var(--border-radius-md);
+            box-shadow: var(--shadow-sm);
+            padding: var(--spacing-lg);
+        }
+
+        .header-title {
+            font-size: var(--font-size-xl);
+            font-weight: 700;
+            color: var(--color-text-title);
+        }
+
+        .page-title {
+            font-size: var(--font-size-xxl);
+            font-weight: 700;
+            color: var(--color-text-title);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .section-title {
+            font-size: var(--font-size-lg);
+            font-weight: 700;
+            color: var(--color-text-primary);
+            margin-bottom: var(--spacing-lg);
+            padding-bottom: var(--spacing-sm);
+            border-bottom: 1px solid var(--color-bg-border);
+        }
+
+        .nav-link {
+            color: var(--color-text-secondary);
+            text-decoration: none;
+            padding: var(--spacing-sm) var(--spacing-md);
+            border-radius: var(--border-radius-sm);
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--color-primary);
+        }
+
+        .nav-link-active {
+            color: var(--color-primary);
+            font-weight: 600;
+        }
+
+        .btn {
+            padding: var(--spacing-sm) var(--spacing-md);
+            border-radius: var(--border-radius-sm);
+            font-size: var(--font-size-sm);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+        }
+
+        .btn-primary {
+            background-color: var(--color-primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #E02929;
+        }
+
+        .btn-secondary {
+            background-color: var(--color-bg-body);
+            color: var(--color-text-primary);
+            border: 1px solid var(--color-bg-border);
+        }
+
+        .btn-secondary:hover {
+            background-color: #E8E8EB;
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            color: var(--color-text-primary);
+            border: 1px solid var(--color-bg-border);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--color-bg-body);
+        }
+
+        .btn-danger {
+            background-color: var(--color-primary);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: #E02929;
+        }
+
+        .btn-sm {
+            padding: var(--spacing-xs) var(--spacing-sm);
+            font-size: var(--font-size-xs);
+        }
+
+        .text-link {
+            color: var(--color-info);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .text-link:hover {
+            color: var(--color-primary);
+            text-decoration: underline;
+        }
+
+        .text-link-danger {
+            color: var(--color-primary);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .text-link-danger:hover {
+            color: #E02929;
+            text-decoration: underline;
+        }
+
+        .switch {
+            width: 40px;
+            height: 20px;
+            border-radius: 10px;
+            background-color: var(--color-bg-border);
+            position: relative;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            border: 1px solid var(--color-bg-border);
+        }
+
+        .switch-on {
+            background-color: var(--color-success);
+            border-color: var(--color-success);
+        }
+
+        .switch-off {
+            background-color: var(--color-bg-border);
+        }
+
+        .switch-handle {
+            position: absolute;
+            top: 1px;
+            left: 1px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background-color: white;
+            transition: transform 0.3s ease;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+        }
+
+        .switch-on .switch-handle {
+            transform: translateX(20px);
+        }
+
+        .switch-off .switch-handle {
+            transform: translateX(0);
+        }
+
+        .tag {
+            padding: 2px 8px;
+            border-radius: var(--border-radius-sm);
+            font-size: var(--font-size-xs);
+            font-weight: 500;
+            display: inline-block;
+        }
+
+        .tag-success {
+            background-color: rgba(29, 218, 29, 0.1);
+            color: var(--color-success);
+        }
+
+        .tag-info {
+            background-color: rgba(77, 121, 255, 0.1);
+            color: var(--color-info);
+        }
+
+        .tag-warning {
+            background-color: rgba(255, 152, 47, 0.1);
+            color: var(--color-warning);
+        }
+
+        .pagination-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: var(--spacing-lg);
+            padding: 0 var(--spacing-md);
+        }
+
+        .pagination-item {
+            padding: var(--spacing-xs) var(--spacing-md);
+            border: 1px solid var(--color-bg-border);
+            border-radius: var(--border-radius-sm);
+            background-color: var(--color-bg-card);
+            color: var(--color-text-primary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .pagination-item:hover:not(.pagination-item-disabled) {
+            border-color: var(--color-primary);
+            color: var(--color-primary);
+        }
+
+        .pagination-item-active {
+            background-color: var(--color-primary);
+            color: white;
+            border-color: var(--color-primary);
+        }
+
+        .pagination-item-disabled {
+            color: var(--color-text-hint);
+            cursor: not-allowed;
+            border-color: var(--color-bg-border);
+        }
+
+        .pagination-item-disabled:hover {
+            border-color: var(--color-bg-border);
+            color: var(--color-text-hint);
+        }
+
+        .min-h-screen {
+            min-height: 100vh;
+        }
+
+        .flex-1 {
+            flex: 1;
+        }
+
+        .flex-wrap {
+            flex-wrap: wrap;
+        }
+
+        .min-w-[200px] {
+            min-width: 200px;
+        }
+
+        .items-end {
+            align-items: flex-end;
+        }
+
+        .mr-2 {
+            margin-right: var(--spacing-sm);
+        }
+
+        .mr-3 {
+            margin-right: var(--spacing-md);
+        }
+
+        .ml-2 {
+            margin-left: var(--spacing-sm);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .group:hover .group-hover\:block {
+            display: block;
+        }
+
+        .z-10 {
+            z-index: 10;
+        }
+
+        .text-gray-400 {
+            color: var(--color-text-tertiary);
+        }
+
+        .text-gray-600 {
+            color: var(--color-text-secondary);
+        }
+
+        .font-medium {
+            font-weight: 500;
+        }
+
+        .form-label {
+            font-size: var(--font-size-sm);
+            color: var(--color-text-primary);
+            font-weight: 500;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: var(--spacing-sm) var(--spacing-md);
+            border: 1px solid var(--color-bg-border);
+            border-radius: var(--border-radius-sm);
+            font-size: var(--font-size-sm);
+            color: var(--color-text-primary);
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 2px rgba(245, 46, 46, 0.1);
+        }
+
+        .form-input.active {
+            border-color: var(--color-primary);
+        }
+
+        .form-input:disabled {
+            background-color: var(--color-bg-body);
+            color: var(--color-text-hint);
+            cursor: not-allowed;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: var(--font-size-sm);
+        }
+
+        .table-header {
+            background-color: var(--color-bg-body);
+        }
+
+        .table-row {
+            border-bottom: 1px solid var(--color-bg-border);
+            transition: background-color 0.3s ease;
+        }
+
+        .table-row:hover {
+            background-color: rgba(245, 46, 46, 0.02);
+        }
+
+        .table-cell {
+            padding: var(--spacing-sm) var(--spacing-md);
+            text-align: left;
+            color: var(--color-text-primary);
+            min-width: 120px;
+            white-space: nowrap;
+        }
+
+        .table-header .table-cell {
+            font-weight: 600;
+            color: var(--color-text-secondary);
+        }
+
+        .side-menu-container {
+            width: 240px;
+            flex-shrink: 0;
+            background-color: var(--color-bg-card);
+            border-radius: var(--border-radius-md);
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+            height: fit-content;
+            position: sticky;
+            top: var(--spacing-lg);
+        }
+
+        .side-menu-header {
+            padding: var(--spacing-md);
+            border-bottom: 1px solid var(--color-bg-border);
+        }
+
+        .side-menu-title {
+            font-size: var(--font-size-md);
+            font-weight: 700;
+            color: var(--color-text-title);
+        }
+
+        .side-menu-list {
+            list-style: none;
+            padding: var(--spacing-sm);
+        }
+
+        .side-menu-item {
+            position: relative;
+        }
+
+        .side-menu-item.active {
+            background-color: rgba(245, 46, 46, 0.05);
+        }
+
+        .side-menu-item.active::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background-color: var(--color-primary);
+        }
+
+        .side-menu-link {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: var(--spacing-sm) var(--spacing-md);
+            color: var(--color-text-primary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border-radius: var(--border-radius-sm);
+        }
+
+        .side-menu-link:hover {
+            background-color: var(--color-bg-body);
+        }
+
+        .side-menu-arrow {
+            font-size: var(--font-size-xs);
+            transition: transform 0.3s ease;
+        }
+
+        .side-menu-submenu {
+            list-style: none;
+            background-color: rgba(245, 245, 248, 0.5);
+            border-radius: var(--border-radius-sm);
+            margin: 0 var(--spacing-xs);
+        }
+
+        .side-menu-subitem {
+            padding-left: 0;
+        }
+
+        .side-menu-subitem.active {
+            background-color: rgba(245, 46, 46, 0.05);
+        }
+
+        .side-menu-subitem.active::before {
+            content: '';
+            position: absolute;
+            left: var(--spacing-md);
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background-color: var(--color-primary);
+        }
+
+        .side-menu-sublink {
+            display: block;
+            padding: var(--spacing-xs) var(--spacing-md);
+            color: var(--color-text-secondary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            padding-left: calc(var(--spacing-md) * 2);
+        }
+
+        .side-menu-sublink:hover {
+            color: var(--color-primary);
+        }
+
+        .side-menu-sublink.active {
+            color: var(--color-primary);
+            font-weight: 500;
+        }
+
+        .main-layout {
+            display: flex;
+            gap: var(--spacing-md);
+        }
+
+        .main-content {
+            flex: 1;
+        }
+
+        .footer {
+            background-color: var(--color-bg-card);
+            border-top: 1px solid var(--color-bg-border);
+            padding: var(--spacing-lg) 0;
+            margin-top: var(--spacing-xl);
+        }
+
+        .footer p {
+            color: var(--color-text-secondary);
+            font-size: var(--font-size-sm);
+        }
+
+        .feature-marker {
+            position: absolute;
+            top: -12px;
+            right: -12px;
+            width: 28px;
+            height: 28px;
+            background-color: var(--color-primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+            z-index: 100;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        .feature-marker:hover {
+            transform: scale(1.1);
+        }
+        
+        .feature-tooltip {
+            position: absolute;
+            background-color: rgba(44, 48, 56, 0.95);
+            color: white;
+            padding: 16px;
+            border-radius: 8px;
+            max-width: 320px;
+            z-index: 1000;
+            display: none;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            left: 40px;
+            top: 0;
+            pointer-events: none;
+        }
+        
+        .feature-tooltip h4 {
+            color: var(--color-primary);
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        
+        .feature-tooltip p {
+            font-size: 12px;
+            line-height: 1.5;
+            margin-bottom: 4px;
+        }
+        
+        .feature-tooltip.active {
+            display: block;
+        }
+
+        .feature-container {
+            position: relative;
+        }
+
+        @media (max-width: 768px) {
+            .grid-cols-1 {
+                grid-template-columns: 1fr;
+            }
+            
+            .md\:grid-cols-3,
+            .md\:grid-cols-4,
+            .md\:grid-cols-5 {
+                grid-template-columns: 1fr;
+            }
+            
+            .flex {
+                flex-direction: column;
+            }
+            
+            .side-menu-container {
+                width: 100%;
+                margin-bottom: var(--spacing-md);
+                position: static;
+            }
+            
+            .main-layout {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body class="body-bg min-h-screen flex flex-col">
+    <header class="header-bg header-shadow">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <h1 class="header-title">TCL数字化运营平台</h1>
+            <div class="flex items-center space-x-4">
+                <span class="text-sm">管理员</span>
+                <button class="btn btn-secondary btn-sm">退出</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-1 flex" style="padding: var(--spacing-md); gap: var(--spacing-md);">
+        <div id="sidebar" class="side-menu-container"></div>
+        <div class="main-content">
+            <section id="order" class="mb-12">
+                <div class="card">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="section-title">超期详情</h2>
+                        <button id="feature1" class="btn btn-outline flex items-center space-x-2" onclick="window.history.back()">
+                            <i class="fa fa-arrow-left"></i>
+                            <span>返回</span>
+                        </button>
+                    </div>
+
+                    <div class="mb-6">
+                        <h3 class="text-lg font-semibold mb-4">订单信息</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div id="feature2" class="feature-container">
+                                <label class="form-label">平台编号</label>
+                                <div class="px-3 py-2 bg-gray-100 rounded-md">GF25112009240017316</div>
+                            </div>
+                            <div id="feature3" class="feature-container">
+                                <label class="form-label">产品</label>
+                                <div class="px-3 py-2 bg-gray-100 rounded-md">光耀宝</div>
+                            </div>
+                            <div id="feature4" class="feature-container">
+                                <label class="form-label">客户姓名</label>
+                                <div class="px-3 py-2 bg-gray-100 rounded-md">黄华振</div>
+                            </div>
+                            <div id="feature5" class="feature-container">
+                                <label class="form-label">安装地区</label>
+                                <div class="px-3 py-2 bg-gray-100 rounded-md">广东省湛江市廉江市</div>
+                            </div>
+                            <div id="feature6" class="feature-container">
+                                <label class="form-label">进入时订单状态</label>
+                                <div class="px-3 py-2 bg-gray-100 rounded-md">待并网领单</div>
+                            </div>
+                            <div id="feature7" class="feature-container">
+                                <label class="form-label">装机容量</label>
+                                <div class="px-3 py-2 bg-gray-100 rounded-md">30.660 K</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-6">
+                        <h3 class="text-lg font-semibold mb-4">超期信息</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div id="feature8" class="feature-container">
+                                <label class="form-label">申诉开始时间</label>
+                                <div class="px-3 py-2 bg-gray-100 rounded-md">2026/04/27 16:24:00</div>
+                            </div>
+                            <div id="feature9" class="feature-container">
+                                <label class="form-label">申诉结束时间</label>
+                                <div class="px-3 py-2 bg-gray-100 rounded-md">2026/05/06 16:24:00</div>
+                            </div>
+                            <div id="feature10" class="feature-container">
+                                <label class="form-label">并网开始时间</label>
+                                <div class="px-3 py-2 bg-gray-100 rounded-md">2026/04/28 00:00:00</div>
+                            </div>
+                            <div id="feature11" class="feature-container">
+                                <label class="form-label">并网超期开始时间</label>
+                                <div class="px-3 py-2 bg-gray-100 rounded-md">2026/04/27 09:00:00</div>
+                            </div>
+                            <div id="feature12" class="feature-container">
+                                <label class="form-label">并网时长</label>
+                                <div class="px-3 py-2 bg-gray-100 rounded-md">110</div>
+                            </div>
+                            <div id="feature13" class="feature-container">
+                                <label class="form-label">回购日</label>
+                                <div class="px-3 py-2 bg-gray-100 rounded-md">2026/06/15 16:24:00</div>
+                            </div>
+                            <div id="feature14" class="feature-container">
+                                <label class="form-label">回购宽限天数</label>
+                                <div class="px-3 py-2 bg-gray-100 rounded-md">20</div>
+                            </div>
+                            <div id="feature15" class="feature-container">
+                                <label class="form-label">回购宽限次数</label>
+                                <div class="px-3 py-2 bg-gray-100 rounded-md">2</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-6">
+                        <h3 class="text-lg font-semibold mb-4">超期计划</h3>
+                        <div class="overflow-x-auto">
+                            <table class="table">
+                                <thead class="table-header">
+                                    <tr>
+                                        <th id="feature16" class="table-cell feature-container">梯度</th>
+                                        <th id="feature17" class="table-cell feature-container">并网时长</th>
+                                        <th id="feature18" class="table-cell feature-container">梯度触发时间</th>
+                                        <th id="feature19" class="table-cell feature-container">超期动作</th>
+                                        <th id="feature20" class="table-cell feature-container">降价幅度(元/W)</th>
+                                        <th id="feature21" class="table-cell feature-container">状态</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="table-body">
+                                    <tr class="table-row">
+                                        <td class="table-cell">梯度1</td>
+                                        <td class="table-cell">110天</td>
+                                        <td class="table-cell">2026/05/06 16:24:00</td>
+                                        <td class="table-cell">降价</td>
+                                        <td class="table-cell">0.1</td>
+                                        <td class="table-cell"><span class="tag tag-success">已生效</span></td>
+                                    </tr>
+                                    <tr class="table-row">
+                                        <td class="table-cell">梯度2</td>
+                                        <td class="table-cell">120天</td>
+                                        <td class="table-cell">2026/05/16 16:24:00</td>
+                                        <td class="table-cell">降价</td>
+                                        <td class="table-cell">0.09</td>
+                                        <td class="table-cell"><span class="tag tag-warning">未生效</span></td>
+                                    </tr>
+                                    <tr class="table-row">
+                                        <td class="table-cell">梯度3</td>
+                                        <td class="table-cell">130天</td>
+                                        <td class="table-cell">2026/05/26 16:24:00</td>
+                                        <td class="table-cell">降价</td>
+                                        <td class="table-cell">0.08</td>
+                                        <td class="table-cell"><span class="tag tag-warning">未生效</span></td>
+                                    </tr>
+                                    <tr class="table-row">
+                                        <td class="table-cell">梯度4</td>
+                                        <td class="table-cell">140天</td>
+                                        <td class="table-cell">2026/06/05 16:24:00</td>
+                                        <td class="table-cell">降价</td>
+                                        <td class="table-cell">0.07</td>
+                                        <td class="table-cell"><span class="tag tag-warning">未生效</span></td>
+                                    </tr>
+                                    <tr class="table-row">
+                                        <td class="table-cell">梯度5</td>
+                                        <td class="table-cell">150天</td>
+                                        <td class="table-cell">2026/06/15 16:24:00</td>
+                                        <td class="table-cell">回购</td>
+                                        <td class="table-cell">-</td>
+                                        <td class="table-cell"><span class="tag tag-warning">未生效</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container mx-auto px-4 text-center">
+            <p>© 2026 TCL数字化运营平台</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const featureElements = [
+                { element: document.getElementById('feature1'), feature: 1, title: '返回按钮', content: ['业务逻辑：用户点击返回按钮，系统返回上一页'] },
+                { element: document.getElementById('feature2'), feature: 2, title: '平台编号', content: ['业务逻辑：显示订单的平台编号'] },
+                { element: document.getElementById('feature3'), feature: 3, title: '产品', content: ['业务逻辑：显示订单的产品信息'] },
+                { element: document.getElementById('feature4'), feature: 4, title: '客户姓名', content: ['业务逻辑：显示订单的客户姓名'] },
+                { element: document.getElementById('feature5'), feature: 5, title: '安装地区', content: ['业务逻辑：显示订单的安装地区'] },
+                { element: document.getElementById('feature6'), feature: 6, title: '进入时订单状态', content: ['业务逻辑：显示订单进入申诉通道时的状态'] },
+                { element: document.getElementById('feature7'), feature: 7, title: '装机容量', content: ['业务逻辑：显示订单的实际安装量，单位为K'] },
+                { element: document.getElementById('feature8'), feature: 8, title: '申诉开始时间', content: ['业务逻辑：显示超期记录可发起申诉的周期，如2026/04/27 16:24:00'] },
+                { element: document.getElementById('feature9'), feature: 9, title: '申诉结束时间', content: ['业务逻辑：显示超期记录可发起申诉的周期，如2026/05/06 16:24:00'] },
+                { element: document.getElementById('feature10'), feature: 10, title: '并网开始时间', content: ['业务逻辑：订单流转到待施工领单时，赋值T+1的0点作为并网开始时间', '示例：订单首次进入待施工领单的时间在2026-04-27 18:40:23，则并网开始时间赋值为2026-04-28 00:00:00'] },
+                { element: document.getElementById('feature11'), feature: 11, title: '并网超期开始时间', content: ['业务逻辑：显示超期记录对应的并网超期开始时间，即梯度1的触发时间，具体到年月日时分秒，如2026-04-27 09:00:00'] },
+                { element: document.getElementById('feature12'), feature: 12, title: '并网时长', content: ['业务逻辑：显示订单的并网时长，数字类型，根据当前天数进入页面时计算'] },
+                { element: document.getElementById('feature13'), feature: 13, title: '回购日', content: ['业务逻辑：显示订单回购梯度的触发时间'] },
+                { element: document.getElementById('feature14'), feature: 14, title: '回购宽限天数', content: ['业务逻辑：显示回购宽限期累计获得的天数，如第一次宽限10天，第二次宽限10天，则累计为20天'] },
+                { element: document.getElementById('feature15'), feature: 15, title: '回购宽限次数', content: ['业务逻辑：显示回购宽限的累计提交次数'] },
+                { element: document.getElementById('feature16'), feature: 16, title: '梯度', content: ['业务逻辑：显示超期计划中的梯度编号'] },
+                { element: document.getElementById('feature17'), feature: 17, title: '并网时长', content: ['业务逻辑：当天-并网开始时间，进1'] },
+                { element: document.getElementById('feature18'), feature: 18, title: '梯度触发时间', content: ['业务逻辑：根据订单进入待施工领单的时间+梯度的触发天数，如2026/05/06 16:24:00'] },
+                { element: document.getElementById('feature19'), feature: 19, title: '超期动作', content: ['业务逻辑：显示超期计划中的超期动作，选项包括：降价、回购'] },
+                { element: document.getElementById('feature20'), feature: 20, title: '降价幅度(元/W)', content: ['业务逻辑：显示超期计划中的梯度降价幅度，当超期动作为降价时必填，数字类型，单位为元/W'] },
+                { element: document.getElementById('feature21'), feature: 21, title: '状态', content: ['业务逻辑：显示超期计划中每个梯度的状态，选项包括：已生效、未生效'] }
+            ];
+
+            featureElements.forEach(item => {
+                if (item.element) {
+                    item.element.classList.add('feature-container');
+                    
+                    const marker = document.createElement('div');
+                    marker.className = 'feature-marker';
+                    marker.dataset.feature = item.feature;
+                    marker.textContent = item.feature;
+                    item.element.appendChild(marker);
+
+                    const tooltip = document.createElement('div');
+                    tooltip.className = 'feature-tooltip';
+                    tooltip.id = `tooltip-${item.feature}`;
+                    tooltip.innerHTML = `<h4>功能点 ${item.feature}: ${item.title}</h4>`;
+                    item.content.forEach(line => {
+                        tooltip.innerHTML += `<p>${line}</p>`;
+                    });
+                    item.element.appendChild(tooltip);
+                }
+            });
+
+            const markers = document.querySelectorAll('.feature-marker');
+            markers.forEach(marker => {
+                marker.addEventListener('mouseenter', function() {
+                    const feature = this.dataset.feature;
+                    const tooltip = document.getElementById(`tooltip-${feature}`);
+                    if (tooltip) {
+                        tooltip.classList.add('active');
+                    }
+                });
+
+                marker.addEventListener('mouseleave', function() {
+                    const feature = this.dataset.feature;
+                    const tooltip = document.getElementById(`tooltip-${feature}`);
+                    if (tooltip) {
+                        tooltip.classList.remove('active');
+                    }
+                });
+            });
+        });
+    </script>
+
+    <script src="../../../components.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            initSidebar('auto_overdue', 'auto');
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>操作日志 - TCL数字化运营平台</title>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            font-size: 14px;
+            line-height: 1.5;
+            color: #2C3038;
+            background-color: #F5F5F8;
+        }
+
+        :root {
+            --color-primary: #F52E2E;
+            --color-warning: #FF982F;
+            --color-success: #1DDA1D;
+            --color-info: #4D79FF;
+            --color-text-title: #000000;
+            --color-text-primary: #2C3038;
+            --color-text-secondary: #5B5E64;
+            --color-text-tertiary: #8A8C90;
+            --color-text-hint: #B9BABD;
+            --color-bg-body: #F5F5F8;
+            --color-bg-card: #FFFFFF;
+            --color-bg-border: #DFE1E5;
+            --spacing-xs: 4px;
+            --spacing-sm: 8px;
+            --spacing-md: 16px;
+            --spacing-lg: 24px;
+            --spacing-xl: 32px;
+            --font-size-xs: 12px;
+            --font-size-sm: 14px;
+            --font-size-md: 16px;
+            --font-size-lg: 18px;
+            --font-size-xl: 20px;
+            --font-size-xxl: 24px;
+            --border-radius-sm: 4px;
+            --border-radius-md: 8px;
+            --border-radius-lg: 12px;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--spacing-md);
+        }
+
+        .flex { display: flex; }
+        .flex-col { flex-direction: column; }
+        .justify-between { justify-content: space-between; }
+        .items-center { align-items: center; }
+        .space-x-4 { gap: var(--spacing-md); }
+        .flex-wrap { flex-wrap: wrap; }
+        .min-w-[200px] { min-width: 200px; }
+        .flex-1 { flex: 1; }
+
+        .px-4 { padding-left: var(--spacing-md); padding-right: var(--spacing-md); }
+        .py-3 { padding-top: var(--spacing-sm); padding-bottom: var(--spacing-sm); }
+        .py-6 { padding-top: var(--spacing-lg); padding-bottom: var(--spacing-lg); }
+        .mb-6 { margin-bottom: var(--spacing-lg); }
+        .mr-2 { margin-right: var(--spacing-sm); }
+
+        .text-sm { font-size: var(--font-size-xs); }
+        .text-lg { font-size: var(--font-size-lg); }
+        .font-medium { font-weight: 500; }
+        .text-center { text-align: center; }
+        .text-gray-500 { color: var(--color-text-tertiary); }
+        .text-gray-600 { color: var(--color-text-secondary); }
+        .text-gray-900 { color: var(--color-text-primary); }
+
+        .body-bg { background-color: var(--color-bg-body); }
+        .header-bg { background-color: var(--color-bg-card); }
+        .header-shadow { box-shadow: var(--shadow-sm); }
+        .card { background-color: var(--color-bg-card); border-radius: var(--border-radius-md); box-shadow: var(--shadow-sm); padding: var(--spacing-lg); }
+
+        .header-title { font-size: var(--font-size-xl); font-weight: 700; color: var(--color-text-title); }
+        .page-title { font-size: var(--font-size-xxl); font-weight: 700; color: var(--color-text-title); margin-bottom: var(--spacing-lg); }
+
+        .btn {
+            padding: var(--spacing-sm) var(--spacing-md);
+            border-radius: var(--border-radius-sm);
+            font-size: var(--font-size-sm);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+        }
+
+        .btn-outline { background-color: transparent; color: var(--color-text-primary); border: 1px solid var(--color-bg-border); }
+        .btn-outline:hover { background-color: var(--color-bg-body); }
+
+        .text-link { color: var(--color-info); text-decoration: none; transition: color 0.3s ease; }
+        .text-link:hover { color: var(--color-primary); text-decoration: underline; }
+
+        .tag { padding: 2px 8px; border-radius: var(--border-radius-sm); font-size: var(--font-size-xs); font-weight: 500; display: inline-block; }
+        .tag-success { background-color: rgba(29, 218, 29, 0.1); color: var(--color-success); }
+        .tag-info { background-color: rgba(77, 121, 255, 0.1); color: var(--color-info); }
+        .tag-warning { background-color: rgba(255, 152, 47, 0.1); color: var(--color-warning); }
+        .tag-danger { background-color: rgba(245, 46, 46, 0.1); color: var(--color-primary); }
+
+        .pagination-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: var(--spacing-lg);
+            padding: 0 var(--spacing-md);
+        }
+
+        .pagination-item {
+            padding: var(--spacing-xs) var(--spacing-md);
+            border: 1px solid var(--color-bg-border);
+            border-radius: var(--border-radius-sm);
+            background-color: var(--color-bg-card);
+            color: var(--color-text-primary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .pagination-item-active { background-color: var(--color-primary); color: white; border-color: var(--color-primary); }
+        .pagination-item-disabled { color: var(--color-text-hint); cursor: not-allowed; }
+
+        .min-h-screen { min-height: 100vh; }
+        .footer { background-color: var(--color-bg-card); border-top: 1px solid var(--color-bg-border); padding: var(--spacing-lg) 0; margin-top: var(--spacing-xl); }
+
+        .table { width: 100%; border-collapse: collapse; font-size: var(--font-size-sm); }
+        .table-header { background-color: var(--color-bg-body); }
+        .table-row { border-bottom: 1px solid var(--color-bg-border); }
+        .table-cell { padding: var(--spacing-sm) var(--spacing-md); text-align: left; color: var(--color-text-primary); }
+        .table-header .table-cell { font-weight: 600; color: var(--color-text-secondary); }
+
+        .feature-marker {
+            position: absolute;
+            width: 28px;
+            height: 28px;
+            background-color: var(--color-primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+            z-index: 100;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        .feature-marker:hover { transform: scale(1.1); }
+        
+        .feature-tooltip {
+            position: fixed;
+            background-color: rgba(44, 48, 56, 0.95);
+            color: white;
+            padding: 16px;
+            border-radius: 8px;
+            max-width: 320px;
+            z-index: 1000;
+            display: none;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+        
+        .feature-tooltip h4 { color: var(--color-primary); margin-bottom: 8px; font-size: 14px; }
+        .feature-tooltip p { font-size: 12px; line-height: 1.5; margin-bottom: 4px; }
+    </style>
+</head>
+<body class="body-bg min-h-screen flex flex-col">
+    <header class="header-bg header-shadow">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <h1 class="header-title">TCL数字化运营平台</h1>
+            <div class="flex items-center space-x-4">
+                <span class="text-sm">管理员</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-1">
+        <div class="container mx-auto px-4 py-6">
+            <div class="mb-6 flex justify-between items-center">
+                <h2 class="page-title">日志</h2>
+                <button class="btn btn-outline flex items-center space-x-2" id="btn-back" onclick="window.history.back()">
+                    <i class="fa fa-arrow-left"></i>
+                    <span>返回</span>
+                </button>
+            </div>
+
+            <div class="card mb-6">
+                <div class="flex flex-wrap gap-4">
+                    <div class="flex-1 min-w-[200px]" id="scope-section">
+                        <label class="block text-sm font-medium text-gray-500">适用范围</label>
+                        <div class="text-sm font-medium text-gray-900">广东省</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card overflow-hidden">
+                <table class="table">
+                    <thead class="table-header">
+                        <tr>
+                            <th class="table-cell" id="seq-col">序号</th>
+                            <th class="table-cell" id="opt-time-col">操作时间</th>
+                            <th class="table-cell" id="opt-user-col">操作人</th>
+                            <th class="table-cell" id="opt-type-col">操作类型</th>
+                            <th class="table-cell" id="detail-col">查看明细</th>
+                        </tr>
+                    </thead>
+                    <tbody class="table-body">
+                        <tr class="table-row">
+                            <td class="table-cell">1</td>
+                            <td class="table-cell text-gray-500">2026-05-03 14:30:22</td>
+                            <td class="table-cell">系统</td>
+                            <td class="table-cell"><span class="tag tag-info">启用</span></td>
+                            <td class="table-cell"><a href="detail_modal.html" class="text-link" id="detail-link">查看明细</a></td>
+                        </tr>
+                        <tr class="table-row">
+                            <td class="table-cell">2</td>
+                            <td class="table-cell text-gray-500">2026-05-03 14:20:15</td>
+                            <td class="table-cell">admin</td>
+                            <td class="table-cell"><span class="tag tag-info">编辑未来生效</span></td>
+                            <td class="table-cell"><a href="detail_modal.html" class="text-link">查看明细</a></td>
+                        </tr>
+                        <tr class="table-row">
+                            <td class="table-cell">3</td>
+                            <td class="table-cell text-gray-500">2026-03-15 14:30:22</td>
+                            <td class="table-cell">admin</td>
+                            <td class="table-cell"><span class="tag tag-info">编辑</span></td>
+                            <td class="table-cell"><a href="detail_modal.html" class="text-link">查看明细</a></td>
+                        </tr>
+                        <tr class="table-row">
+                            <td class="table-cell">4</td>
+                            <td class="table-cell text-gray-500">2026-03-10 09:15:45</td>
+                            <td class="table-cell">admin</td>
+                            <td class="table-cell"><span class="tag tag-success">创建未来生效</span></td>
+                            <td class="table-cell"><a href="detail_modal.html" class="text-link">查看明细</a></td>
+                        </tr>
+                        <tr class="table-row">
+                            <td class="table-cell">5</td>
+                            <td class="table-cell text-gray-500">2026-03-05 16:45:12</td>
+                            <td class="table-cell">admin</td>
+                            <td class="table-cell"><span class="tag tag-warning">禁用</span></td>
+                            <td class="table-cell">-</td>
+                        </tr>
+                        <tr class="table-row">
+                            <td class="table-cell">6</td>
+                            <td class="table-cell text-gray-500">2026-03-03 10:20:33</td>
+                            <td class="table-cell">admin</td>
+                            <td class="table-cell"><span class="tag tag-danger">删除未来生效</span></td>
+                            <td class="table-cell">-</td>
+                        </tr>
+                        <tr class="table-row">
+                            <td class="table-cell">7</td>
+                            <td class="table-cell text-gray-500">2026-03-01 11:20:33</td>
+                            <td class="table-cell">admin</td>
+                            <td class="table-cell"><span class="tag tag-success">创建</span></td>
+                            <td class="table-cell"><a href="detail_modal.html" class="text-link">查看明细</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="pagination-container" id="pagination-section">
+                <div class="text-sm text-gray-500">共 <span class="font-medium">10</span> 条记录</div>
+                <div class="flex space-x-1">
+                    <button class="pagination-item pagination-item-disabled">上一页</button>
+                    <button class="pagination-item pagination-item-active">1</button>
+                    <button class="pagination-item">2</button>
+                    <button class="pagination-item">下一页</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container mx-auto px-4 text-center text-sm text-gray-600">
+            © 2026 TCL光伏. 保留所有权利.
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const featureElements = [
+                { element: document.getElementById('btn-back'), feature: 1, title: '返回', content: ['业务逻辑：用户点击返回按钮，系统返回上一页'] },
+                { element: document.getElementById('scope-section'), feature: 2, title: '适用范围', content: ['业务逻辑：显示策略的适用范围'] },
+                { element: document.getElementById('seq-col'), feature: 3, title: '序号', content: ['按照操作时间排序，最新在前'] },
+                { element: document.getElementById('opt-time-col'), feature: 4, title: '操作时间', content: ['业务逻辑：显示操作的时间'] },
+                { element: document.getElementById('opt-user-col'), feature: 5, title: '操作人', content: ['显示操作的执行人员，未来生效的状态变化对应操作人为系统', '示例：未来0801生效启用，则启用日志的操作人为系统'] },
+                { element: document.getElementById('opt-type-col'), feature: 6, title: '操作类型', content: ['创建', '创建未来生效', '编辑', '编辑未来生效', '启用', '禁用', '删除', '删除未来生效', '在示例图中展示上述所有类型'] },
+                { element: document.getElementById('detail-link'), feature: 7, title: '查看明细', content: ['记录日志生成时刻，区域对应的超期计划，支持以下操作类型可查看明细：', '创建', '创建未来生效', '编辑', '编辑未来生效'] },
+                { element: document.getElementById('pagination-section'), feature: 8, title: '分页', content: ['业务逻辑：用户点击分页控件，系统显示不同页的操作日志'] }
+            ];
+
+            featureElements.forEach(item => {
+                if (item.element) {
+                    item.element.style.position = 'relative';
+                    const marker = document.createElement('div');
+                    marker.className = 'feature-marker';
+                    marker.dataset.feature = item.feature;
+                    marker.textContent = item.feature;
+                    marker.style.cssText = 'position: absolute; top: -10px; left: -10px; z-index: 1000;';
+                    item.element.appendChild(marker);
+
+                    const tooltip = document.createElement('div');
+                    tooltip.className = 'feature-tooltip';
+                    tooltip.id = `tooltip-${item.feature}`;
+                    tooltip.innerHTML = `<h4>功能点 ${item.feature}: ${item.title}</h4>`;
+                    item.content.forEach(line => {
+                        tooltip.innerHTML += `<p>${line}</p>`;
+                    });
+                    document.body.appendChild(tooltip);
+                }
+            });
+
+            const markers = document.querySelectorAll('.feature-marker');
+            markers.forEach(marker => {
+                marker.addEventListener('mouseenter', function() {
+                    const feature = this.dataset.feature;
+                    const tooltip = document.getElementById(`tooltip-${feature}`);
+                    if (tooltip) {
+                        const rect = this.getBoundingClientRect();
+                        tooltip.style.left = `${rect.left}px`;
+                        tooltip.style.top = `${rect.bottom + 10}px`;
+                        tooltip.style.display = 'block';
+                    }
+                });
+
+                marker.addEventListener('mouseleave', function() {
+                    const feature = this.dataset.feature;
+                    const tooltip = document.getElementById(`tooltip-${feature}`);
+                    if (tooltip) {
+                        tooltip.style.display = 'none';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,22 @@
+{
+  "name": "html-to-ui",
+  "description": "根据设计规范重构HTML文件的样式，保持DOM结构和业务逻辑不变",
+  "author": "system",
+  "version": "1.0.0",
+  "tags": ["frontend", "html", "css", "design"],
+  "inputs": [
+    {
+      "name": "design_spec",
+      "type": "string",
+      "required": true,
+      "description": "设计规范，Figma链接或设计变量描述"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "result",
+      "type": "string",
+      "description": "重构完成的结果"
+    }
+  ]
+}

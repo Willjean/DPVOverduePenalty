@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>并网超期驳回</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: rgba(0, 0, 0, 0.5);
+            color: #333;
+            line-height: 1.4;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal {
+            background: #fff;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 320px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .modal-header {
+            padding: 16px;
+            text-align: center;
+            border-bottom: 1px solid #eee;
+        }
+
+        .modal-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .modal-body {
+            padding: 16px;
+        }
+
+        .order-info {
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px dashed #eee;
+        }
+
+        .order-label {
+            font-size: 12px;
+            color: #999;
+            margin-bottom: 4px;
+        }
+
+        .order-no {
+            font-size: 14px;
+            color: #1e88e5;
+            font-weight: 600;
+            word-break: break-all;
+        }
+
+        .modal-desc {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 12px;
+            line-height: 1.5;
+        }
+
+        .reject-reason {
+            width: 100%;
+            height: 100px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 13px;
+            resize: none;
+            outline: none;
+            font-family: inherit;
+            transition: border-color 0.2s;
+        }
+
+        .reject-reason:focus {
+            border-color: #e53935;
+        }
+
+        .reject-reason.error {
+            border-color: #e53935;
+        }
+
+        .char-count {
+            text-align: right;
+            font-size: 11px;
+            color: #999;
+            margin-top: 4px;
+        }
+
+        .char-count.warning {
+            color: #e53935;
+        }
+
+        .modal-footer {
+            display: flex;
+            border-top: 1px solid #eee;
+        }
+
+        .modal-btn {
+            flex: 1;
+            padding: 12px;
+            font-size: 14px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .modal-btn-cancel {
+            color: #999;
+            border-right: 1px solid #eee;
+        }
+
+        .modal-btn-cancel:active {
+            background: #f5f5f5;
+        }
+
+        .modal-btn-confirm {
+            color: #e53935;
+            font-weight: 600;
+        }
+
+        .modal-btn-confirm:active {
+            background: #fff3f3;
+        }
+
+        .feature-marker {
+            position: absolute;
+            width: 28px;
+            height: 28px;
+            background: #F52E2E;
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+            z-index: 10;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(245, 46, 46, 0.4);
+        }
+
+        .feature-marker:hover + .feature-tooltip {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .feature-tooltip {
+            position: absolute;
+            background: rgba(44, 48, 56, 0.95);
+            color: #fff;
+            padding: 10px;
+            border-radius: 6px;
+            width: 220px;
+            z-index: 20;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            font-size: 11px;
+            line-height: 1.4;
+            pointer-events: none;
+        }
+
+        .feature-tooltip .tooltip-title {
+            color: #F52E2E;
+            font-weight: 600;
+            font-size: 12px;
+            margin-bottom: 4px;
+            padding-bottom: 4px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .feature-tooltip .tooltip-content li {
+            margin-bottom: 3px;
+            list-style: disc;
+            margin-left: 14px;
+            font-size: 11px;
+        }
+
+        .feature-tooltip::after {
+            content: '';
+            position: absolute;
+            right: -6px;
+            top: 8px;
+            transform: rotate(45deg);
+            width: 12px;
+            height: 12px;
+            background: rgba(44, 48, 56, 0.95);
+        }
+
+        .title-marker {
+            top: -14px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .title-marker + .feature-tooltip {
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .title-marker + .feature-tooltip::after {
+            right: auto;
+            left: 50%;
+            top: -6px;
+            transform: translateX(-50%) rotate(45deg);
+        }
+
+        .order-no-marker {
+            top: 24px;
+            left: -14px;
+        }
+
+        .order-no-marker + .feature-tooltip {
+            top: 0;
+            left: -220px;
+        }
+
+        .order-no-marker + .feature-tooltip::after {
+            right: -6px;
+            left: auto;
+            top: 8px;
+        }
+
+        .desc-marker {
+            top: 60px;
+            left: -14px;
+        }
+
+        .desc-marker + .feature-tooltip {
+            top: 0;
+            left: -220px;
+        }
+
+        .desc-marker + .feature-tooltip::after {
+            right: -6px;
+            left: auto;
+            top: 8px;
+        }
+
+        .reason-marker {
+            top: 96px;
+            left: -14px;
+        }
+
+        .reason-marker + .feature-tooltip {
+            top: 0;
+            left: -220px;
+        }
+
+        .cancel-marker {
+            bottom: -14px;
+            left: 25%;
+            transform: translateX(-50%);
+        }
+
+        .cancel-marker + .feature-tooltip {
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-80%);
+        }
+
+        .cancel-marker + .feature-tooltip::after {
+            right: auto;
+            left: 80%;
+            bottom: -6px;
+            top: auto;
+            transform: translateX(-50%) rotate(45deg);
+        }
+
+        .confirm-marker {
+            bottom: -14px;
+            right: 25%;
+            transform: translateX(50%);
+        }
+
+        .confirm-marker + .feature-tooltip {
+            bottom: 20px;
+            right: 50%;
+            transform: translateX(80%);
+        }
+
+        .confirm-marker + .feature-tooltip::after {
+            right: 80%;
+            left: auto;
+            bottom: -6px;
+            top: auto;
+            transform: translateX(50%) rotate(45deg);
+        }
+
+        .error-toast {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(244, 67, 54, 0.9);
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-size: 13px;
+            z-index: 100;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .error-toast.show {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="modal-overlay">
+        <div class="modal">
+            <div class="feature-marker title-marker">1</div>
+            <div class="feature-tooltip">
+                <div class="tooltip-title">弹窗标题</div>
+                <div class="tooltip-content">标题展示：并网超期驳回</div>
+            </div>
+            
+            <div class="modal-header">
+                <div class="modal-title">并网超期驳回</div>
+            </div>
+
+            <div class="modal-body">
+                <div class="feature-marker order-no-marker">2</div>
+                <div class="feature-tooltip">
+                    <div class="tooltip-title">订单编号</div>
+                    <div class="tooltip-content">暂时驳回的订单编号</div>
+                </div>
+                
+                <div class="order-info">
+                    <div class="order-label">订单编号</div>
+                    <div class="order-no">GF260325165958337877</div>
+                </div>
+
+                <div class="feature-marker desc-marker">3</div>
+                <div class="feature-tooltip">
+                    <div class="tooltip-title">文案</div>
+                    <div class="tooltip-content">请填写驳回原因</div>
+                </div>
+                
+                <p class="modal-desc">请填写驳回原因</p>
+
+                <div class="feature-marker reason-marker">4</div>
+                <div class="feature-tooltip">
+                    <div class="tooltip-title">驳回原因</div>
+                    <div class="tooltip-content">
+                        <ul>
+                            <li>必填</li>
+                            <li>最多录入200字符</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <textarea 
+                    id="rejectReason" 
+                    class="reject-reason" 
+                    placeholder="请输入驳回原因..." 
+                    maxlength="200"
+                    oninput="updateCharCount()"
+                ></textarea>
+                <div id="charCount" class="char-count">0/200</div>
+            </div>
+
+            <div class="feature-marker cancel-marker">5</div>
+            <div class="feature-tooltip">
+                <div class="tooltip-title">弹窗操作-取消</div>
+                <div class="tooltip-content">关闭弹窗</div>
+            </div>
+            
+            <div class="feature-marker confirm-marker">6</div>
+            <div class="feature-tooltip">
+                <div class="tooltip-title">弹窗操作-确认</div>
+                <div class="tooltip-content">
+                    <ul>
+                        <li>确认校验：超期记录状态正确，否则提示超期记录状态不正确，请检查</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="modal-footer">
+                <button class="modal-btn modal-btn-cancel" onclick="handleCancel()">取消</button>
+                <button class="modal-btn modal-btn-confirm" onclick="handleConfirm()">确认</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="error-toast" id="errorToast"></div>
+
+    <script>
+        function updateCharCount() {
+            const textarea = document.getElementById('rejectReason');
+            const count = document.getElementById('charCount');
+            const length = textarea.value.length;
+            
+            count.textContent = `${length}/200`;
+            
+            if (length > 180) {
+                count.classList.add('warning');
+            } else {
+                count.classList.remove('warning');
+            }
+        }
+
+        function handleCancel() {
+            showToast('已取消驳回操作');
+        }
+
+        function handleConfirm() {
+            const reason = document.getElementById('rejectReason').value.trim();
+            
+            if (!reason) {
+                document.getElementById('rejectReason').classList.add('error');
+                showToast('请填写驳回原因');
+                return;
+            }
+            
+            document.getElementById('rejectReason').classList.remove('error');
+            
+            showToast('驳回成功');
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('errorToast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2500);
+        }
+    </script>
+</body>
+</html>

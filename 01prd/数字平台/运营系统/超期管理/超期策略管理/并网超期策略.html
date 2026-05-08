@@ -1,0 +1,1617 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>并网超期策略 - TCL数字化运营平台</title>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <style>
+        /* 基础样式重置 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            font-size: 14px;
+            line-height: 1.5;
+            color: #2C3038;
+            background-color: #F5F5F8;
+        }
+
+        /* 颜色系统 */
+        :root {
+            /* 标准色 */
+            --color-primary: #F52E2E;
+            --color-warning: #FF982F;
+            --color-success: #1DDA1D;
+            --color-info: #4D79FF;
+            
+            /* 文本色 */
+            --color-text-title: #000000;
+            --color-text-primary: #2C3038;
+            --color-text-secondary: #5B5E64;
+            --color-text-tertiary: #8A8C90;
+            --color-text-hint: #B9BABD;
+            
+            /* 背景色 */
+            --color-bg-body: #F5F5F8;
+            --color-bg-card: #FFFFFF;
+            --color-bg-border: #DFE1E5;
+            
+            /* 间距系统 */
+            --spacing-xs: 4px;
+            --spacing-sm: 8px;
+            --spacing-md: 16px;
+            --spacing-lg: 24px;
+            --spacing-xl: 32px;
+            
+            /* 字体大小 */
+            --font-size-xs: 12px;
+            --font-size-sm: 14px;
+            --font-size-md: 16px;
+            --font-size-lg: 18px;
+            --font-size-xl: 20px;
+            --font-size-xxl: 24px;
+            
+            /* 边框半径 */
+            --border-radius-sm: 4px;
+            --border-radius-md: 8px;
+            --border-radius-lg: 12px;
+            
+            /* 阴影 */
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        /* 基础布局类 */
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--spacing-md);
+        }
+
+        .flex {
+            display: flex;
+        }
+
+        .flex-col {
+            flex-direction: column;
+        }
+
+        .justify-between {
+            justify-content: space-between;
+        }
+
+        .items-center {
+            align-items: center;
+        }
+
+        .space-x-4 {
+            gap: var(--spacing-md);
+        }
+
+        .space-x-8 {
+            gap: var(--spacing-xl);
+        }
+
+        .grid {
+            display: grid;
+        }
+
+        .grid-cols-1 {
+            grid-template-columns: repeat(1, minmax(0, 1fr));
+        }
+
+        .md\:grid-cols-4 {
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+        }
+
+        .md\:grid-cols-5 {
+            grid-template-columns: repeat(5, minmax(0, 1fr));
+        }
+
+        .gap-4 {
+            gap: var(--spacing-md);
+        }
+
+        .gap-6 {
+            gap: var(--spacing-lg);
+        }
+
+        /* 间距类 */
+        .px-4 {
+            padding-left: var(--spacing-md);
+            padding-right: var(--spacing-md);
+        }
+
+        .py-3 {
+            padding-top: var(--spacing-sm);
+            padding-bottom: var(--spacing-sm);
+        }
+
+        .py-8 {
+            padding-top: var(--spacing-xl);
+            padding-bottom: var(--spacing-xl);
+        }
+
+        .mb-4 {
+            margin-bottom: var(--spacing-md);
+        }
+
+        .mb-6 {
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .mb-8 {
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .mb-12 {
+            margin-bottom: calc(var(--spacing-xl) * 1.5);
+        }
+
+        .mt-4 {
+            margin-top: var(--spacing-md);
+        }
+
+        .mt-8 {
+            margin-top: var(--spacing-xl);
+        }
+
+        /* 文本类 */
+        .text-sm {
+            font-size: var(--font-size-xs);
+        }
+
+        .text-lg {
+            font-size: var(--font-size-lg);
+        }
+
+        .font-semibold {
+            font-weight: 600;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .text-gray-500 {
+            color: var(--color-text-tertiary);
+        }
+
+        /* 背景和边框 */
+        .body-bg {
+            background-color: var(--color-bg-body);
+        }
+
+        .header-bg {
+            background-color: var(--color-bg-card);
+        }
+
+        .header-shadow {
+            box-shadow: var(--shadow-sm);
+        }
+
+        .border {
+            border: 1px solid var(--color-bg-border);
+        }
+
+        .rounded {
+            border-radius: var(--border-radius-sm);
+        }
+
+        .rounded-md {
+            border-radius: var(--border-radius-md);
+        }
+
+        /* 卡片 */
+        .card {
+            background-color: var(--color-bg-card);
+            border-radius: var(--border-radius-md);
+            box-shadow: var(--shadow-sm);
+            padding: var(--spacing-lg);
+        }
+
+        /* 标题 */
+        .header-title {
+            font-size: var(--font-size-xl);
+            font-weight: 700;
+            color: var(--color-text-title);
+        }
+
+        .page-title {
+            font-size: var(--font-size-xxl);
+            font-weight: 700;
+            color: var(--color-text-title);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .section-title {
+            font-size: var(--font-size-lg);
+            font-weight: 700;
+            color: var(--color-text-primary);
+            margin-bottom: var(--spacing-md);
+            padding-bottom: var(--spacing-sm);
+            border-bottom: 1px solid var(--color-bg-border);
+        }
+
+        /* 导航链接 */
+        .nav-link {
+            color: var(--color-text-secondary);
+            text-decoration: none;
+            padding: var(--spacing-sm) var(--spacing-md);
+            border-radius: var(--border-radius-sm);
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--color-primary);
+        }
+
+        .nav-link-active {
+            color: var(--color-primary);
+            font-weight: 600;
+        }
+
+        /* 按钮 */
+        .btn {
+            padding: var(--spacing-sm) var(--spacing-md);
+            border-radius: var(--border-radius-sm);
+            font-size: var(--font-size-sm);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+        }
+
+        .btn-primary {
+            background-color: var(--color-primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #E02929;
+        }
+
+        .btn-secondary {
+            background-color: var(--color-bg-body);
+            color: var(--color-text-primary);
+            border: 1px solid var(--color-bg-border);
+        }
+
+        .btn-secondary:hover {
+            background-color: #E8E8EB;
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            color: var(--color-text-primary);
+            border: 1px solid var(--color-bg-border);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--color-bg-body);
+        }
+
+        .btn-danger {
+            background-color: var(--color-primary);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: #E02929;
+        }
+
+        .btn-sm {
+            padding: var(--spacing-xs) var(--spacing-sm);
+            font-size: var(--font-size-xs);
+        }
+
+        .btn-secondary.tooltip-btn {
+            position: relative;
+        }
+
+        #ruleTooltip {
+            position: absolute;
+            bottom: calc(100% + 12px);
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #333333 !important;
+            color: #ffffff !important;
+            padding: 12px 16px !important;
+            border-radius: 6px !important;
+            font-size: 13px !important;
+            max-width: 400px !important;
+            z-index: 9999 !important;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4) !important;
+            display: none !important;
+            line-height: 1.6 !important;
+            white-space: normal !important;
+        }
+
+        #ruleTooltip::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 8px solid transparent;
+            border-top-color: #333333;
+        }
+
+        #ruleTooltip.show {
+            display: block !important;
+        }
+
+        /* 链接 */
+        .text-link {
+            color: var(--color-info);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .text-link:hover {
+            color: var(--color-primary);
+            text-decoration: underline;
+        }
+
+        .text-link-danger {
+            color: var(--color-primary);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .text-link-danger:hover {
+            color: #E02929;
+            text-decoration: underline;
+        }
+
+        /* 开关 */
+        .switch {
+            width: 40px;
+            height: 20px;
+            border-radius: 10px;
+            background-color: var(--color-bg-border);
+            position: relative;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            border: 1px solid var(--color-bg-border);
+        }
+
+        .switch-on {
+            background-color: var(--color-success);
+            border-color: var(--color-success);
+        }
+
+        .switch-off {
+            background-color: var(--color-bg-border);
+        }
+
+        .switch-handle {
+            position: absolute;
+            top: 1px;
+            left: 1px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background-color: white;
+            transition: transform 0.3s ease;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+        }
+
+        .switch-on .switch-handle {
+            transform: translateX(20px);
+        }
+
+        .switch-off .switch-handle {
+            transform: translateX(0);
+        }
+
+        /* 标签 */
+        .tag {
+            padding: 2px 8px;
+            border-radius: var(--border-radius-sm);
+            font-size: var(--font-size-xs);
+            font-weight: 500;
+            display: inline-block;
+        }
+
+        .tag-success {
+            background-color: rgba(29, 218, 29, 0.1);
+            color: var(--color-success);
+        }
+
+        .tag-info {
+            background-color: rgba(77, 121, 255, 0.1);
+            color: var(--color-info);
+        }
+
+        .tag-warning {
+            background-color: rgba(255, 152, 47, 0.1);
+            color: var(--color-warning);
+        }
+
+        /* 分页 */
+        .pagination-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: var(--spacing-lg);
+            padding: 0 var(--spacing-md);
+        }
+
+        .pagination-item {
+            padding: var(--spacing-xs) var(--spacing-md);
+            border: 1px solid var(--color-bg-border);
+            border-radius: var(--border-radius-sm);
+            background-color: var(--color-bg-card);
+            color: var(--color-text-primary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .pagination-item:hover:not(.pagination-item-disabled) {
+            border-color: var(--color-primary);
+            color: var(--color-primary);
+        }
+
+        .pagination-item-active {
+            background-color: var(--color-primary);
+            color: white;
+            border-color: var(--color-primary);
+        }
+
+        .pagination-item-disabled {
+            color: var(--color-text-hint);
+            cursor: not-allowed;
+            border-color: var(--color-bg-border);
+        }
+
+        .pagination-item-disabled:hover {
+            border-color: var(--color-bg-border);
+            color: var(--color-text-hint);
+        }
+
+        /* 布局辅助类 */
+        .min-h-screen {
+            min-height: 100vh;
+        }
+
+        .flex-1 {
+            flex: 1;
+        }
+
+        .flex-wrap {
+            flex-wrap: wrap;
+        }
+
+        .min-w-[200px] {
+            min-width: 200px;
+        }
+
+        .items-end {
+            align-items: flex-end;
+        }
+
+        .mr-2 {
+            margin-right: var(--spacing-sm);
+        }
+
+        .mr-3 {
+            margin-right: var(--spacing-md);
+        }
+
+        .ml-2 {
+            margin-left: var(--spacing-sm);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .group:hover .group-hover-block {
+            display: block;
+        }
+
+        .z-10 {
+            z-index: 10;
+        }
+
+        /* 文本颜色辅助类 */
+        .text-gray-400 {
+            color: var(--color-text-tertiary);
+        }
+
+        .text-gray-600 {
+            color: var(--color-text-secondary);
+        }
+
+        .font-medium {
+            font-weight: 500;
+        }
+
+        /* 表单 */
+        .form-container {
+            background-color: var(--color-bg-card);
+            border-radius: var(--border-radius-md);
+            padding: var(--spacing-lg);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .form-container.horizontal {
+            padding: var(--spacing-md);
+        }
+
+        .form-row {
+            display: flex;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .form-group {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-xs);
+        }
+
+        .form-group.horizontal {
+            flex-direction: row;
+            align-items: center;
+        }
+
+        .form-label {
+            font-size: var(--font-size-sm);
+            color: var(--color-text-primary);
+            font-weight: 500;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: var(--spacing-sm) var(--spacing-md);
+            border: 1px solid var(--color-bg-border);
+            border-radius: var(--border-radius-sm);
+            font-size: var(--font-size-sm);
+            color: var(--color-text-primary);
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 2px rgba(245, 46, 46, 0.1);
+        }
+
+        .form-input.active {
+            border-color: var(--color-primary);
+        }
+
+        .form-input:disabled {
+            background-color: var(--color-bg-body);
+            color: var(--color-text-hint);
+            cursor: not-allowed;
+        }
+
+        .date-range {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+
+        .date-input {
+            flex: 1;
+        }
+
+        .date-separator {
+            color: var(--color-text-secondary);
+            white-space: nowrap;
+        }
+
+        .form-unit {
+            position: absolute;
+            right: var(--spacing-md);
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--color-text-tertiary);
+            font-size: var(--font-size-xs);
+        }
+
+        .form-icon {
+            position: absolute;
+            right: var(--spacing-md);
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--color-text-tertiary);
+            font-size: var(--font-size-sm);
+        }
+
+        .form-add-btn {
+            position: absolute;
+            right: var(--spacing-md);
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: var(--color-info);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius-sm);
+            padding: 2px 6px;
+            font-size: var(--font-size-xs);
+            cursor: pointer;
+        }
+
+        .form-error {
+            font-size: var(--font-size-xs);
+            color: var(--color-primary);
+            margin-top: var(--spacing-xs);
+        }
+
+        /* 表格 */
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: var(--font-size-sm);
+        }
+
+        .table-header {
+            background-color: var(--color-bg-body);
+        }
+
+        .table-row {
+            border-bottom: 1px solid var(--color-bg-border);
+            transition: background-color 0.3s ease;
+        }
+
+        .table-row:hover {
+            background-color: rgba(245, 46, 46, 0.02);
+        }
+
+        .table-cell {
+            padding: var(--spacing-sm) var(--spacing-md);
+            text-align: left;
+            color: var(--color-text-primary);
+        }
+
+        .table-header .table-cell {
+            font-weight: 600;
+            color: var(--color-text-secondary);
+        }
+
+        .table.fixed {
+            table-layout: fixed;
+        }
+
+        .table-cell.fixed-left {
+            position: sticky;
+            left: 0;
+            background-color: var(--color-bg-card);
+            z-index: 10;
+            border-right: 1px solid var(--color-bg-border);
+        }
+
+        .table-cell.fixed-right {
+            position: sticky;
+            right: 0;
+            background-color: var(--color-bg-card);
+            z-index: 10;
+            border-left: 1px solid var(--color-bg-border);
+        }
+
+        .table-action {
+            color: var(--color-info);
+            text-decoration: none;
+            font-size: var(--font-size-sm);
+            transition: color 0.3s ease;
+        }
+
+        .table-action:hover {
+            color: var(--color-primary);
+            text-decoration: underline;
+        }
+
+        /* 页脚 */
+        .footer {
+            background-color: var(--color-bg-card);
+            border-top: 1px solid var(--color-bg-border);
+            padding: var(--spacing-lg) 0;
+            margin-top: var(--spacing-xl);
+        }
+
+        .footer p {
+            color: var(--color-text-secondary);
+            font-size: var(--font-size-sm);
+        }
+
+        /* 侧边菜单 */
+        .side-menu-container {
+            width: 240px;
+            flex-shrink: 0;
+        }
+        
+        .side-menu {
+            background-color: var(--color-bg-card);
+            border-radius: var(--border-radius-md);
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+        }
+        
+        .side-menu-header {
+            padding: var(--spacing-md);
+            border-bottom: 1px solid var(--color-bg-border);
+        }
+        
+        .side-menu-title {
+            font-size: var(--font-size-sm);
+            font-weight: 600;
+            color: var(--color-text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .side-menu-list {
+            list-style: none;
+        }
+        
+        .side-menu-item {
+            position: relative;
+        }
+        
+        .side-menu-link {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: var(--spacing-sm) var(--spacing-md);
+            color: var(--color-text-primary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .side-menu-link:hover {
+            background-color: rgba(245, 46, 46, 0.05);
+            color: var(--color-primary);
+        }
+        
+        .side-menu-item.active {
+            background-color: rgba(245, 46, 46, 0.05);
+        }
+        
+        .side-menu-item.active::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background-color: var(--color-primary);
+        }
+        
+        .side-menu-item.active .side-menu-link {
+            color: var(--color-primary);
+            font-weight: 500;
+        }
+        
+        .side-menu-arrow {
+            font-size: var(--font-size-xs);
+            transition: transform 0.3s ease;
+        }
+        
+        .side-menu-item:hover .side-menu-arrow {
+            transform: translateX(2px);
+        }
+        
+        /* 子菜单样式 */
+        .side-menu-submenu {
+            list-style: none;
+            padding-left: var(--spacing-md);
+            background-color: rgba(245, 46, 46, 0.02);
+        }
+        
+        .side-menu-subitem {
+            position: relative;
+        }
+        
+        .side-menu-sublink {
+            display: block;
+            padding: var(--spacing-xs) var(--spacing-md);
+            color: var(--color-text-primary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: var(--font-size-sm);
+        }
+        
+        .side-menu-sublink:hover {
+            background-color: rgba(245, 46, 46, 0.05);
+            color: var(--color-primary);
+        }
+        
+        .side-menu-subitem.active {
+            background-color: rgba(245, 46, 46, 0.05);
+        }
+        
+        .side-menu-subitem.active::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background-color: var(--color-primary);
+        }
+        
+        .side-menu-subitem.active .side-menu-sublink {
+            color: var(--color-primary);
+            font-weight: 500;
+        }
+        
+        /* 主布局 */
+        .main-layout {
+            display: flex;
+            gap: var(--spacing-md);
+        }
+        
+        .main-content {
+            flex: 1;
+        }
+
+        /* 序号标记样式 */
+        .feature-container {
+            position: relative;
+        }
+
+        .feature-marker {
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            background-color: #F52E2E;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 1000;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            left: -30px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .feature-tooltip {
+            position: absolute;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 12px;
+            border-radius: 4px;
+            z-index: 1001;
+            max-width: 300px;
+            font-size: 14px;
+            display: none;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        .feature-tooltip::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 8px solid transparent;
+            border-top-color: rgba(0, 0, 0, 0.8);
+        }
+
+        /* 为表格单元格添加特殊样式，确保标记正确显示 */
+        .table-cell.feature-container {
+            position: relative;
+            padding-left: 30px;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .grid-cols-1 {
+                grid-template-columns: 1fr;
+            }
+            
+            .md\:grid-cols-4,
+            .md\:grid-cols-5 {
+                grid-template-columns: 1fr;
+            }
+            
+            .flex {
+                flex-direction: column;
+            }
+            
+            .form-row {
+                flex-direction: column;
+            }
+            
+            .main-layout {
+                flex-direction: column;
+            }
+            
+            .side-menu-container {
+                width: 100%;
+                margin-bottom: var(--spacing-md);
+            }
+            
+            .side-menu-container.compact {
+                width: 100%;
+            }
+            
+            .tab-container.vertical {
+                flex-direction: column;
+            }
+            
+            .tabs.vertical {
+                width: 100%;
+                flex-direction: row;
+                border-right: none;
+                border-bottom: 1px solid var(--color-bg-border);
+                overflow-x: auto;
+            }
+            
+            .tabs.vertical .tab.active::after {
+                bottom: 0;
+                left: 0;
+                top: auto;
+                right: 0;
+                width: 100%;
+                height: 2px;
+            }
+        }
+    </style>
+</head>
+<body class="body-bg">
+    <div class="min-h-screen flex flex-col">
+        <!-- 顶部导航栏 -->
+        <header class="header-bg header-shadow">
+            <div class="px-4 py-3 flex justify-between items-center">
+                <h1 class="header-title">TCL数字化运营平台</h1>
+                <div class="flex items-center space-x-4">
+                    <span class="text-sm">管理员</span>
+                    <button class="btn btn-secondary btn-sm">退出</button>
+                </div>
+            </div>
+        </header>
+
+        <!-- 主要内容 -->
+        <main class="flex-1 px-4 py-6">
+            <div class="main-layout">
+                <!-- 侧边菜单 -->
+            <div id="sidebar"></div>
+            <!-- 主内容区 -->
+                <div class="main-content">
+            <!-- 页面标题 -->
+            <div class="mb-6">
+                <h2 class="page-title">并网超期策略</h2>
+            </div>
+
+            <!-- 搜索和筛选 -->
+            <div class="card mb-6">
+                <div class="flex flex-wrap gap-4">
+                    <div class="flex-1 min-w-[200px]">
+                        <label class="form-label">区域</label>
+                        <div class="relative">
+                            <button id="regionDropdownBtn" class="form-input w-full flex justify-between items-center">
+                                <span id="selectedRegions">请选择区域</span>
+                                <i class="fa fa-chevron-down text-gray-400"></i>
+                            </button>
+                            <div id="regionDropdown" class="absolute w-full mt-1 border border-gray-300 rounded-md bg-white shadow-lg z-10 hidden">
+                                <div class="p-2 max-h-64 overflow-y-auto">
+                                    <label class="flex items-center p-2 hover:bg-gray-50 cursor-pointer">
+                                        <input type="checkbox" value="all" class="mr-2">
+                                        全国
+                                    </label>
+                                    <label class="flex items-center p-2 hover:bg-gray-50 cursor-pointer">
+                                        <input type="checkbox" value="guangdong" class="mr-2">
+                                        广东省
+                                    </label>
+                                    <label class="flex items-center p-2 hover:bg-gray-50 cursor-pointer">
+                                        <input type="checkbox" value="jiangsu" class="mr-2">
+                                        江苏省
+                                    </label>
+                                    <label class="flex items-center p-2 hover:bg-gray-50 cursor-pointer">
+                                        <input type="checkbox" value="shandong" class="mr-2">
+                                        山东省
+                                    </label>
+                                    <label class="flex items-center p-2 hover:bg-gray-50 cursor-pointer">
+                                        <input type="checkbox" value="zhejiang" class="mr-2">
+                                        浙江省
+                                    </label>
+                                    <label class="flex items-center p-2 hover:bg-gray-50 cursor-pointer">
+                                        <input type="checkbox" value="hubei" class="mr-2">
+                                        湖北省
+                                    </label>
+                                    <label class="flex items-center p-2 hover:bg-gray-50 cursor-pointer">
+                                        <input type="checkbox" value="sichuan" class="mr-2">
+                                        四川省
+                                    </label>
+                                    <label class="flex items-center p-2 hover:bg-gray-50 cursor-pointer">
+                                        <input type="checkbox" value="henan" class="mr-2">
+                                        河南省
+                                    </label>
+                                    <label class="flex items-center p-2 hover:bg-gray-50 cursor-pointer">
+                                        <input type="checkbox" value="fujian" class="mr-2">
+                                        福建省
+                                    </label>
+                                    <label class="flex items-center p-2 hover:bg-gray-50 cursor-pointer">
+                                        <input type="checkbox" value="hunan" class="mr-2">
+                                        湖南省
+                                    </label>
+                                    <label class="flex items-center p-2 hover:bg-gray-50 cursor-pointer">
+                                        <input type="checkbox" value="shanghai" class="mr-2">
+                                        上海市
+                                    </label>
+                                    <label class="flex items-center p-2 hover:bg-gray-50 cursor-pointer">
+                                        <input type="checkbox" value="beijing" class="mr-2">
+                                        北京市
+                                    </label>
+                                    <label class="flex items-center p-2 hover:bg-gray-50 cursor-pointer">
+                                        <input type="checkbox" value="tianjin" class="mr-2">
+                                        天津市
+                                    </label>
+                                    <label class="flex items-center p-2 hover:bg-gray-50 cursor-pointer">
+                                        <input type="checkbox" value="chongqing" class="mr-2">
+                                        重庆市
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex-1 min-w-[200px]">
+                        <label class="form-label">状态</label>
+                        <select class="form-input w-full">
+                            <option value="">全部</option>
+                            <option value="active">启用</option>
+                            <option value="inactive">禁用</option>
+                        </select>
+                    </div>
+                    <div class="flex items-end">
+                        <button class="btn btn-primary mr-2">查询</button>
+                        <button class="btn btn-outline">重置</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 规则列表 -->
+            <div class="card overflow-hidden">
+                <div style="display: flex; justify-content: flex-end; align-items: center; gap: 16px; padding: 12px 16px; padding-left: 0;" id="buttonBar">
+                    <div class="relative" id="ruleTooltipContainer">
+                        <button class="btn btn-secondary" id="ruleBtn">
+                            <span>规则说明</span>
+                        </button>
+                        <div class="tooltip-popup" id="ruleTooltip">
+                            <p>区域启用后，新增订单流转到待施工领单的均按区域策略执行，历史存量订单若无适用的超期策略则会统一检查是否满足区域的规则，历史存量订单若已经有适用的超期策略，将沿用，不随新的策略调整。</p>
+                        </div>
+                    </div>
+                    <a href="新增策略.html" class="btn btn-primary" id="addBtn">
+                        <i class="fa fa-plus"></i>
+                        <span>新增策略</span>
+                    </a>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="table">
+                        <thead class="table-header">
+                            <tr>
+                                <th class="table-cell">适用范围</th>
+                                <th class="table-cell">梯度1</th>
+                                <th class="table-cell">梯度2</th>
+                                <th class="table-cell">梯度3</th>
+                                <th class="table-cell">梯度4</th>
+                                <th class="table-cell">梯度5</th>
+                                <th class="table-cell">状态</th>
+                                <th class="table-cell">操作时间</th>
+                                <th class="table-cell">
+                                    <div class="group relative">
+                                        未来生效
+                                        <div class="absolute bottom-full mb-2 hidden group-hover:block bg-gray-800 text-white text-xs rounded p-2 w-64 z-10">
+                                            当状态处于启用且当前时间符合启用生效时间，区域策略才正式生效
+                                        </div>
+                                    </div>
+                                </th>
+                                <th class="table-cell">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody class="table-body">
+                            <!-- 全国规则 -->
+                            <tr class="table-row">
+                                <td class="table-cell">全国</td>
+                                <td class="table-cell">0.10(120天)</td>
+                                <td class="table-cell">0.09(150天)</td>
+                                <td class="table-cell">0.08(180天)</td>
+                                <td class="table-cell">0.07(210天)</td>
+                                <td class="table-cell">回购(240天)</td>
+                                <td class="table-cell">
+                                    <div class="flex items-center">
+                                        <button class="switch switch-on" data-status="on">
+                                            <span class="switch-handle"></span>
+                                        </button>
+                                        <span class="ml-2 text-sm text-green-500">启用</span>
+                                    </div>
+                                </td>
+                                <td class="table-cell text-gray-500">2026-03-15 10:30:00</td>
+                                <td class="table-cell text-gray-500">-</td>
+                                <td class="table-cell">
+                                    <a href="编辑策略.html" class="text-link mr-3">编辑</a>
+                                    <a href="log_modal.html" class="text-link mr-3">日志</a>
+                                </td>
+                            </tr>
+
+                            <!-- 省份规则 -->
+                            <tr class="table-row">
+                                <td class="table-cell">广东省</td>
+                                <td class="table-cell">0.10(120天)</td>
+                                <td class="table-cell">0.09(150天)</td>
+                                <td class="table-cell">0.08(180天)</td>
+                                <td class="table-cell">0.07(210天)</td>
+                                <td class="table-cell">回购(240天)</td>
+                                <td class="table-cell">
+                                    <div class="flex items-center">
+                                        <button class="switch switch-on" data-status="on">
+                                            <span class="switch-handle"></span>
+                                        </button>
+                                        <span class="ml-2 text-sm text-green-500">启用</span>
+                                    </div>
+                                </td>
+                                <td class="table-cell text-gray-500">2026-03-14 09:20:00</td>
+                                <td class="table-cell text-gray-500">-</td>
+                                <td class="table-cell">
+                                    <a href="编辑策略.html" class="text-link mr-3">编辑</a>
+                                    <a href="log_modal.html" class="text-link mr-3">日志</a>
+                                    <a href="delete_modal.html" class="text-link-danger">删除</a>
+                                </td>
+                            </tr>
+
+                            <tr class="table-row">
+                                <td class="table-cell">江苏省</td>
+                                <td class="table-cell">0.10(120天)</td>
+                                <td class="table-cell">0.09(150天)</td>
+                                <td class="table-cell">0.08(180天)</td>
+                                <td class="table-cell">回购(210天)</td>
+                                <td class="table-cell">/</td>
+                                <td class="table-cell">
+                                    <div class="flex items-center">
+                                        <button class="switch switch-off" data-status="off">
+                                            <span class="switch-handle"></span>
+                                        </button>
+                                        <span class="ml-2 text-sm text-red-500">禁用</span>
+                                    </div>
+                                </td>
+                                <td class="table-cell text-gray-500">2026-03-13 15:45:00</td>
+                                <td class="table-cell text-gray-500">2026-04-01 00:00:00 禁用</td>
+                                <td class="table-cell">
+                                    <a href="编辑策略.html" class="text-link mr-3">编辑</a>
+                                    <a href="编辑策略.html" class="text-link mr-3">编辑未来生效</a>
+                                    <a href="log_modal.html" class="text-link mr-3">日志</a>
+                                    <a href="delete_modal.html" class="text-link-danger">删除</a>
+                                </td>
+                            </tr>
+
+                            <tr class="table-row">
+                                <td class="table-cell">山东省</td>
+                                <td class="table-cell">0.10(120天)</td>
+                                <td class="table-cell">0.09(150天)</td>
+                                <td class="table-cell">0.08(180天)</td>
+                                <td class="table-cell">0.07(210天)</td>
+                                <td class="table-cell">回购(240天)</td>
+                                <td class="table-cell">
+                                    <div class="flex items-center">
+                                        <button class="switch switch-on" data-status="on">
+                                            <span class="switch-handle"></span>
+                                        </button>
+                                        <span class="ml-2 text-sm text-green-500">启用</span>
+                                    </div>
+                                </td>
+                                <td class="table-cell text-gray-500">2026-03-12 11:30:00</td>
+                                <td class="table-cell text-gray-500">-</td>
+                                <td class="table-cell">
+                                    <a href="编辑策略.html" class="text-link mr-3">编辑</a>
+                                    <a href="log_modal.html" class="text-link mr-3">日志</a>
+                                    <a href="delete_modal.html" class="text-link-danger">删除</a>
+                                </td>
+                            </tr>
+
+                            <tr class="table-row">
+                                <td class="table-cell">浙江省</td>
+                                <td class="table-cell">0.10(120天)</td>
+                                <td class="table-cell">0.09(150天)</td>
+                                <td class="table-cell">0.08(180天)</td>
+                                <td class="table-cell">0.07(210天)</td>
+                                <td class="table-cell">回购(240天)</td>
+                                <td class="table-cell">
+                                    <div class="flex items-center">
+                                        <button class="switch switch-on" data-status="on">
+                                            <span class="switch-handle"></span>
+                                        </button>
+                                        <span class="ml-2 text-sm text-green-500">启用</span>
+                                    </div>
+                                </td>
+                                <td class="table-cell text-gray-500">2026-03-11 14:20:00</td>
+                                <td class="table-cell text-gray-500">-</td>
+                                <td class="table-cell">
+                                    <a href="编辑策略.html" class="text-link mr-3">编辑</a>
+                                    <a href="log_modal.html" class="text-link mr-3">日志</a>
+                                    <a href="delete_modal.html" class="text-link-danger">删除</a>
+                                </td>
+                            </tr>
+
+                            <tr class="table-row">
+                                <td class="table-cell">湖北省</td>
+                                <td class="table-cell">0.10(120天)</td>
+                                <td class="table-cell">0.09(150天)</td>
+                                <td class="table-cell">0.08(180天)</td>
+                                <td class="table-cell">0.07(210天)</td>
+                                <td class="table-cell">回购(240天)</td>
+                                <td class="table-cell">
+                                    <div class="flex items-center">
+                                        <button class="switch switch-on" data-status="on">
+                                            <span class="switch-handle"></span>
+                                        </button>
+                                        <span class="ml-2 text-sm text-green-500">启用</span>
+                                    </div>
+                                </td>
+                                <td class="table-cell text-gray-500">2026-03-10 09:15:00</td>
+                                <td class="table-cell text-gray-500">-</td>
+                                <td class="table-cell">
+                                    <a href="编辑策略.html" class="text-link mr-3">编辑</a>
+                                    <a href="log_modal.html" class="text-link mr-3">日志</a>
+                                    <a href="delete_modal.html" class="text-link-danger">删除</a>
+                                </td>
+                            </tr>
+
+                            <tr class="table-row">
+                                <td class="table-cell">四川省</td>
+                                <td class="table-cell">0.10(120天)</td>
+                                <td class="table-cell">0.09(150天)</td>
+                                <td class="table-cell">0.08(180天)</td>
+                                <td class="table-cell">0.07(210天)</td>
+                                <td class="table-cell">回购(240天)</td>
+                                <td class="table-cell">
+                                    <div class="flex items-center">
+                                        <button class="switch switch-off" data-status="off">
+                                            <span class="switch-handle"></span>
+                                        </button>
+                                        <span class="ml-2 text-sm text-red-500">禁用</span>
+                                    </div>
+                                </td>
+                                <td class="table-cell text-gray-500">2026-03-09 16:30:00</td>
+                                <td class="table-cell text-gray-500">2026-05-01 00:00:00 禁用</td>
+                                <td class="table-cell">
+                                    <a href="编辑策略.html" class="text-link mr-3">编辑</a>
+                                    <a href="编辑策略.html" class="text-link mr-3">编辑未来生效</a>
+                                    <a href="log_modal.html" class="text-link mr-3">日志</a>
+                                    <a href="delete_modal.html" class="text-link-danger">删除</a>
+                                </td>
+                            </tr>
+
+                            <tr class="table-row">
+                                <td class="table-cell">河南省</td>
+                                <td class="table-cell">0.10(120天)</td>
+                                <td class="table-cell">0.09(150天)</td>
+                                <td class="table-cell">0.08(180天)</td>
+                                <td class="table-cell">0.07(210天)</td>
+                                <td class="table-cell">回购(240天)</td>
+                                <td class="table-cell">
+                                    <div class="flex items-center">
+                                        <button class="switch switch-on" data-status="on">
+                                            <span class="switch-handle"></span>
+                                        </button>
+                                        <span class="ml-2 text-sm text-green-500">启用</span>
+                                    </div>
+                                </td>
+                                <td class="table-cell text-gray-500">2026-03-08 10:00:00</td>
+                                <td class="table-cell text-gray-500">-</td>
+                                <td class="table-cell">
+                                    <a href="编辑策略.html" class="text-link mr-3">编辑</a>
+                                    <a href="log_modal.html" class="text-link mr-3">日志</a>
+                                    <a href="delete_modal.html" class="text-link-danger">删除</a>
+                                </td>
+                            </tr>
+
+                            <tr class="table-row">
+                                <td class="table-cell">福建省</td>
+                                <td class="table-cell">0.10(120天)</td>
+                                <td class="table-cell">0.09(150天)</td>
+                                <td class="table-cell">0.08(180天)</td>
+                                <td class="table-cell">0.07(210天)</td>
+                                <td class="table-cell">回购(240天)</td>
+                                <td class="table-cell">
+                                    <div class="flex items-center">
+                                        <button class="switch switch-on" data-status="on">
+                                            <span class="switch-handle"></span>
+                                        </button>
+                                        <span class="ml-2 text-sm text-green-500">启用</span>
+                                    </div>
+                                </td>
+                                <td class="table-cell text-gray-500">2026-03-07 14:45:00</td>
+                                <td class="table-cell text-gray-500">-</td>
+                                <td class="table-cell">
+                                    <a href="编辑策略.html" class="text-link mr-3">编辑</a>
+                                    <a href="log_modal.html" class="text-link mr-3">日志</a>
+                                    <a href="delete_modal.html" class="text-link-danger">删除</a>
+                                </td>
+                            </tr>
+
+                            <tr class="table-row">
+                                <td class="table-cell">湖南省</td>
+                                <td class="table-cell">0.10(120天)</td>
+                                <td class="table-cell">0.09(150天)</td>
+                                <td class="table-cell">0.08(180天)</td>
+                                <td class="table-cell">0.07(210天)</td>
+                                <td class="table-cell">回购(240天)</td>
+                                <td class="table-cell">
+                                    <div class="flex items-center">
+                                        <button class="switch switch-on" data-status="on">
+                                            <span class="switch-handle"></span>
+                                        </button>
+                                        <span class="ml-2 text-sm text-green-500">启用</span>
+                                    </div>
+                                </td>
+                                <td class="table-cell text-gray-500">2026-03-06 11:30:00</td>
+                                <td class="table-cell text-gray-500">-</td>
+                                <td class="table-cell">
+                                    <a href="编辑策略.html" class="text-link mr-3">编辑</a>
+                                    <a href="log_modal.html" class="text-link mr-3">日志</a>
+                                    <a href="delete_modal.html" class="text-link-danger">删除</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 分页 -->
+            <div class="pagination-container">
+                <div class="text-sm text-gray-500">
+                    共 <span class="font-medium">10</span> 条记录
+                </div>
+                <div class="flex space-x-1">
+                    <button class="pagination-item pagination-item-disabled">上一页</button>
+                    <button class="pagination-item pagination-item-active">1</button>
+                    <button class="pagination-item">2</button>
+                    <button class="pagination-item">下一页</button>
+                </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- 页脚 -->
+        <footer class="footer">
+            <div class="px-4 text-center text-sm">
+                © 2026 TCL光伏. 保留所有权利.
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // 开关切换功能
+        document.addEventListener('DOMContentLoaded', function() {
+            const switches = document.querySelectorAll('.switch');
+            switches.forEach(switchBtn => {
+                switchBtn.addEventListener('click', function() {
+                    const isOn = this.classList.contains('switch-on');
+                    if (isOn) {
+                        this.classList.remove('switch-on');
+                        this.classList.add('switch-off');
+                        const statusText = this.parentElement.querySelector('span:last-child');
+                        statusText.textContent = '禁用';
+                    } else {
+                        this.classList.remove('switch-off');
+                        this.classList.add('switch-on');
+                        const statusText = this.parentElement.querySelector('span:last-child');
+                        statusText.textContent = '启用';
+                    }
+                });
+            });
+
+            // 区域下拉框功能
+            const regionDropdownBtn = document.getElementById('regionDropdownBtn');
+            const regionDropdown = document.getElementById('regionDropdown');
+            const selectedRegions = document.getElementById('selectedRegions');
+            const regionCheckboxes = regionDropdown.querySelectorAll('input[type="checkbox"]');
+            
+            const regionLabels = {
+                'all': '全国',
+                'guangdong': '广东省',
+                'jiangsu': '江苏省',
+                'shandong': '山东省',
+                'zhejiang': '浙江省',
+                'hubei': '湖北省',
+                'sichuan': '四川省',
+                'henan': '河南省',
+                'fujian': '福建省',
+                'hunan': '湖南省',
+                'shanghai': '上海市',
+                'beijing': '北京市',
+                'tianjin': '天津市',
+                'chongqing': '重庆市'
+            };
+            
+            regionDropdownBtn.addEventListener('click', function() {
+                regionDropdown.classList.toggle('hidden');
+            });
+            
+            regionCheckboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    const selected = Array.from(regionCheckboxes).filter(cb => cb.checked).map(cb => regionLabels[cb.value]);
+                    if (selected.length > 0) {
+                        selectedRegions.textContent = selected.join(', ');
+                    } else {
+                        selectedRegions.textContent = '请选择区域';
+                    }
+                });
+            });
+            
+            // 点击外部关闭下拉框
+            document.addEventListener('click', function(event) {
+                if (!regionDropdownBtn.contains(event.target) && !regionDropdown.contains(event.target)) {
+                    regionDropdown.classList.add('hidden');
+                }
+            });
+
+            // 使用sign of html技能为页面元素添加序号标记
+            console.log('DOM loaded, adding markers...');
+            
+            // 定义需要添加标记的元素和对应的功能点
+            const featureElements = [
+                // 功能点1：页面名
+                { element: document.querySelector('.page-title'), feature: 1, title: '页面名', content: ['1. 在页面顶部展示页面名'] },
+                
+                // 功能点2：区域查询条件
+                { element: document.querySelector('#regionDropdownBtn'), feature: 2, title: '区域', content: ['1. 输入规则：多选', '2. 查询规则：默认查询全部'] },
+                
+                // 功能点3：状态查询条件
+                { element: document.querySelector('select.form-input'), feature: 3, title: '状态', content: ['1. 输入规则：单选，可选启用/禁用,选项包括：全部、启用、禁用', '2. 查询规则：默认查询全部'] },
+                
+                // 功能点4：新增策略按钮
+                { element: document.querySelector('#addBtn'), feature: 4, title: '新增策略', content: ['业务逻辑：用户点击新增策略按钮，系统跳转到策略配置页面'] },
+                
+                // 功能点5：规则说明
+                { element: document.querySelector('#ruleBtn'), feature: 5, title: '规则说明', content: ['点击/移入提示：区域启用后，新增订单流转到待施工领单的均按区域策略执行，历史存量订单若无适用的超期策略则会统一检查是否满足区域的规则，历史存量订单若已经有适用的超期策略，将沿用，不随新的策略调整。'] },
+                
+                // 功能点6：适用范围字段
+                { element: document.querySelector('table th:nth-child(1)'), feature: 6, title: '适用范围', content: ['业务逻辑：1. 显示策略的适用范围；', '2. 列表按照适用范围排序'] },
+                
+                // 功能点7：梯度1字段
+                { element: document.querySelector('table th:nth-child(2)'), feature: 7, title: '梯度1', content: ['业务逻辑：显示策略的梯度1配置，示例：0.10(120天)'] },
+                
+                // 功能点8：梯度2字段
+                { element: document.querySelector('table th:nth-child(3)'), feature: 8, title: '梯度2', content: ['业务逻辑：显示策略的梯度2配置，示例：0.01(130天)'] },
+                
+                // 功能点9：梯度3字段
+                { element: document.querySelector('table th:nth-child(4)'), feature: 9, title: '梯度3', content: ['业务逻辑：显示策略的梯度3配置'] },
+                
+                // 功能点10：梯度4字段
+                { element: document.querySelector('table th:nth-child(5)'), feature: 10, title: '梯度4', content: ['业务逻辑：显示策略的梯度4配置'] },
+                
+                // 功能点11：梯度5字段
+                { element: document.querySelector('table th:nth-child(6)'), feature: 11, title: '梯度5', content: ['业务逻辑：显示策略的梯度5配置，如果是回购梯度，显示：回购(160天)'] },
+                
+                // 功能点12：梯度列数
+                { element: document.querySelector('table th:nth-child(7)'), feature: 12, title: '梯度列数', content: ['梯度最多展示10列，根据拥有最长梯度的区域来控制梯度列数；', '每一区域的最后一个梯度均为回购；', '若区域的梯度少于最长策略，在后面的空梯度，填充"/"'] },
+                
+                // 功能点13：状态字段
+                { element: document.querySelector('table th:nth-child(8)'), feature: 13, title: '状态', content: ['显示区域策略的状态；用户点击状态开关，切换策略的启用/禁用状态'] },
+                
+                // 功能点14：操作时间字段
+                { element: document.querySelector('table th:nth-child(9)'), feature: 14, title: '操作时间', content: ['显示策略的操作时间，格式年月日时分秒'] },
+                
+                // 功能点15：未来生效
+                { element: document.querySelector('table th:nth-child(10)'), feature: 15, title: '未来生效', content: ['1. 显示未来生效时间+未来生效状态，格式年月日时分秒+启用/禁用', '示例：于2026-03-15 10:30:00 启用'] },
+                
+                // 功能点16：分页控件
+                { element: document.querySelector('.pagination-container'), feature: 16, title: '分页控件', content: ['业务逻辑：用户点击分页控件，系统显示不同页的策略'] },
+                
+                // 功能点17：编辑按钮
+                { element: document.querySelectorAll('a.text-link[href="编辑策略.html"]')[0], feature: 17, title: '编辑', content: ['系统跳转到编辑策略页面'] },
+                
+                // 功能点18：编辑未来生效
+                { element: document.querySelectorAll('a.text-link[href="编辑策略.html"]')[1], feature: 18, title: '编辑未来生效', content: ['系统跳转到编辑未来生效页面，仅在区域拥有未来生效版本时展示'] },
+                
+                // 功能点19：日志按钮
+                { element: document.querySelector('a.text-link[href="log_modal.html"]'), feature: 19, title: '日志', content: ['用户点击日志按钮，系统跳转到操作日志页面'] },
+                
+                // 功能点20：删除按钮
+                { element: document.querySelector('a.text-link-danger'), feature: 20, title: '删除', content: ['1. 用户点击删除按钮，系统跳转到删除确认页面', '2. 全国的策略不允许删除，隐藏删除入口'] }
+            ];
+
+            // 为每个元素添加标记
+            featureElements.forEach(item => {
+                console.log('Processing feature', item.feature, 'element:', item.element);
+                if (item.element) {
+                    // 确保元素具有feature-container类
+                    if (!item.element.classList.contains('feature-container')) {
+                        item.element.classList.add('feature-container');
+                        console.log('Added feature-container class to element');
+                    }
+                    
+                    // 创建标记元素
+                    const marker = document.createElement('div');
+                    marker.className = 'feature-marker';
+                    marker.dataset.feature = item.feature;
+                    marker.textContent = item.feature;
+                    item.element.appendChild(marker);
+                    console.log('Added marker for feature', item.feature);
+
+                    // 创建工具提示
+                    const tooltip = document.createElement('div');
+                    tooltip.className = 'feature-tooltip';
+                    tooltip.id = `tooltip-${item.feature}`;
+                    tooltip.innerHTML = `<h4>功能点 ${item.feature}: ${item.title}</h4>`;
+                    item.content.forEach(line => {
+                        tooltip.innerHTML += `<p>${line}</p>`;
+                    });
+                    document.body.appendChild(tooltip);
+                    console.log('Added tooltip for feature', item.feature);
+                } else {
+                    console.log('Element not found for feature', item.feature);
+                }
+            });
+
+            // 添加悬停事件
+            const markers = document.querySelectorAll('.feature-marker');
+            console.log('Found markers:', markers.length);
+            markers.forEach(marker => {
+                marker.addEventListener('mouseenter', function() {
+                    const feature = this.dataset.feature;
+                    const tooltip = document.getElementById(`tooltip-${feature}`);
+                    if (tooltip) {
+                        const rect = this.getBoundingClientRect();
+                        tooltip.style.left = `${rect.left}px`;
+                        tooltip.style.top = `${rect.bottom + 10}px`;
+                        tooltip.style.display = 'block';
+                    }
+                });
+
+                marker.addEventListener('mouseleave', function() {
+                    const feature = this.dataset.feature;
+                    const tooltip = document.getElementById(`tooltip-${feature}`);
+                    if (tooltip) {
+                        tooltip.style.display = 'none';
+                    }
+                });
+            });
+        });
+    </script>
+
+    <script src="../../../components.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            initSidebar('strategy_list', 'strategy');
+            
+            // 规则说明tooltip功能
+            const ruleBtn = document.getElementById('ruleBtn');
+            const ruleTooltip = document.getElementById('ruleTooltip');
+            
+            if (ruleBtn && ruleTooltip) {
+                ruleBtn.addEventListener('mouseenter', function() {
+                    ruleTooltip.classList.add('show');
+                });
+                
+                ruleBtn.addEventListener('mouseleave', function() {
+                    ruleTooltip.classList.remove('show');
+                });
+                
+                ruleBtn.addEventListener('click', function(event) {
+                    event.stopPropagation();
+                    ruleTooltip.classList.toggle('show');
+                });
+                
+                // 点击外部关闭tooltip
+                document.addEventListener('click', function(event) {
+                    if (!ruleBtn.contains(event.target) && !ruleTooltip.contains(event.target)) {
+                        ruleTooltip.classList.remove('show');
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

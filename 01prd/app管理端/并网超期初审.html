@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>并网超期初审</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.4;
+            padding-bottom: 56px;
+        }
+
+        .header-tabs {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: #fff;
+            z-index: 100;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+        }
+
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid #eee;
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+
+        .tab-item {
+            padding: 10px 12px;
+            font-size: 13px;
+            color: #666;
+            position: relative;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .tab-item.active {
+            color: #333;
+            font-weight: 600;
+        }
+
+        .tab-item.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 12px;
+            right: 12px;
+            height: 2px;
+            background: #e53935;
+        }
+
+        .status-tabs {
+            display: flex;
+            padding: 6px 10px;
+            gap: 6px;
+        }
+
+        .status-tab {
+            flex: 1;
+            padding: 5px 6px;
+            text-align: center;
+            border-radius: 14px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .status-tab.active {
+            background: #fff3f3;
+            color: #e53935;
+            font-weight: 600;
+        }
+
+        .status-tab.inactive {
+            background: #f5f5f5;
+            color: #999;
+        }
+
+        .badge {
+            background: #e53935;
+            color: #fff;
+            font-size: 10px;
+            padding: 1px 4px;
+            border-radius: 8px;
+            min-width: 16px;
+            text-align: center;
+            margin-left: 3px;
+        }
+
+        .badge-zero {
+            background: #ddd;
+            color: #999;
+        }
+
+        .main-container {
+            display: flex;
+            margin-top: 72px;
+        }
+
+        .sidebar {
+            width: 80px;
+            background: #fff;
+            padding: 8px 0;
+            flex-shrink: 0;
+            position: fixed;
+            left: 0;
+            top: 72px;
+            bottom: 56px;
+            overflow-y: auto;
+            border-right: 1px solid #eee;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .sidebar-item {
+            padding: 10px 6px;
+            font-size: 11px;
+            color: #666;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            transition: all 0.2s;
+            border-left: 2px solid transparent;
+            gap: 4px;
+        }
+
+        .sidebar-item.active {
+            background: #fff3f3;
+            color: #e53935;
+            font-weight: 600;
+            border-left-color: #e53935;
+        }
+
+        .sidebar-item .badge {
+            margin-left: 0;
+            font-size: 9px;
+            padding: 1px 3px;
+        }
+
+        .content {
+            flex: 1;
+            margin-left: 80px;
+            padding: 8px;
+            min-height: calc(100vh - 128px);
+        }
+
+        .search-bar {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 8px;
+            align-items: center;
+            background: #fff;
+            padding: 6px 8px;
+            border-radius: 6px;
+            border: 1px solid #eee;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 6px 10px;
+            border: 1px solid #ddd;
+            border-radius: 16px;
+            font-size: 12px;
+            outline: none;
+            min-width: 0;
+        }
+
+        .search-input:focus {
+            border-color: #e53935;
+        }
+
+        .btn-search {
+            padding: 6px 12px;
+            background: #e53935;
+            color: #fff;
+            border: none;
+            border-radius: 16px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .order-card {
+            background: #fff;
+            border-radius: 6px;
+            padding: 10px;
+            margin-bottom: 8px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+            border: 1px solid #eee;
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+
+        .agent-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .order-info-row {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 4px;
+            flex-wrap: wrap;
+        }
+
+        .customer-name {
+            font-size: 12px;
+            color: #333;
+        }
+
+        .order-no {
+            font-size: 11px;
+            color: #1e88e5;
+            font-weight: 600;
+        }
+
+        .copy-icon {
+            font-size: 12px;
+            color: #999;
+            cursor: pointer;
+        }
+
+        .sub-info {
+            font-size: 10px;
+            color: #999;
+            line-height: 1.4;
+            margin-bottom: 6px;
+        }
+
+        .urgent-bar {
+            display: flex;
+            align-items: center;
+            padding: 6px 8px;
+            background: #fff8e1;
+            border-radius: 4px;
+            margin: 6px 0;
+        }
+
+        .urgent-icon {
+            width: 22px;
+            height: 22px;
+            background: #ffb74d;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 10px;
+            margin-right: 6px;
+            flex-shrink: 0;
+        }
+
+        .urgent-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .urgent-label {
+            font-size: 10px;
+            color: #999;
+            margin-bottom: 1px;
+        }
+
+        .urgent-value {
+            font-size: 12px;
+            color: #f57c00;
+            font-weight: 600;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 6px;
+            margin-bottom: 8px;
+        }
+
+        .info-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .info-label {
+            font-size: 10px;
+            color: #999;
+            margin-bottom: 1px;
+        }
+
+        .info-value {
+            font-size: 11px;
+            color: #333;
+            word-break: break-all;
+        }
+
+        .action-bar {
+            display: flex;
+            gap: 6px;
+            padding: 8px;
+            background: #fafafa;
+            border-radius: 4px;
+            margin-top: 8px;
+        }
+
+        .btn-action {
+            flex: 1;
+            padding: 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-pass {
+            background: linear-gradient(135deg, #66bb6a 0%, #43a047 100%);
+            color: #fff;
+        }
+
+        .btn-pass:active {
+            opacity: 0.9;
+        }
+
+        .btn-reject {
+            background: #fff;
+            color: #e53935;
+            border: 1px solid #e53935;
+        }
+
+        .btn-reject:active {
+            background: #fff3f3;
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 56px;
+            background: #fff;
+            display: flex;
+            box-shadow: 0 -1px 3px rgba(0, 0, 0, 0.08);
+            z-index: 100;
+        }
+
+        .nav-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            text-decoration: none;
+            font-size: 9px;
+            position: relative;
+        }
+
+        .nav-item.active {
+            color: #e53935;
+        }
+
+        .nav-icon {
+            font-size: 18px;
+            margin-bottom: 1px;
+        }
+
+        .nav-badge {
+            position: absolute;
+            top: 2px;
+            right: 50%;
+            transform: translateX(14px);
+            background: #e53935;
+            color: #fff;
+            font-size: 8px;
+            padding: 1px 3px;
+            border-radius: 8px;
+            min-width: 12px;
+            text-align: center;
+        }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 200;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+        }
+
+        .modal {
+            background: #fff;
+            border-radius: 10px;
+            width: 100%;
+            max-width: 280px;
+            overflow: hidden;
+        }
+
+        .modal-header {
+            padding: 14px;
+            text-align: center;
+        }
+
+        .modal-icon {
+            width: 40px;
+            height: 40px;
+            background: #fff3e0;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 8px;
+            font-size: 20px;
+        }
+
+        .modal-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .modal-body {
+            padding: 6px 14px 14px;
+            text-align: center;
+        }
+
+        .modal-desc {
+            font-size: 12px;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        .modal-footer {
+            display: flex;
+            border-top: 1px solid #eee;
+        }
+
+        .modal-btn {
+            flex: 1;
+            padding: 12px;
+            font-size: 14px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+        }
+
+        .modal-btn-cancel {
+            color: #999;
+            border-right: 1px solid #eee;
+        }
+
+        .modal-btn-confirm {
+            color: #e53935;
+            font-weight: 600;
+        }
+
+        .toast {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.75);
+            color: #fff;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 12px;
+            z-index: 300;
+            opacity: 0;
+            transition: opacity 0.2s;
+            text-align: center;
+            max-width: 80%;
+        }
+
+        .toast.show {
+            opacity: 1;
+        }
+
+        .toast.success {
+            background: rgba(76, 175, 80, 0.9);
+        }
+
+        .toast.error {
+            background: rgba(244, 67, 54, 0.9);
+        }
+
+        .feature-marker {
+            position: absolute;
+            left: -36px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 28px;
+            height: 28px;
+            background: #F52E2E;
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+            z-index: 10;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(245, 46, 46, 0.4);
+        }
+
+        .feature-marker:hover + .feature-tooltip {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(-50%) translateX(10px);
+        }
+
+        .feature-tooltip {
+            position: absolute;
+            left: -36px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(44, 48, 56, 0.95);
+            color: #fff;
+            padding: 12px;
+            border-radius: 8px;
+            width: 280px;
+            z-index: 20;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            font-size: 12px;
+            line-height: 1.5;
+            pointer-events: none;
+        }
+
+        .feature-tooltip .tooltip-title {
+            color: #F52E2E;
+            font-weight: 600;
+            font-size: 13px;
+            margin-bottom: 8px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 6px;
+        }
+
+        .feature-tooltip .tooltip-content {
+            color: #ddd;
+        }
+
+        .feature-tooltip .tooltip-content li {
+            margin-bottom: 4px;
+            list-style: disc;
+            margin-left: 16px;
+        }
+
+        .feature-tooltip::after {
+            content: '';
+            position: absolute;
+            right: -8px;
+            top: 50%;
+            transform: translateY(-50%) rotate(45deg);
+            width: 16px;
+            height: 16px;
+            background: rgba(44, 48, 56, 0.95);
+        }
+
+        .feature-container {
+            position: relative;
+            padding-left: 40px;
+        }
+
+        .card-feature-container {
+            position: relative;
+        }
+    </style>
+</head>
+<body>
+    <div class="header-tabs">
+        <div class="tabs">
+            <div class="tab-item active">订单审批</div>
+            <div class="tab-item">业务审批</div>
+            <div class="tab-item">事件中心</div>
+            <div class="tab-item">客服工单</div>
+        </div>
+        <div class="status-tabs">
+            <div class="status-tab active">待处理<span class="badge">349</span></div>
+            <div class="status-tab inactive">已处理<span>(0)</span></div>
+        </div>
+    </div>
+
+    <div class="main-container">
+        <aside class="sidebar">
+            <ul class="sidebar-menu">
+                <li class="sidebar-item">
+                    <span>订单信息变更</span>
+                    <span class="badge badge-zero">0</span>
+                </li>
+                <li class="sidebar-item">
+                    <span>取消订单</span>
+                    <span class="badge badge-zero">0</span>
+                </li>
+                <li class="sidebar-item active">
+                    <span>并网超期审核</span>
+                    <span class="badge">349</span>
+                </li>
+                <li class="sidebar-item">
+                    <span>物流审批</span>
+                    <span class="badge badge-zero">0</span>
+                </li>
+            </ul>
+        </aside>
+
+        <main class="content">
+            <div class="feature-container">
+                <div class="feature-marker">1</div>
+                <div class="feature-tooltip">
+                    <div class="tooltip-title">输入搜索框</div>
+                    <div class="tooltip-content">
+                        <ul>
+                            <li>输入限制：最多录入99字符</li>
+                            <li>支持订单号精确查询</li>
+                            <li>支持姓名模糊查询</li>
+                            <li>支持代理商模糊查询</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="search-bar">
+                    <input type="text" class="search-input" id="searchInput" placeholder="搜索代理商/姓名/订单号" maxlength="99">
+                    <button class="btn-search" id="searchBtn">搜索</button>
+                </div>
+            </div>
+
+            <div class="feature-container">
+                <div class="feature-marker">2</div>
+                <div class="feature-tooltip">
+                    <div class="tooltip-title">排序</div>
+                    <div class="tooltip-content">按照申诉通道关闭剩余时长排序</div>
+                </div>
+                <button class="btn-search" id="sortBtn" style="width: 100%; margin-bottom: 8px; border-radius: 6px;">
+                    ↓ 按申诉通道关闭剩余时长排序
+                </button>
+            </div>
+
+            <div class="order-card">
+                <div class="card-feature-container" style="margin-bottom: 8px;">
+                    <div class="feature-marker" style="left: -36px; top: 12px;">4</div>
+                    <div class="feature-tooltip" style="top: 12px;">
+                        <div class="tooltip-title">代理商名称</div>
+                        <div class="tooltip-content">展示订单代理商名称</div>
+                    </div>
+                    <div class="card-header">
+                        <span class="agent-name">河南亦晨新能源有限公司</span>
+                    </div>
+                </div>
+                
+                <div class="order-info-row">
+                    <div class="feature-marker" style="position: relative; left: -36px; top: 0; transform: none;">6</div>
+                    <div class="feature-tooltip" style="position: relative; left: -36px; top: 0; transform: none;">
+                        <div class="tooltip-title">客户姓名</div>
+                        <div class="tooltip-content">展示订单农户姓名</div>
+                    </div>
+                    <span class="customer-name">叶玉宝</span>
+                    <span class="feature-marker" style="position: static; display: inline-block; margin-right: 2px; transform: none; left: auto; top: auto;">7</span>
+                    <span class="order-no">GF260325165958337877</span>
+                    <span class="copy-icon">📋</span>
+                </div>
+                <div class="sub-info">
+                    <span class="feature-marker" style="position: static; display: inline-block; margin-right: 4px; transform: none; left: auto; top: auto;">8</span>
+                    河南-邓志良
+                    <span class="feature-marker" style="position: static; display: inline-block; margin-left: 4px; margin-right: 4px; transform: none; left: auto; top: auto;">9</span>
+                    HNQP/南阳凯奥新能源有限公司
+                </div>
+
+                <div class="card-feature-container">
+                    <div class="feature-marker" style="left: -36px; top: 16px;">5</div>
+                    <div class="feature-tooltip" style="top: 16px;">
+                        <div class="tooltip-title">申诉通道关闭剩余时长</div>
+                        <div class="tooltip-content">展示离申诉通道关闭时间，如3天2小时</div>
+                    </div>
+                    <div class="urgent-bar">
+                        <div class="urgent-icon">⏰</div>
+                        <div class="urgent-info">
+                            <div class="urgent-label">申诉通道关闭剩余时长</div>
+                            <div class="urgent-value">3天2小时</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-grid">
+                    <div class="info-item">
+                        <span class="feature-marker" style="position: static; display: inline-block; margin-right: 4px; transform: none; left: auto; top: auto;">10</span>
+                        <span class="info-label">申诉通道</span>
+                        <span class="info-value">2026-04-27 ~ 2026-05-06</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="feature-marker" style="position: static; display: inline-block; margin-right: 4px; transform: none; left: auto; top: auto;">11</span>
+                        <span class="info-label">并网开始时间</span>
+                        <span class="info-value">2026-04-01</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="feature-marker" style="position: static; display: inline-block; margin-right: 4px; transform: none; left: auto; top: auto;">12</span>
+                        <span class="info-label">并网天数</span>
+                        <span class="info-value">28天</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">状态</span>
+                        <span class="info-value">待初审</span>
+                    </div>
+                </div>
+
+                <div class="card-feature-container">
+                    <div class="feature-marker" style="left: -36px; top: 14px;">13</div>
+                    <div class="feature-tooltip" style="top: 14px;">
+                        <div class="tooltip-title">通过/驳回</div>
+                        <div class="tooltip-content">
+                            <ul>
+                                <li>交互：通过占较大区域，占据卡片底部</li>
+                                <li>通过后提示：延期申诉已通过初审，请关注后续审核进度~</li>
+                                <li>驳回后二次弹窗确认</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="action-bar">
+                        <button class="btn-action btn-pass" onclick="handlePass('GF260325165958337877')">通过</button>
+                        <button class="btn-action btn-reject" onclick="showRejectModal('GF260325165958337877')">驳回</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="order-card">
+                <div class="card-header">
+                    <span class="agent-name">南阳凯奥新能源有限公司</span>
+                </div>
+                
+                <div class="order-info-row">
+                    <span class="customer-name">许加</span>
+                    <span class="order-no">GF260330153207253156</span>
+                    <span class="copy-icon">📋</span>
+                </div>
+                <div class="sub-info">河南-张三-HNQP/郑州光伏科技有限公司</div>
+
+                <div class="urgent-bar">
+                    <div class="urgent-icon">⏰</div>
+                    <div class="urgent-info">
+                        <div class="urgent-label">申诉通道关闭剩余时长</div>
+                        <div class="urgent-value">4天14小时</div>
+                    </div>
+                </div>
+
+                <div class="info-grid">
+                    <div class="info-item">
+                        <span class="info-label">申诉通道</span>
+                        <span class="info-value">2026-04-28 ~ 2026-05-07</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">并网开始时间</span>
+                        <span class="info-value">2026-04-05</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">并网天数</span>
+                        <span class="info-value">24天</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">状态</span>
+                        <span class="info-value">待初审</span>
+                    </div>
+                </div>
+
+                <div class="action-bar">
+                    <button class="btn-action btn-pass" onclick="handlePass('GF260330153207253156')">通过</button>
+                    <button class="btn-action btn-reject" onclick="showRejectModal('GF260330153207253156')">驳回</button>
+                </div>
+            </div>
+
+            <div class="order-card">
+                <div class="card-header">
+                    <span class="agent-name">郑州光伏科技有限公司</span>
+                </div>
+                
+                <div class="order-info-row">
+                    <span class="customer-name">张三</span>
+                    <span class="order-no">GF260315224567890123</span>
+                    <span class="copy-icon">📋</span>
+                </div>
+                <div class="sub-info">河南-李四-HNQP/洛阳新能源科技有限公司</div>
+
+                <div class="urgent-bar">
+                    <div class="urgent-icon">⏰</div>
+                    <div class="urgent-info">
+                        <div class="urgent-label">申诉通道关闭剩余时长</div>
+                        <div class="urgent-value">2天6小时</div>
+                    </div>
+                </div>
+
+                <div class="info-grid">
+                    <div class="info-item">
+                        <span class="info-label">申诉通道</span>
+                        <span class="info-value">2026-04-26 ~ 2026-05-05</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">并网开始时间</span>
+                        <span class="info-value">2026-03-28</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">并网天数</span>
+                        <span class="info-value">32天</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">状态</span>
+                        <span class="info-value">待初审</span>
+                    </div>
+                </div>
+
+                <div class="action-bar">
+                    <button class="btn-action btn-pass" onclick="handlePass('GF260315224567890123')">通过</button>
+                    <button class="btn-action btn-reject" onclick="showRejectModal('GF260315224567890123')">驳回</button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <nav class="bottom-nav">
+        <a href="#" class="nav-item active">
+            <span class="nav-icon">✅</span>
+            <span>待办</span>
+            <span class="nav-badge">2</span>
+        </a>
+        <a href="#" class="nav-item">
+            <span class="nav-icon">📊</span>
+            <span>数据</span>
+        </a>
+        <a href="#" class="nav-item">
+            <span class="nav-icon">⚙️</span>
+            <span>管理</span>
+        </a>
+        <a href="#" class="nav-item">
+            <span class="nav-icon">📋</span>
+            <span>订单</span>
+        </a>
+        <a href="#" class="nav-item">
+            <span class="nav-icon">👤</span>
+            <span>我的</span>
+            <span class="nav-badge">1</span>
+        </a>
+    </nav>
+
+    <div class="modal-overlay" id="rejectModal">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-icon">⚠️</div>
+                <div class="modal-title">确认驳回</div>
+            </div>
+            <div class="modal-body">
+                <p class="modal-desc">确定要驳回此申诉申请吗？<br>驳回后代理商可重新发起申诉。</p>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn modal-btn-cancel" onclick="hideRejectModal()">取消</button>
+                <button class="modal-btn modal-btn-confirm" onclick="confirmReject()">确认驳回</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        let currentRejectOrderNo = '';
+
+        function handlePass(orderNo) {
+            showToast('延期申诉已通过初审，请关注后续审核进度~', 'success');
+        }
+
+        function showRejectModal(orderNo) {
+            currentRejectOrderNo = orderNo;
+            document.getElementById('rejectModal').classList.add('show');
+        }
+
+        function hideRejectModal() {
+            document.getElementById('rejectModal').classList.remove('show');
+            currentRejectOrderNo = '';
+        }
+
+        function confirmReject() {
+            hideRejectModal();
+            showToast('已驳回该申诉申请', 'error');
+        }
+
+        function showToast(message, type) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = `toast ${type} show`;
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        document.getElementById('searchBtn').addEventListener('click', function() {
+            const value = document.getElementById('searchInput').value;
+            if (value.length > 99) {
+                showToast('搜索内容最多录入99字符', 'error');
+            } else if (value.trim()) {
+                showToast('搜索完成', 'success');
+            }
+        });
+    </script>
+</body>
+</html>

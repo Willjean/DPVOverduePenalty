@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>分布式光伏并网超期惩罚系统 - 原型导航</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+        h1 {
+            color: white;
+            text-align: center;
+            margin-bottom: 40px;
+            font-size: 28px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 small {
+            display: block;
+            font-size: 16px;
+            margin-top: 10px;
+            opacity: 0.9;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        .module {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .module h2 {
+            color: #333;
+            margin-bottom: 16px;
+            font-size: 20px;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 8px;
+        }
+        .link-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 12px;
+        }
+        .link-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            text-decoration: none;
+            color: #333;
+            transition: all 0.3s;
+            border: 1px solid transparent;
+        }
+        .link-item:hover {
+            background: #667eea;
+            color: white;
+            transform: translateX(4px);
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+        }
+        .link-icon {
+            font-size: 20px;
+            margin-right: 12px;
+        }
+        .link-text {
+            flex: 1;
+            font-size: 14px;
+        }
+        .sub-links {
+            margin-top: 12px;
+            padding-left: 20px;
+            border-left: 3px solid #667eea;
+        }
+        .sub-module {
+            margin-bottom: 16px;
+        }
+        .sub-module h3 {
+            font-size: 16px;
+            color: #667eea;
+            margin-bottom: 8px;
+        }
+        .sub-links-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 8px;
+        }
+        .sub-link {
+            padding: 8px 12px;
+            background: #f0f0f0;
+            border-radius: 6px;
+            text-decoration: none;
+            color: #555;
+            font-size: 13px;
+            transition: all 0.2s;
+        }
+        .sub-link:hover {
+            background: #667eea;
+            color: white;
+        }
+        .folder-info {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 20px;
+        }
+        .folder-info h3 {
+            color: #856404;
+            margin-bottom: 8px;
+        }
+        .folder-info p {
+            color: #856404;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📊 分布式光伏并网超期惩罚系统<small>原型页面导航</small></h1>
+        
+        <div class="folder-info">
+            <h3>📂 项目结构说明</h3>
+            <p>本项目包含4个主要模块，分别对应不同的用户角色和功能页面。</p>
+        </div>
+        
+        <div class="module">
+            <h2>📱 APP管理端</h2>
+            <p style="color: #666; margin-bottom: 16px;">代理商和管理员使用的移动端审批界面</p>
+            <div class="link-grid">
+                <a href="APP代理端&管理端/order_detail.html" class="link-item">
+                    <span class="link-icon">📋</span>
+                    <span class="link-text">订单详情</span>
+                </a>
+                <a href="app管理端/并网超期初审.html" class="link-item">
+                    <span class="link-icon">✅</span>
+                    <span class="link-text">并网超期初审</span>
+                </a>
+                <a href="app管理端/已处理-并网超期初审.html" class="link-item">
+                    <span class="link-icon">📝</span>
+                    <span class="link-text">已处理-并网超期初审</span>
+                </a>
+                <a href="app管理端/并网超期驳回.html" class="link-item">
+                    <span class="link-icon">❌</span>
+                    <span class="link-text">并网超期驳回</span>
+                </a>
+                <a href="app管理端/拒绝弹窗.html" class="link-item">
+                    <span class="link-icon">🚫</span>
+                    <span class="link-text">拒绝弹窗</span>
+                </a>
+            </div>
+        </div>
+        
+        <div class="module">
+            <h2>🌐 开放平台 - 超期管理</h2>
+            <p style="color: #666; margin-bottom: 16px;">代理商端超期订单和申诉管理</p>
+            <div class="link-grid">
+                <a href="开放平台/超期管理/order_overdue_agent.html" class="link-item">
+                    <span class="link-icon">⚡</span>
+                    <span class="link-text">超期订单管理</span>
+                </a>
+                <a href="开放平台/超期管理/submit_exemption.html" class="link-item">
+                    <span class="link-icon">📤</span>
+                    <span class="link-text">提交申诉</span>
+                </a>
+                <a href="开放平台/超期管理/申诉列表.html" class="link-item">
+                    <span class="link-icon">📑</span>
+                    <span class="link-text">申诉列表</span>
+                </a>
+                <a href="开放平台/超期管理/申诉详情.html" class="link-item">
+                    <span class="link-icon">🔍</span>
+                    <span class="link-text">申诉详情</span>
+                </a>
+                <a href="开放平台/超期管理/超期详情.html" class="link-item">
+                    <span class="link-icon">📊</span>
+                    <span class="link-text">超期详情</span>
+                </a>
+            </div>
+        </div>
+        
+        <div class="module">
+            <h2>🏢 数字平台 - 运营系统</h2>
+            <p style="color: #666; margin-bottom: 16px;">运营人员使用的审核和管理界面</p>
+            
+            <div class="sub-links">
+                <div class="sub-module">
+                    <h3>📁 申诉审核记录</h3>
+                    <div class="sub-links-grid">
+                        <a href="数字平台/运营系统/申诉审核记录/approval_list.html" class="sub-link">
+                            申诉审核记录列表
+                        </a>
+                        <a href="数字平台/运营系统/申诉审核记录/approval_detail.html" class="sub-link">
+                            申诉审核详情
+                        </a>
+                        <a href="数字平台/运营系统/申诉审核记录/approve_exemption.html" class="sub-link">
+                            申诉审批
+                        </a>
+                        <a href="数字平台/运营系统/申诉审核记录/审核弹窗.html" class="sub-link">
+                            审核弹窗
+                        </a>
+                        <a href="数字平台/运营系统/申诉审核记录/转单弹窗.html" class="sub-link">
+                            转单弹窗
+                        </a>
+                        <a href="数字平台/运营系统/申诉审核记录/申诉复审.html" class="sub-link">
+                            申诉复审
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="sub-module">
+                    <h3>📁 超期管理 - 订单管理</h3>
+                    <div class="sub-links-grid">
+                        <a href="数字平台/运营系统/超期管理/并网超期订单/并网超期订单(新).html" class="sub-link">
+                            并网超期订单
+                        </a>
+                        <a href="数字平台/运营系统/超期管理/并网超期订单/超期详情.html" class="sub-link">
+                            超期详情
+                        </a>
+                        <a href="数字平台/运营系统/超期管理/并网超期订单/回购宽限.html" class="sub-link">
+                            回购宽限
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="sub-module">
+                    <h3>📁 超期管理 - 策略管理</h3>
+                    <div class="sub-links-grid">
+                        <a href="数字平台/运营系统/超期管理/超期策略管理/并网超期策略.html" class="sub-link">
+                            并网超期策略
+                        </a>
+                        <a href="数字平台/运营系统/超期管理/超期策略管理/新增策略.html" class="sub-link">
+                            新增策略
+                        </a>
+                        <a href="数字平台/运营系统/超期管理/超期策略管理/编辑策略.html" class="sub-link">
+                            编辑策略
+                        </a>
+                        <a href="数字平台/运营系统/超期管理/超期策略管理/编辑未来生效策略.html" class="sub-link">
+                            编辑未来生效策略
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="sub-module">
+                    <h3>📁 超期管理 - 申诉原因管理</h3>
+                    <div class="sub-links-grid">
+                        <a href="数字平台/运营系统/超期管理/申诉原因管理/审核原因列表.html" class="sub-link">
+                            审核原因列表
+                        </a>
+                        <a href="数字平台/运营系统/超期管理/申诉原因管理/新增申诉原因.html" class="sub-link">
+                            新增申诉原因
+                        </a>
+                        <a href="数字平台/运营系统/超期管理/申诉原因管理/编辑申诉原因.html" class="sub-link">
+                            编辑申诉原因
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div style="text-align: center; color: white; margin-top: 40px; padding: 20px;">
+            <p>📅 最后更新: 2026-05-08</p>
+            <p style="margin-top: 8px;">点击上方链接查看各个原型页面</p>
+        </div>
+    </div>
+</body>
+</html>

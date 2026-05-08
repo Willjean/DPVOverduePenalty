@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TCL设计系统</title>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="theme.css">
+</head>
+<body class="body-bg">
+    <!-- 导航栏 -->
+    <nav class="header-bg header-shadow">
+        <div class="px-4 py-3 flex justify-between items-center">
+            <h1 class="header-title">TCL设计系统</h1>
+            <div class="flex space-x-4">
+                <a href="#" class="nav-link nav-link-active">组件库</a>
+                <a href="#" class="nav-link">设计规范</a>
+                <a href="#" class="nav-link">使用指南</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 主内容区 -->
+    <main class="px-4 py-8">
+        <!-- 页面标题 -->
+        <h2 class="page-title">设计系统组件库</h2>
+
+        <!-- 基础样式 -->
+        <section id="base-styles" class="mb-12">
+            <div class="card">
+                <h3 class="section-title">基础样式</h3>
+                
+                <!-- 颜色 -->
+                <div class="mb-6">
+                    <h4 class="text-lg font-semibold mb-4">颜色系统</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                        <div class="p-4 border rounded-md">
+                            <div class="w-full h-16 bg-red-500 mb-2 rounded"></div>
+                            <p class="text-sm">标准色: #F52E2E</p>
+                        </div>
+                        <div class="p-4 border rounded-md">
+                            <div class="w-full h-16 bg-orange-400 mb-2 rounded"></div>
+                            <p class="text-sm">提示色: #FF982F</p>
+                        </div>
+                        <div class="p-4 border rounded-md">
+                            <div class="w-full h-16 bg-green-500 mb-2 rounded"></div>
+                            <p class="text-sm">通过色: #1DDA1D</p>
+                        </div>
+                        <div class="p-4 border rounded-md">
+                            <div class="w-full h-16 bg-blue-500 mb-2 rounded"></div>
+                            <p class="text-sm">操作色: #4D79FF</p>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-5 gap-4 mt-4">
+                        <div class="p-4 border rounded-md">
+                            <div class="w-full h-16 bg-black mb-2 rounded"></div>
+                            <p class="text-sm">标题文字: #000000</p>
+                        </div>
+                        <div class="p-4 border rounded-md">
+                            <div class="w-full h-16 bg-gray-800 mb-2 rounded"></div>
+                            <p class="text-sm">主要文字: #2C3038</p>
+                        </div>
+                        <div class="p-4 border rounded-md">
+                            <div class="w-full h-16 bg-gray-500 mb-2 rounded"></div>
+                            <p class="text-sm">次要文字: #5B5E64</p>
+                        </div>
+                        <div class="p-4 border rounded-md">
+                            <div class="w-full h-16 bg-gray-400 mb-2 rounded"></div>
+                            <p class="text-sm">辅助文字: #8A8C90</p>
+                        </div>
+                        <div class="p-4 border rounded-md">
+                            <div class="w-full h-16 bg-gray-300 mb-2 rounded"></div>
+                            <p class="text-sm">提示文字: #B9BABD</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 侧边菜单 -->
+        <section id="side-menu" class="mb-12">
+            <div class="card">
+                <h3 class="section-title">侧边菜单</h3>
+                <div class="flex space-x-8">
+                    <div class="side-menu-container">
+                        <div class="side-menu">
+                            <div class="side-menu-header">
+                                <h4 class="side-menu-title">TCL 数字化运营平台</h4>
+                                <button class="side-menu-toggle">
+                                    <i class="fa fa-bars"></i>
+                                </button>
+                            </div>
+                            <ul class="side-menu-list">
+                                <li class="side-menu-item">
+                                    <a href="#" class="side-menu-link">
+                                        一级菜单
+                                        <i class="fa fa-angle-down side-menu-arrow"></i>
+                                    </a>
+                                </li>
+                                <li class="side-menu-item active">
+                                    <a href="#" class="side-menu-link">
+                                        一级菜单
+                                        <i class="fa fa-angle-up side-menu-arrow"></i>
+                                    </a>
+                                    <ul class="side-menu-submenu">
+                                        <li class="side-menu-subitem">
+                                            <a href="#" class="side-menu-sublink">二级菜单</a>
+                                        </li>
+                                        <li class="side-menu-subitem">
+                                            <a href="#" class="side-menu-sublink">二级菜单</a>
+                                        </li>
+                                        <li class="side-menu-subitem">
+                                            <a href="#" class="side-menu-sublink">
+                                                二级菜单
+                                                <i class="fa fa-angle-down side-menu-arrow"></i>
+                                            </a>
+                                            <ul class="side-menu-submenu">
+                                                <li class="side-menu-subitem">
+                                                    <a href="#" class="side-menu-sublink">三级菜单</a>
+                                                </li>
+                                                <li class="side-menu-subitem active">
+                                                    <a href="#" class="side-menu-sublink">三级菜单</a>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="side-menu-item">
+                                    <a href="#" class="side-menu-link">
+                                        一级菜单
+                                        <i class="fa fa-angle-down side-menu-arrow"></i>
+                                    </a>
+                                </li>
+                                <li class="side-menu-item">
+                                    <a href="#" class="side-menu-link">
+                                        一级菜单
+                                        <i class="fa fa-angle-down side-menu-arrow"></i>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="side-menu-container compact">
+                        <div class="side-menu compact">
+                            <div class="side-menu-header">
+                                <h4 class="side-menu-title">TCL</h4>
+                            </div>
+                            <ul class="side-menu-list">
+                                <li class="side-menu-item">
+                                    <a href="#" class="side-menu-link">
+                                        <i class="fa fa-circle-o side-menu-icon"></i>
+                                    </a>
+                                </li>
+                                <li class="side-menu-item active">
+                                    <a href="#" class="side-menu-link">
+                                        <i class="fa fa-circle side-menu-icon"></i>
+                                    </a>
+                                </li>
+                                <li class="side-menu-item">
+                                    <a href="#" class="side-menu-link">
+                                        <i class="fa fa-circle-o side-menu-icon"></i>
+                                    </a>
+                                </li>
+                                <li class="side-menu-item">
+                                    <a href="#" class="side-menu-link">
+                                        <i class="fa fa-circle-o side-menu-icon"></i>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 表单组件 -->
+        <section id="forms" class="mb-12">
+            <div class="card">
+                <h3 class="section-title">表单</h3>
+                <p class="mb-6">当光标位于输入框时，允许用户输入或编辑文本内容的基本表单组件。可与输入框，搜索框，下拉框，日期选择器等灵活组合使用。</p>
+                
+                <!-- 表单-上下结构 -->
+                <div class="mb-8">
+                    <h4 class="text-lg font-semibold mb-4">表单-上下结构</h4>
+                    <div class="form-container">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">默认</label>
+                                <input type="text" class="form-input" placeholder="请输入事件名称">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label"></label>
+                                <select class="form-input">
+                                    <option value="">请选择事件名称</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label"></label>
+                                <select class="form-input">
+                                    <option value="">请选择事件名称</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label"></label>
+                                <div class="date-range">
+                                    <input type="date" class="form-input date-input">
+                                    <span class="date-separator">至</span>
+                                    <input type="date" class="form-input date-input">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label"></label>
+                                <input type="text" class="form-input" placeholder="请输入事件名称">
+                                <span class="form-unit">1/20</span>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label"></label>
+                                <input type="text" class="form-input" placeholder="请输入事件名称">
+                                <i class="fa fa-calculator form-icon"></i>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">激活</label>
+                                <input type="text" class="form-input active" placeholder="请输入事件名称">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label"></label>
+                                <select class="form-input active">
+                                    <option value="">请选择事件名称</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label"></label>
+                                <select class="form-input active">
+                                    <option value="">请选择事件名称</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label"></label>
+                                <div class="date-range">
+                                    <input type="date" class="form-input date-input active">
+                                    <span class="date-separator">至</span>
+                                    <input type="date" class="form-input date-input active">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label"></label>
+                                <input type="text" class="form-input active" placeholder="请输入事件名称">
+                                <span class="form-unit">1/20</span>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label"></label>
+                                <input type="text" class="form-input active" placeholder="请输入事件名称">
+                                <i class="fa fa-calculator form-icon"></i>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">完成</label>
+                                <input type="text" class="form-input" placeholder="事件名称">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label"></label>
+                                <select class="form-input">
+                                    <option value="">事件名称</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label"></label>
+                                <select class="form-input">
+                                    <option value="">这是名称 ×</option>
+                                </select>
+                                <button class="form-add-btn">+8</button>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label"></label>
+                                <div class="date-range">
+                                    <input type="date" class="form-input date-input" value="2020-12">
+                                    <span class="date-separator">至</span>
+                                    <input type="date" class="form-input date-input" value="2021-12">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">异常</label>
+                                <input type="text" class="form-input" placeholder="事件名称">
+                                <p class="form-error">这里是异常提示文案</p>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label"></label>
+                                <select class="form-input">
+                                    <option value="">事件名称</option>
+                                </select>
+                                <p class="form-error">这里是异常提示文案</p>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label"></label>
+                                <select class="form-input">
+                                    <option value="">这是名称 ×</option>
+                                </select>
+                                <button class="form-add-btn">+8</button>
+                                <p class="form-error">这里是异常提示文案</p>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label"></label>
+                                <div class="date-range">
+                                    <input type="date" class="form-input date-input" value="2020-12">
+                                    <span class="date-separator">至</span>
+                                    <input type="date" class="form-input date-input" value="2021-12">
+                                </div>
+                                <p class="form-error">这里是异常提示文案</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 表单-左右结构 -->
+                <div class="mb-8">
+                    <h4 class="text-lg font-semibold mb-4">表单-左右结构</h4>
+                    <div class="form-container horizontal">
+                        <div class="form-row">
+                            <div class="form-group horizontal">
+                                <label class="form-label">默认 事件名称</label>
+                                <input type="text" class="form-input" placeholder="请输入事件名称">
+                            </div>
+                            <div class="form-group horizontal">
+                                <label class="form-label">单选事件名称</label>
+                                <select class="form-input">
+                                    <option value="">请选择事件名称</option>
+                                </select>
+                            </div>
+                            <div class="form-group horizontal">
+                                <label class="form-label">多选事件名称</label>
+                                <select class="form-input">
+                                    <option value="">请选择事件名称</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group horizontal">
+                                <label class="form-label">激活 事件名称</label>
+                                <input type="text" class="form-input active" placeholder="请输入事件名称">
+                            </div>
+                            <div class="form-group horizontal">
+                                <label class="form-label">单选事件名称</label>
+                                <select class="form-input active">
+                                    <option value="">请选择事件名称</option>
+                                </select>
+                            </div>
+                            <div class="form-group horizontal">
+                                <label class="form-label">多选事件名称</label>
+                                <select class="form-input active">
+                                    <option value="">请选择事件名称</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 单选/复选框 -->
+        <section id="checkboxes" class="mb-12">
+            <div class="card">
+                <h3 class="section-title">单/复选框</h3>
+                <div class="flex space-x-8">
+                    <div>
+                        <h4 class="text-lg font-semibold mb-4">单选</h4>
+                        <p class="mb-4">主要应用在表单选择/选择器下拉选择以及表格中。</p>
+                        <div class="checkbox-group">
+                            <label class="checkbox-item">
+                                <input type="radio" name="radio" class="radio">
+                                <span class="checkbox-label">未选</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="radio" name="radio" class="radio hover">
+                                <span class="checkbox-label">悬浮</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="radio" name="radio" class="radio" checked>
+                                <span class="checkbox-label">选中</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="radio" name="radio" class="radio disabled">
+                                <span class="checkbox-label">未选不可选</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="radio" name="radio" class="radio disabled" checked>
+                                <span class="checkbox-label">已选不可选</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 class="text-lg font-semibold mb-4">多选</h4>
+                        <p class="mb-4">主要应用在表单选择/选择器下拉选择以及表格中。</p>
+                        <div class="checkbox-group">
+                            <label class="checkbox-item">
+                                <input type="checkbox" class="checkbox">
+                                <span class="checkbox-label">未选</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" class="checkbox hover">
+                                <span class="checkbox-label">悬浮</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" class="checkbox" checked>
+                                <span class="checkbox-label">选中</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" class="checkbox indeterminate">
+                                <span class="checkbox-label">部分选中</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" class="checkbox disabled">
+                                <span class="checkbox-label">未选不可选</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" class="checkbox disabled" checked>
+                                <span class="checkbox-label">已选不可选</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" class="checkbox disabled indeterminate">
+                                <span class="checkbox-label">部分选中不可选</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 复选框组 -->
+                <div class="mt-8">
+                    <h4 class="text-lg font-semibold mb-4">复选框组</h4>
+                    <p class="mb-4">复选框可以与其他复选框具有父子关系</p>
+                    <div class="checkbox-group">
+                        <p class="mb-2">选中父级选项后，所有子复选框均被选中</p>
+                        <div class="checkbox-tree">
+                            <label class="checkbox-item">
+                                <input type="checkbox" class="checkbox" checked>
+                                <span class="checkbox-label">父级选项</span>
+                            </label>
+                            <div class="checkbox-children">
+                                <label class="checkbox-item">
+                                    <input type="checkbox" class="checkbox" checked>
+                                    <span class="checkbox-label">子级选项</span>
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" class="checkbox" checked>
+                                    <span class="checkbox-label">子级选项</span>
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" class="checkbox" checked>
+                                    <span class="checkbox-label">子级选项</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="checkbox-group mt-4">
+                        <p class="mb-2">如果未选中父复选框，则所有子复选框均未选中</p>
+                        <div class="checkbox-tree">
+                            <label class="checkbox-item">
+                                <input type="checkbox" class="checkbox">
+                                <span class="checkbox-label">父级选项</span>
+                            </label>
+                            <div class="checkbox-children">
+                                <label class="checkbox-item">
+                                    <input type="checkbox" class="checkbox">
+                                    <span class="checkbox-label">子级选项</span>
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" class="checkbox">
+                                    <span class="checkbox-label">子级选项</span>
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" class="checkbox">
+                                    <span class="checkbox-label">子级选项</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="checkbox-group mt-4">
+                        <p class="mb-2">如果选中了部分（但不是全部）子复选框，则父复选框变为不确定的复选框</p>
+                        <div class="checkbox-tree">
+                            <label class="checkbox-item">
+                                <input type="checkbox" class="checkbox indeterminate">
+                                <span class="checkbox-label">父级选项</span>
+                            </label>
+                            <div class="checkbox-children">
+                                <label class="checkbox-item">
+                                    <input type="checkbox" class="checkbox" checked>
+                                    <span class="checkbox-label">子级选项</span>
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" class="checkbox">
+                                    <span class="checkbox-label">子级选项</span>
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" class="checkbox" checked>
+                                    <span class="checkbox-label">子级选项</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tab切换 -->
+        <section id="tabs" class="mb-12">
+            <div class="card">
+                <h3 class="section-title">Tab切换</h3>
+                <p class="mb-6">把大量信息进行分类展示，用户可以方便地切换分类，而不必跳转页面进行比较浏览，可以在有限的显示区域内展示更多信息。分类可根据业务类别、业务状态或者操作类型等并列关系来划分，分类标题长度建议为2-8个中文字。</p>
+                
+                <!-- 基础样式 -->
+                <div class="mb-8">
+                    <h4 class="text-lg font-semibold mb-4">基础样式</h4>
+                    <p class="mb-4">引领整个页面的内容，用于主功能切换</p>
+                    <div class="tab-container">
+                        <div class="tabs">
+                            <button class="tab">选项一</button>
+                            <button class="tab">选项二</button>
+                            <button class="tab active">选项三</button>
+                            <button class="tab">选项四</button>
+                        </div>
+                        <div class="tab-content">
+                            <p>选项三的内容</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 板块内容之间做分类区分 -->
+                <div class="mb-8">
+                    <h4 class="text-lg font-semibold mb-4">板块内容之间做分类区分</h4>
+                    <p class="mb-4">用于内容切换</p>
+                    <div class="tab-container section">
+                        <div class="tabs">
+                            <button class="tab">选项一</button>
+                            <button class="tab">选项二</button>
+                            <button class="tab active">选项三</button>
+                            <button class="tab">选项四</button>
+                        </div>
+                        <div class="tab-content">
+                            <p>选项三的内容</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 次级分类样式 -->
+                <div class="mb-8">
+                    <h4 class="text-lg font-semibold mb-4">次级分类样式</h4>
+                    <p class="mb-4">用于页面二级的内容切换</p>
+                    <div class="tab-container secondary">
+                        <div class="tabs">
+                            <button class="tab active">选项一</button>
+                            <button class="tab">选项二</button>
+                            <button class="tab">选项三</button>
+                            <button class="tab">选项四</button>
+                        </div>
+                        <div class="tab-content">
+                            <p>选项一的内容</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 胶囊型样式 -->
+                <div class="mb-8">
+                    <h4 class="text-lg font-semibold mb-4">胶囊型样式</h4>
+                    <p class="mb-4">用于卡片内的选项切换，经常和其它组件结合使用，让用户快速切换对应内容</p>
+                    <div class="tab-container pill">
+                        <div class="tabs">
+                            <button class="tab active">选项一</button>
+                            <button class="tab">选项二</button>
+                            <button class="tab">选项三</button>
+                            <button class="tab">选项四</button>
+                            <button class="tab">选项五</button>
+                            <button class="tab">选项六</button>
+                            <button class="tab">选项七</button>
+                        </div>
+                        <div class="tab-content">
+                            <p>选项一的内容</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 竖状样式 -->
+                <div class="mb-8">
+                    <h4 class="text-lg font-semibold mb-4">竖状样式</h4>
+                    <p class="mb-4">用于分类较多的选项，可以不限制分类数量，具备更好的扩展性。</p>
+                    <div class="tab-container vertical">
+                        <div class="tabs vertical">
+                            <button class="tab">选项一</button>
+                            <button class="tab">选项二</button>
+                            <button class="tab active">选项三</button>
+                            <button class="tab">选项四</button>
+                            <button class="tab">选项五</button>
+                            <button class="tab">选项六</button>
+                            <button class="tab">选项七</button>
+                            <button class="tab">选项八</button>
+                            <button class="tab">选项九</button>
+                            <button class="tab">选项十</button>
+                        </div>
+                        <div class="tab-content">
+                            <p>选项三的内容</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 表格组件 -->
+        <section id="tables" class="mb-12">
+            <div class="card">
+                <h3 class="section-title">固定列表格</h3>
+                <p class="mb-6">横向内容过多时，可选择固定列，一般是第一列和操作列首尾两列。</p>
+                
+                <div class="overflow-x-auto">
+                    <table class="table fixed">
+                        <thead class="table-header">
+                            <tr>
+                                <th class="table-cell fixed-left">ID</th>
+                                <th class="table-cell">应用系统</th>
+                                <th class="table-cell">所在页面</th>
+                                <th class="table-cell">所在位置</th>
+                                <th class="table-cell">位置标识</th>
+                                <th class="table-cell">问卷ID</th>
+                                <th class="table-cell">问卷标题</th>
+                                <th class="table-cell">问卷类型</th>
+                                <th class="table-cell">填写用户账号</th>
+                                <th class="table-cell">填写用户姓名</th>
+                                <th class="table-cell">填写时间</th>
+                                <th class="table-cell fixed-right">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody class="table-body">
+                            <tr class="table-row">
+                                <td class="table-cell fixed-left">DM202403</td>
+                                <td class="table-cell">数字化运营平台</td>
+                                <td class="table-cell">首页</td>
+                                <td class="table-cell">广告位</td>
+                                <td class="table-cell">DM202403</td>
+                                <td class="table-cell">00FDG</td>
+                                <td class="table-cell">关于光伏介绍</td>
+                                <td class="table-cell">500</td>
+                                <td class="table-cell">张三丰</td>
+                                <td class="table-cell">张三丰</td>
+                                <td class="table-cell">2022/12/23 14:32:45</td>
+                                <td class="table-cell fixed-right">
+                                    <a href="#" class="table-action">查看详情</a>
+                                </td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="table-cell fixed-left">DM202403</td>
+                                <td class="table-cell">数字化运营平台</td>
+                                <td class="table-cell">首页</td>
+                                <td class="table-cell">广告位</td>
+                                <td class="table-cell">DM202403</td>
+                                <td class="table-cell">00FDG</td>
+                                <td class="table-cell">关于光伏介绍</td>
+                                <td class="table-cell">500</td>
+                                <td class="table-cell">张三丰</td>
+                                <td class="table-cell">张三丰</td>
+                                <td class="table-cell">2022/12/23 14:32:45</td>
+                                <td class="table-cell fixed-right">
+                                    <a href="#" class="table-action">查看详情</a>
+                                </td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="table-cell fixed-left">DM202403</td>
+                                <td class="table-cell">数字化运营平台</td>
+                                <td class="table-cell">首页</td>
+                                <td class="table-cell">广告位</td>
+                                <td class="table-cell">DM202403</td>
+                                <td class="table-cell">00FDG</td>
+                                <td class="table-cell">关于光伏介绍</td>
+                                <td class="table-cell">500</td>
+                                <td class="table-cell">张三丰</td>
+                                <td class="table-cell">张三丰</td>
+                                <td class="table-cell">2022/12/23 14:32:45</td>
+                                <td class="table-cell fixed-right">
+                                    <a href="#" class="table-action">查看详情</a>
+                                </td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="table-cell fixed-left">DM202403</td>
+                                <td class="table-cell">数字化运营平台</td>
+                                <td class="table-cell">首页</td>
+                                <td class="table-cell">广告位</td>
+                                <td class="table-cell">DM202403</td>
+                                <td class="table-cell">00FDG</td>
+                                <td class="table-cell">关于光伏介绍</td>
+                                <td class="table-cell">500</td>
+                                <td class="table-cell">张三丰</td>
+                                <td class="table-cell">张三丰</td>
+                                <td class="table-cell">2022/12/23 14:32:45</td>
+                                <td class="table-cell fixed-right">
+                                    <a href="#" class="table-action">查看详情</a>
+                                </td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="table-cell fixed-left">DM202403</td>
+                                <td class="table-cell">数字化运营平台</td>
+                                <td class="table-cell">首页</td>
+                                <td class="table-cell">广告位</td>
+                                <td class="table-cell">DM202403</td>
+                                <td class="table-cell">00FDG</td>
+                                <td class="table-cell">关于光伏介绍</td>
+                                <td class="table-cell">500</td>
+                                <td class="table-cell">张三丰</td>
+                                <td class="table-cell">张三丰</td>
+                                <td class="table-cell">2022/12/23 14:32:45</td>
+                                <td class="table-cell fixed-right">
+                                    <a href="#" class="table-action">查看详情</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="container mx-auto px-4 text-center">
+            <p>© 2026 TCL设计系统</p>
+        </div>
+    </footer>
+
+    <script>
+        // 侧边菜单交互
+        document.querySelectorAll('.side-menu-item').forEach(item => {
+            const link = item.querySelector('.side-menu-link');
+            const submenu = item.querySelector('.side-menu-submenu');
+            const arrow = item.querySelector('.side-menu-arrow');
+            
+            if (link && submenu && arrow) {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    item.classList.toggle('active');
+                    if (item.classList.contains('active')) {
+                        submenu.style.display = 'block';
+                        arrow.classList.remove('fa-angle-down');
+                        arrow.classList.add('fa-angle-up');
+                    } else {
+                        submenu.style.display = 'none';
+                        arrow.classList.remove('fa-angle-up');
+                        arrow.classList.add('fa-angle-down');
+                    }
+                });
+            }
+        });
+        
+        // Tab切换交互
+        document.querySelectorAll('.tab-container').forEach(container => {
+            const tabs = container.querySelectorAll('.tab');
+            const content = container.querySelector('.tab-content');
+            
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    // 移除所有tab的active类
+                    tabs.forEach(t => t.classList.remove('active'));
+                    // 添加当前tab的active类
+                    this.classList.add('active');
+                    // 更新内容
+                    content.querySelector('p').textContent = `${this.textContent}的内容`;
+                });
+            });
+        });
+        
+        // 复选框组交互
+        document.querySelectorAll('.checkbox-tree').forEach(tree => {
+            const parentCheckbox = tree.querySelector('.checkbox-item .checkbox');
+            const childCheckboxes = tree.querySelectorAll('.checkbox-children .checkbox');
+            
+            if (parentCheckbox && childCheckboxes.length > 0) {
+                // 父复选框点击事件
+                parentCheckbox.addEventListener('change', function() {
+                    const isChecked = this.checked;
+                    childCheckboxes.forEach(child => {
+                        child.checked = isChecked;
+                        child.classList.toggle('indeterminate', false);
+                    });
+                });
+                
+                // 子复选框点击事件
+                childCheckboxes.forEach(child => {
+                    child.addEventListener('change', function() {
+                        const checkedCount = tree.querySelectorAll('.checkbox-children .checkbox:checked').length;
+                        if (checkedCount === 0) {
+                            parentCheckbox.checked = false;
+                            parentCheckbox.classList.toggle('indeterminate', false);
+                        } else if (checkedCount === childCheckboxes.length) {
+                            parentCheckbox.checked = true;
+                            parentCheckbox.classList.toggle('indeterminate', false);
+                        } else {
+                            parentCheckbox.checked = false;
+                            parentCheckbox.classList.toggle('indeterminate', true);
+                        }
+                    });
+                });
+            }
+        });
+    </script>
+</body>
+</html>

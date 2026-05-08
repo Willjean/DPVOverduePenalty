@@ -1,0 +1,1699 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>申诉详情 - TCL光伏开放平台</title>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script src="../skill-sign-of-html.js"></script>
+
+    <style>
+        /* 基础样式重置 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* 序号标记样式 */
+        .feature-container {
+            position: relative;
+        }
+
+        .feature-marker {
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            background-color: #F52E2E;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 1000;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            left: -30px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        
+        /* 为按钮添加特殊样式，确保标记正确显示 */
+        .text-link.feature-container {
+            position: relative;
+            padding-left: 30px;
+        }
+        
+        .text-link.feature-container .feature-marker {
+            left: -15px;
+        }
+
+        /* 网格布局样式 */
+        .grid {
+            display: grid;
+            gap: 1rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .grid-cols-3 {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        /* 卡片样式 */
+        .card {
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* 表单样式 */
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 4px;
+        }
+
+        /* 按钮样式 */
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 4px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background-color: #F52E2E;
+            color: white;
+            border: none;
+        }
+
+        .btn-outline {
+            background-color: white;
+            color: #F52E2E;
+            border: 1px solid #F52E2E;
+        }
+
+        .feature-marker:hover {
+            transform: scale(1.1);
+        }
+
+        .feature-tooltip {
+            position: absolute;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 12px;
+            border-radius: 4px;
+            z-index: 1001;
+            max-width: 300px;
+            font-size: 14px;
+            display: none;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        .feature-tooltip::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 8px solid transparent;
+            border-top-color: rgba(0, 0, 0, 0.8);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            font-size: 14px;
+            line-height: 1.5;
+            color: #2C3038;
+            background-color: #F5F5F8;
+        }
+
+        /* 颜色系统 */
+        :root {
+            /* 标准色 */
+            --color-primary: #F52E2E;
+            --color-warning: #FF982F;
+            --color-success: #1DDA1D;
+            --color-info: #4D79FF;
+            
+            /* 文本色 */
+            --color-text-title: #000000;
+            --color-text-primary: #2C3038;
+            --color-text-secondary: #5B5E64;
+            --color-text-tertiary: #8A8C90;
+            --color-text-hint: #B9BABD;
+            
+            /* 背景色 */
+            --color-bg-body: #F5F5F8;
+            --color-bg-card: #FFFFFF;
+            --color-bg-border: #DFE1E5;
+            
+            /* 间距系统 */
+            --spacing-xs: 4px;
+            --spacing-sm: 8px;
+            --spacing-md: 16px;
+            --spacing-lg: 24px;
+            --spacing-xl: 32px;
+            
+            /* 字体大小 */
+            --font-size-xs: 12px;
+            --font-size-sm: 14px;
+            --font-size-md: 16px;
+            --font-size-lg: 18px;
+            --font-size-xl: 20px;
+            --font-size-xxl: 24px;
+            
+            /* 边框半径 */
+            --border-radius-sm: 4px;
+            --border-radius-md: 8px;
+            --border-radius-lg: 12px;
+            
+            /* 阴影 */
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        /* 基础布局类 */
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--spacing-md);
+        }
+
+        .flex {
+            display: flex;
+        }
+
+        .flex-col {
+            flex-direction: column;
+        }
+
+        .justify-between {
+            justify-content: space-between;
+        }
+
+        .items-center {
+            align-items: center;
+        }
+
+        .space-x-1 {
+            gap: var(--spacing-xs);
+        }
+
+        .space-x-4 {
+            gap: var(--spacing-md);
+        }
+
+        .space-x-6 {
+            gap: var(--spacing-lg);
+        }
+
+        .grid {
+            display: grid;
+        }
+
+        .grid-cols-1 {
+            grid-template-columns: repeat(1, minmax(0, 1fr));
+        }
+
+        .md\:grid-cols-2 {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .lg\:grid-cols-3 {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+
+        .gap-4 {
+            gap: var(--spacing-md);
+        }
+
+        .gap-6 {
+            gap: var(--spacing-lg);
+        }
+
+        /* 间距类 */
+        .px-4 {
+            padding-left: var(--spacing-md);
+            padding-right: var(--spacing-md);
+        }
+
+        .py-3 {
+            padding-top: var(--spacing-sm);
+            padding-bottom: var(--spacing-sm);
+        }
+
+        .py-4 {
+            padding-top: var(--spacing-md);
+            padding-bottom: var(--spacing-md);
+        }
+
+        .py-6 {
+            padding-top: var(--spacing-lg);
+            padding-bottom: var(--spacing-lg);
+        }
+
+        .mb-4 {
+            margin-bottom: var(--spacing-md);
+        }
+
+        .mb-6 {
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .mb-8 {
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .mb-12 {
+            margin-bottom: calc(var(--spacing-xl) * 1.5);
+        }
+
+        .mt-4 {
+            margin-top: var(--spacing-md);
+        }
+
+        .mt-8 {
+            margin-top: var(--spacing-xl);
+        }
+
+        .mt-2 {
+            margin-top: 8px;
+        }
+
+        .mr-2 {
+            margin-right: var(--spacing-sm);
+        }
+
+        .pl-4 {
+            padding-left: 16px;
+        }
+
+        .pl-6 {
+            padding-left: 24px;
+        }
+
+        /* 文本类 */
+        .text-sm {
+            font-size: var(--font-size-xs);
+        }
+
+        .text-lg {
+            font-size: var(--font-size-lg);
+        }
+
+        .font-medium {
+            font-weight: 500;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .text-gray-500 {
+            color: var(--color-text-tertiary);
+        }
+
+        .text-gray-600 {
+            color: var(--color-text-secondary);
+        }
+
+        .text-gray-700 {
+            color: var(--color-text-primary);
+        }
+
+        .text-gray-900 {
+            color: var(--color-text-primary);
+        }
+
+        /* 背景和边框 */
+        .body-bg {
+            background-color: var(--color-bg-body);
+        }
+
+        .header-bg {
+            background-color: var(--color-bg-card);
+        }
+
+        .header-shadow {
+            box-shadow: var(--shadow-sm);
+        }
+
+        .border {
+            border: 1px solid var(--color-bg-border);
+        }
+
+        .border-b {
+            border-bottom: 1px solid var(--color-bg-border);
+        }
+
+        .border-gray-200 {
+            border-color: var(--color-bg-border);
+        }
+
+        .border-primary {
+            border-color: var(--color-primary);
+        }
+
+        .border-transparent {
+            border-color: transparent;
+        }
+
+        .rounded {
+            border-radius: var(--border-radius-sm);
+        }
+
+        .rounded-md {
+            border-radius: var(--border-radius-md);
+        }
+
+        /* 卡片 */
+        .card {
+            background-color: var(--color-bg-card);
+            border-radius: var(--border-radius-md);
+            box-shadow: var(--shadow-sm);
+            padding: var(--spacing-lg);
+        }
+
+        /* 标题 */
+        .header-title {
+            font-size: var(--font-size-xl);
+            font-weight: 700;
+            color: var(--color-text-title);
+        }
+
+        .page-title {
+            font-size: var(--font-size-xxl);
+            font-weight: 700;
+            color: var(--color-text-title);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .section-title {
+            font-size: var(--font-size-lg);
+            font-weight: 700;
+            color: var(--color-text-primary);
+            margin-bottom: var(--spacing-lg);
+            padding-bottom: var(--spacing-sm);
+            border-bottom: 1px solid var(--color-bg-border);
+        }
+
+        /* 导航链接 */
+        .nav-link {
+            color: var(--color-text-secondary);
+            text-decoration: none;
+            padding: var(--spacing-sm) var(--spacing-md);
+            border-radius: var(--border-radius-sm);
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--color-primary);
+        }
+
+        .nav-link-active {
+            color: var(--color-primary);
+            font-weight: 600;
+        }
+
+        /* 按钮 */
+        .btn {
+            padding: var(--spacing-sm) var(--spacing-md);
+            border-radius: var(--border-radius-sm);
+            font-size: var(--font-size-sm);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+        }
+
+        .btn-primary {
+            background-color: var(--color-primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #E02929;
+        }
+
+        .btn-secondary {
+            background-color: var(--color-bg-body);
+            color: var(--color-text-primary);
+            border: 1px solid var(--color-bg-border);
+        }
+
+        .btn-secondary:hover {
+            background-color: #E8E8EB;
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            color: var(--color-text-primary);
+            border: 1px solid var(--color-bg-border);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--color-bg-body);
+        }
+
+        .btn-danger {
+            background-color: var(--color-primary);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: #E02929;
+        }
+
+        .btn-sm {
+            padding: var(--spacing-xs) var(--spacing-sm);
+            font-size: var(--font-size-xs);
+        }
+
+        /* 链接 */
+        .text-link {
+            color: var(--color-info);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .text-link:hover {
+            color: var(--color-primary);
+            text-decoration: underline;
+        }
+
+        .text-link-danger {
+            color: var(--color-primary);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .text-link-danger:hover {
+            color: #E02929;
+            text-decoration: underline;
+        }
+
+        /* 开关 */
+        .switch {
+            width: 40px;
+            height: 20px;
+            border-radius: 10px;
+            background-color: var(--color-bg-border);
+            position: relative;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            border: 1px solid var(--color-bg-border);
+        }
+
+        .switch-on {
+            background-color: var(--color-success);
+            border-color: var(--color-success);
+        }
+
+        .switch-off {
+            background-color: var(--color-bg-border);
+        }
+
+        .switch-handle {
+            position: absolute;
+            top: 1px;
+            left: 1px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background-color: white;
+            transition: transform 0.3s ease;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+        }
+
+        .switch-on .switch-handle {
+            transform: translateX(20px);
+        }
+
+        .switch-off .switch-handle {
+            transform: translateX(0);
+        }
+
+        /* 标签 */
+        .tag {
+            padding: 2px 8px;
+            border-radius: var(--border-radius-sm);
+            font-size: var(--font-size-xs);
+            font-weight: 500;
+            display: inline-block;
+        }
+
+        .tag-success {
+            background-color: rgba(29, 218, 29, 0.1);
+            color: var(--color-success);
+        }
+
+        .tag-info {
+            background-color: rgba(77, 121, 255, 0.1);
+            color: var(--color-info);
+        }
+
+        .tag-warning {
+            background-color: rgba(255, 152, 47, 0.1);
+            color: var(--color-warning);
+        }
+
+        /* 分页 */
+        .pagination-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: var(--spacing-lg);
+            padding: 0 var(--spacing-md);
+        }
+
+        .pagination-item {
+            padding: var(--spacing-xs) var(--spacing-md);
+            border: 1px solid var(--color-bg-border);
+            border-radius: var(--border-radius-sm);
+            background-color: var(--color-bg-card);
+            color: var(--color-text-primary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .pagination-item:hover:not(.pagination-item-disabled) {
+            border-color: var(--color-primary);
+            color: var(--color-primary);
+        }
+
+        .pagination-item-active {
+            background-color: var(--color-primary);
+            color: white;
+            border-color: var(--color-primary);
+        }
+
+        .pagination-item-disabled {
+            color: var(--color-text-hint);
+            cursor: not-allowed;
+            border-color: var(--color-bg-border);
+        }
+
+        .pagination-item-disabled:hover {
+            border-color: var(--color-bg-border);
+            color: var(--color-text-hint);
+        }
+
+        /* 布局辅助类 */
+        .min-h-screen {
+            min-height: 100vh;
+        }
+
+        .flex-1 {
+            flex: 1;
+        }
+
+        .flex-wrap {
+            flex-wrap: wrap;
+        }
+
+        .min-w-[200px] {
+            min-width: 200px;
+        }
+
+        .items-end {
+            align-items: flex-end;
+        }
+
+        .mr-2 {
+            margin-right: var(--spacing-sm);
+        }
+
+        .mr-3 {
+            margin-right: var(--spacing-md);
+        }
+
+        .ml-2 {
+            margin-left: var(--spacing-sm);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .group:hover .group-hover\:block {
+            display: block;
+        }
+
+        .z-10 {
+            z-index: 10;
+        }
+
+        .w-full {
+            width: 100%;
+        }
+
+        .-mb-px {
+            margin-bottom: -1px;
+        }
+
+        /* 文本颜色辅助类 */
+        .text-gray-400 {
+            color: var(--color-text-tertiary);
+        }
+
+        .text-gray-600 {
+            color: var(--color-text-secondary);
+        }
+
+        .font-medium {
+            font-weight: 500;
+        }
+
+        /* 附件展示样式 */
+        .attachment-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            padding: 12px;
+            border: 1px solid var(--color-bg-border);
+            border-radius: var(--border-radius-md);
+            background-color: white;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .attachment-item:hover {
+            border-color: var(--color-primary);
+            background-color: rgba(245, 46, 46, 0.05);
+        }
+
+        .attachment-thumbnail {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: var(--border-radius-sm);
+            border: 1px solid var(--color-bg-border);
+        }
+
+        .attachment-name {
+            color: var(--color-text-primary);
+            text-align: center;
+            max-width: 80px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        /* 表单 */
+        .form-container {
+            background-color: var(--color-bg-card);
+            border-radius: var(--border-radius-md);
+            padding: var(--spacing-lg);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .form-container.horizontal {
+            padding: var(--spacing-md);
+        }
+
+        .form-row {
+            display: flex;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .form-group {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-xs);
+        }
+
+        .form-group.horizontal {
+            flex-direction: row;
+            align-items: center;
+        }
+
+        .form-label {
+            font-size: var(--font-size-sm);
+            color: var(--color-text-primary);
+            font-weight: 500;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: var(--spacing-sm) var(--spacing-md);
+            border: 1px solid var(--color-bg-border);
+            border-radius: var(--border-radius-sm);
+            font-size: var(--font-size-sm);
+            color: var(--color-text-primary);
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 2px rgba(245, 46, 46, 0.1);
+        }
+
+        .form-input.active {
+            border-color: var(--color-primary);
+        }
+
+        .form-input:disabled {
+            background-color: var(--color-bg-body);
+            color: var(--color-text-hint);
+            cursor: not-allowed;
+        }
+
+        .date-range {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+
+        .date-input {
+            flex: 1;
+        }
+
+        .date-separator {
+            color: var(--color-text-secondary);
+            white-space: nowrap;
+        }
+
+        .form-unit {
+            position: absolute;
+            right: var(--spacing-md);
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--color-text-tertiary);
+            font-size: var(--font-size-xs);
+        }
+
+        .form-icon {
+            position: absolute;
+            right: var(--spacing-md);
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--color-text-tertiary);
+            font-size: var(--font-size-sm);
+        }
+
+        .form-add-btn {
+            position: absolute;
+            right: var(--spacing-md);
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: var(--color-info);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius-sm);
+            padding: 2px 6px;
+            font-size: var(--font-size-xs);
+            cursor: pointer;
+        }
+
+        .form-error {
+            font-size: var(--font-size-xs);
+            color: var(--color-primary);
+            margin-top: var(--spacing-xs);
+        }
+
+        /* 表格 */
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: var(--font-size-sm);
+        }
+
+        .table-header {
+            background-color: var(--color-bg-body);
+        }
+
+        .table-row {
+            border-bottom: 1px solid var(--color-bg-border);
+            transition: background-color 0.3s ease;
+        }
+
+        .table-row:hover {
+            background-color: rgba(245, 46, 46, 0.02);
+        }
+
+        .table-cell {
+            padding: var(--spacing-sm) var(--spacing-md);
+            text-align: left;
+            color: var(--color-text-primary);
+        }
+
+        .table-header .table-cell {
+            font-weight: 600;
+            color: var(--color-text-secondary);
+        }
+
+        .table.fixed {
+            table-layout: fixed;
+        }
+
+        .table-cell.fixed-left {
+            position: sticky;
+            left: 0;
+            background-color: var(--color-bg-card);
+            z-index: 10;
+            border-right: 1px solid var(--color-bg-border);
+        }
+
+        .table-cell.fixed-right {
+            position: sticky;
+            right: 0;
+            background-color: var(--color-bg-card);
+            z-index: 10;
+            border-left: 1px solid var(--color-bg-border);
+        }
+
+        .table-action {
+            color: var(--color-info);
+            text-decoration: none;
+            font-size: var(--font-size-sm);
+            transition: color 0.3s ease;
+        }
+
+        .table-action:hover {
+            color: var(--color-primary);
+            text-decoration: underline;
+        }
+
+        /* 页脚 */
+        .footer {
+            background-color: var(--color-bg-card);
+            border-top: 1px solid var(--color-bg-border);
+            padding: var(--spacing-lg) 0;
+            margin-top: var(--spacing-xl);
+        }
+
+        .footer p {
+            color: var(--color-text-secondary);
+            font-size: var(--font-size-sm);
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .grid-cols-1 {
+                grid-template-columns: 1fr;
+            }
+            
+            .md\:grid-cols-2,
+            .lg\:grid-cols-3 {
+                grid-template-columns: 1fr;
+            }
+            
+            .flex {
+                flex-direction: column;
+            }
+            
+            .form-row {
+                flex-direction: column;
+            }
+            
+            .side-menu-container {
+                width: 100%;
+                margin-bottom: var(--spacing-md);
+            }
+            
+            .side-menu-container.compact {
+                width: 100%;
+            }
+            
+            .main-layout {
+                flex-direction: column;
+            }
+            
+            .tab-container.vertical {
+                flex-direction: column;
+            }
+            
+            .tabs.vertical {
+                width: 100%;
+                flex-direction: row;
+                border-right: none;
+                border-bottom: 1px solid var(--color-bg-border);
+                overflow-x: auto;
+            }
+            
+            .tabs.vertical .tab.active::after {
+                bottom: 0;
+                left: 0;
+                top: auto;
+                right: 0;
+                width: 100%;
+                height: 2px;
+            }
+        }
+
+        /* 侧边菜单 */
+        .side-menu-container {
+            width: 240px;
+            flex-shrink: 0;
+        }
+
+        .side-menu-container.compact {
+            width: 60px;
+        }
+
+        .side-menu {
+            background-color: var(--color-bg-card);
+            border-radius: var(--border-radius-md);
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+        }
+
+        .side-menu.compact {
+            width: 60px;
+        }
+
+        .side-menu-header {
+            padding: var(--spacing-md);
+            border-bottom: 1px solid var(--color-bg-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .side-menu-title {
+            font-size: var(--font-size-md);
+            font-weight: 700;
+            color: var(--color-text-title);
+        }
+
+        .side-menu-toggle {
+            background: none;
+            border: none;
+            font-size: var(--font-size-md);
+            color: var(--color-text-secondary);
+            cursor: pointer;
+            padding: var(--spacing-xs);
+            border-radius: var(--border-radius-sm);
+        }
+
+        .side-menu-toggle:hover {
+            background-color: var(--color-bg-body);
+        }
+
+        .side-menu-list {
+            list-style: none;
+        }
+
+        .side-menu-item {
+            position: relative;
+        }
+
+        .side-menu-item.active {
+            background-color: rgba(245, 46, 46, 0.05);
+        }
+
+        .side-menu-item.active::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background-color: var(--color-primary);
+        }
+
+        .side-menu-link {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: var(--spacing-sm) var(--spacing-md);
+            color: var(--color-text-primary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .side-menu-link:hover {
+            background-color: var(--color-bg-body);
+        }
+
+        .side-menu-arrow {
+            font-size: var(--font-size-xs);
+            transition: transform 0.3s ease;
+        }
+
+        .side-menu-item:hover .side-menu-arrow {
+            transform: translateX(2px);
+        }
+
+        /* 主布局 */
+        .main-layout {
+            display: flex;
+            gap: var(--spacing-md);
+        }
+
+        .main-content {
+            flex: 1;
+        }
+
+        /* 标签容器 */
+        .tab-container {
+            display: flex;
+            background-color: var(--color-bg-card);
+            border-radius: var(--border-radius-md);
+            box-shadow: var(--shadow-sm);
+            padding: 0;
+        }
+
+        .tab-container.section {
+            margin-bottom: var(--spacing-lg);
+            box-shadow: none;
+            border-bottom: 1px solid var(--color-bg-border);
+            border-radius: 0;
+            padding: 0;
+            background-color: transparent;
+        }
+
+        .tab-container.vertical {
+            flex-direction: row;
+        }
+
+        .tabs {
+            display: flex;
+            background-color: var(--color-bg-card);
+            border-bottom: none;
+        }
+
+        .tabs.vertical {
+            flex-direction: column;
+            border-right: 1px solid var(--color-bg-border);
+            border-bottom: none;
+            min-width: 200px;
+        }
+
+        .tab {
+            padding: var(--spacing-md) var(--spacing-lg);
+            color: var(--color-text-secondary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: var(--font-size-sm);
+            border-bottom: 2px solid transparent;
+            position: relative;
+            white-space: nowrap;
+        }
+
+        .tab:hover {
+            color: var(--color-primary);
+            background-color: rgba(245, 46, 46, 0.02);
+        }
+
+        .tab.active {
+            color: var(--color-primary);
+            font-weight: 600;
+            border-bottom-color: var(--color-primary);
+        }
+
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: var(--spacing-lg);
+            right: var(--spacing-lg);
+            height: 2px;
+            background-color: var(--color-primary);
+        }
+
+        .tabs.vertical .tab {
+            border-bottom: none;
+            border-left: 2px solid transparent;
+            padding: var(--spacing-sm) var(--spacing-md);
+        }
+
+        .tabs.vertical .tab.active {
+            border-left-color: var(--color-primary);
+            border-bottom-color: transparent;
+            background-color: rgba(245, 46, 46, 0.02);
+        }
+
+        .tabs.vertical .tab.active::after {
+            display: none;
+        }
+
+        .tabs.vertical .tab.active::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: var(--spacing-sm);
+            bottom: var(--spacing-sm);
+            width: 2px;
+            background-color: var(--color-primary);
+        }
+
+        /* 表格列宽度 */
+        .table th:nth-child(1),
+        .table td:nth-child(1) {
+            width: 80px;
+            min-width: 80px;
+        }
+        
+        .table th:nth-child(2),
+        .table td:nth-child(2) {
+            width: 120px;
+            min-width: 120px;
+        }
+        
+        .table th:nth-child(3),
+        .table td:nth-child(3) {
+            width: 180px;
+            min-width: 180px;
+        }
+        
+        .table th:nth-child(4),
+        .table td:nth-child(4) {
+            width: 120px;
+            min-width: 120px;
+        }
+        
+        .table th:nth-child(5),
+        .table td:nth-child(5) {
+            width: 120px;
+            min-width: 120px;
+        }
+        
+        .table th:nth-child(6),
+        .table td:nth-child(6) {
+            width: 180px;
+            min-width: 180px;
+        }
+        
+        /* 表格内容显示 */
+        .table-cell {
+            white-space: nowrap;
+        }
+        
+        /* 确保表格容器可以横向滚动 */
+        .overflow-x-auto {
+            overflow-x: auto;
+            max-width: 100%;
+        }
+    </style>
+</head>
+<body class="body-bg">
+    <div class="min-h-screen flex flex-col">
+        <!-- 顶部导航栏 -->
+        <header class="header-bg header-shadow">
+            <div class="px-4 py-3 flex justify-between items-center">
+                <h1 class="header-title">TCL光伏开放平台</h1>
+                <div class="flex items-center space-x-4">
+                    <span class="text-sm">代理商</span>
+                    <button class="btn btn-secondary btn-sm">退出</button>
+                </div>
+            </div>
+        </header>
+
+        <!-- 主要内容 -->
+        <main class="flex-1 px-4 py-6">
+            <div class="main-layout">
+                <!-- 侧边菜单 -->
+            <div id="sidebar"></div>
+            <!-- 主内容区 -->
+                <div class="main-content">
+                    <!-- 页面标题和导航 -->
+                    <div class="mb-6">
+                        <div class="flex justify-between items-center mb-4">
+                            <h2 class="page-title">申诉详情</h2>
+                            <button class="btn btn-secondary">返回</button>
+                        </div>
+                    </div>
+
+                    <!-- 订单信息 -->
+                    <div class="card mb-6">
+                        <h3 class="section-title">订单信息</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            <div class="form-group">
+                                <label class="form-label">订单编号</label>
+                                <input type="text" value="GF260324102106071241" disabled class="form-input">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">代理团队</label>
+                                <input type="text" value="惠州团队" disabled class="form-input">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">装机容量 (kW)</label>
+                                <input type="text" value="10.50" disabled class="form-input">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 超期信息 -->
+                    <div class="card mb-6">
+                        <h3 class="section-title">超期信息</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            <div class="form-group">
+                                <label class="form-label">并网时长</label>
+                                <input type="text" value="45" disabled class="form-input">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">申诉开始时间</label>
+                                <input type="text" value="2026-04-12 16:24:00" disabled class="form-input">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">申诉结束时间</label>
+                                <input type="text" value="2026-05-06 16:24:00" disabled class="form-input">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">并网开始时间</label>
+                                <input type="text" value="2026-04-28 00:00:00" disabled class="form-input">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">并网超期开始时间</label>
+                                <input type="text" value="2026-04-29 09:00:00" disabled class="form-input">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 超期计划 -->
+                    <div class="card mb-6">
+                        <h3 class="section-title">超期计划</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            <div class="form-group">
+                                <label class="form-label">梯度</label>
+                                <input type="text" value="梯度2" disabled class="form-input">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">并网时长</label>
+                                <input type="text" value="45" disabled class="form-input">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">梯度触发时间</label>
+                                <input type="text" value="2026-05-06 16:24:00" disabled class="form-input">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">梯度动作</label>
+                                <input type="text" value="降价" disabled class="form-input">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">梯度降价幅度 (元/W)</label>
+                                <input type="text" value="0.01" disabled class="form-input">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">状态</label>
+                                <input type="text" value="未生效" disabled class="form-input">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 申诉信息 -->
+                    <div class="card mb-6">
+                        <h3 class="section-title">申诉信息</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="form-group">
+                                <label class="form-label">审核记录编号</label>
+                                <input type="text" value="AP2604120001" disabled class="form-input">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">申诉原因</label>
+                                <input type="text" value="天气原因" disabled class="form-input">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">申诉通过后并网超期开始时间</label>
+                                <input type="text" value="2026-05-04 09:00:00" disabled class="form-input">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">申诉描述</label>
+                                <textarea rows="3" disabled class="form-input">因连续暴雨天气，无法正常施工，申请延期并网。</textarea>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">申诉附件</label>
+                                <div class="flex items-center space-x-4 flex-wrap gap-4">
+                                    <div class="attachment-item">
+                                        <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=PDF%20document%20icon%20blue%20color%20simple%20design&image_size=square" alt="暴雨证明.pdf" class="attachment-thumbnail">
+                                        <span class="attachment-name text-sm">暴雨证明.pdf</span>
+                                    </div>
+                                    <div class="attachment-item">
+                                        <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=photo%20image%20icon%20green%20color%20simple%20design&image_size=square" alt="施工照片.jpg" class="attachment-thumbnail">
+                                        <span class="attachment-name text-sm">施工照片.jpg</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 审核结果 -->
+                    <div class="card mb-6">
+                        <h3 class="section-title">审核结果</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="form-group">
+                                <label class="form-label">审核结果</label>
+                                <input type="text" value="通过" disabled class="form-input">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">审核意见</label>
+                                <textarea rows="3" disabled class="form-input">情况属实，同意延期7天。</textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 审核进度列表 -->
+                    <div class="card mb-6">
+                        <h3 class="section-title">审核进度列表</h3>
+                        <div class="overflow-x-auto">
+                            <table class="table">
+                                <thead class="table-header">
+                                    <tr>
+                                        <th class="table-cell">序号</th>
+                                        <th class="table-cell">进度</th>
+                                        <th class="table-cell">操作时间</th>
+                                        <th class="table-cell">操作人</th>
+                                        <th class="table-cell">操作结果</th>
+                                        <th class="table-cell">操作备注</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="table-body">
+                                    <tr class="table-row">
+                                        <td class="table-cell">1</td>
+                                        <td class="table-cell">提交</td>
+                                        <td class="table-cell">2026-04-12 16:24:00</td>
+                                        <td class="table-cell">惠州团队</td>
+                                        <td class="table-cell">提交成功</td>
+                                        <td class="table-cell">因连续暴雨天气，无法正常施工，申请延期并网。</td>
+                                    </tr>
+                                    <tr class="table-row">
+                                        <td class="table-cell">2</td>
+                                        <td class="table-cell">初审</td>
+                                        <td class="table-cell">2026-04-13 09:30:00</td>
+                                        <td class="table-cell">张三</td>
+                                        <td class="table-cell">初审通过</td>
+                                        <td class="table-cell">情况属实，同意提交复审。</td>
+                                    </tr>
+                                    <tr class="table-row">
+                                        <td class="table-cell">3</td>
+                                        <td class="table-cell">复审</td>
+                                        <td class="table-cell">2026-04-14 14:20:00</td>
+                                        <td class="table-cell">李四</td>
+                                        <td class="table-cell">复审通过</td>
+                                        <td class="table-cell">情况属实，同意延期7天。</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- 页脚 -->
+        <footer class="footer">
+            <div class="px-4 text-center text-sm">
+                © 2026 TCL光伏. 保留所有权利.
+            </div>
+        </footer>
+    </div>
+
+    <!-- 序号标记已通过JavaScript动态添加 -->
+
+    <script>
+        // 使用sign of html技能为页面元素添加序号标记
+        document.addEventListener('DOMContentLoaded', function() {
+            // 定义需要添加标记的元素和对应的功能点
+            const featureElements = [
+                // 功能点1：返回按钮
+                { element: document.querySelector('.btn-secondary'), feature: 1, title: '返回按钮', content: ['业务逻辑：用户点击返回按钮，系统返回上一页'] },
+                
+                // 功能点2-4：订单信息
+                { element: document.querySelectorAll('.card')[0].querySelectorAll('.form-group')[0], feature: 2, title: '订单编号字段', content: ['业务逻辑：显示订单的唯一标识符'] },
+                { element: document.querySelectorAll('.card')[0].querySelectorAll('.form-group')[1], feature: 3, title: '代理字段', content: ['业务逻辑：显示订单的代理商信息'] },
+                { element: document.querySelectorAll('.card')[0].querySelectorAll('.form-group')[2], feature: 4, title: '装机容量字段', content: ['业务逻辑：显示订单的装机容量，数字类型，两位小数，单位为kW'] },
+                
+                // 功能点5-10：超期信息
+                { element: document.querySelectorAll('.card')[1].querySelectorAll('.form-group')[0], feature: 5, title: '并网时长字段', content: ['业务逻辑：显示订单的并网时长，数字类型，根据当天天数进入页面时计算'] },
+                { element: document.querySelectorAll('.card')[1].querySelectorAll('.form-group')[1], feature: 6, title: '申请时间字段', content: ['业务逻辑：显示申诉的发起时间，日期时间格式'] },
+                { element: document.querySelectorAll('.card')[1].querySelectorAll('.form-group')[2], feature: 7, title: '申诉开始时间', content: ['显示超期记录可发起申诉的周期，如2026/04/12 16:24:00'] },
+                { element: document.querySelectorAll('.card')[1].querySelectorAll('.form-group')[3], feature: 8, title: '申诉结束时间', content: ['显示超期记录可发起申诉的周期，如2026/05/06 16:24:00'] },
+                { element: document.querySelectorAll('.card')[1].querySelectorAll('.form-group')[4], feature: 9, title: '并网开始时间', content: ['订单流转到待施工领单时，赋值+1的0点作为并网开始时间。示例：订单首次进入待施工领单的时间为2026-04-27 18:40:23，则并网开始时间赋值为2024-04-28 00:00:00'] },
+                { element: document.querySelectorAll('.card')[1].querySelectorAll('.form-group')[5], feature: 10, title: '并网超期开始时间字段', content: ['业务逻辑：显示进入超期对应的并网超期开始时间，即梯度1的触发时间，具体到年月日时分秒，如2026-04-29 09:00:00'] },
+                
+                // 功能点11-16：超期计划
+                { element: document.querySelectorAll('.card')[2].querySelectorAll('.form-group')[0], feature: 11, title: '梯度字段', content: ['业务逻辑：显示超期计划中的梯度编号'] },
+                { element: document.querySelectorAll('.card')[2].querySelectorAll('.form-group')[1], feature: 12, title: '并网时长字段', content: ['业务逻辑：显示超期计划中的并网时长'] },
+                { element: document.querySelectorAll('.card')[2].querySelectorAll('.form-group')[2], feature: 13, title: '梯度触发时间', content: ['显示梯度对应的触发时间，如2026/05/06 16:24:00'] },
+                { element: document.querySelectorAll('.card')[2].querySelectorAll('.form-group')[3], feature: 14, title: '梯度动作', content: ['业务逻辑：显示超期计划中的梯度动作，选项包括：降价、回购'] },
+                { element: document.querySelectorAll('.card')[2].querySelectorAll('.form-group')[4], feature: 15, title: '梯度(元/W)字段', content: ['业务逻辑：显示超期计划中的梯度降价幅度，当超期动作为降价时必填，数字类型，单位为元/W'] },
+                { element: document.querySelectorAll('.card')[2].querySelectorAll('.form-group')[5], feature: 16, title: '状态字段', content: ['业务逻辑：显示超期计划中每个梯度的状态，选项包括：已生效、未生效'] },
+                
+                // 功能点17-21：申诉信息
+                { element: document.querySelectorAll('.card')[3].querySelectorAll('.form-group')[0], feature: 17, title: '审核记录编号', content: ['展示当前申诉记录的编号'] },
+                { element: document.querySelectorAll('.card')[3].querySelectorAll('.form-group')[1], feature: 18, title: '申诉原因', content: ['展示代理商选择的申诉原因'] },
+                { element: document.querySelectorAll('.card')[3].querySelectorAll('.form-group')[2], feature: 19, title: '申诉通过后并网超期开始时间', content: ['业务逻辑：显示增加申诉分类延期天数后对应的并网超期开始时间，具体到年月日时分秒，如2026-05-04 09:00:00'] },
+                { element: document.querySelectorAll('.card')[3].querySelectorAll('.form-group')[3], feature: 20, title: '申诉描述', content: ['展示代理商填写的申诉原因'] },
+                { element: document.querySelectorAll('.card')[3].querySelectorAll('.form-group')[4].querySelector('.flex'), feature: 21, title: '申诉附件', content: ['1. 最多支持5个', '2. 支持预览', '3. 支持格式：jpg, jpeg, pdf'] },
+                
+                // 功能点22-23：审核结果
+                { element: document.querySelectorAll('.card')[4].querySelectorAll('.form-group')[0], feature: 22, title: '审核结果', content: ['展示审核结果'] },
+                { element: document.querySelectorAll('.card')[4].querySelectorAll('.form-group')[1], feature: 23, title: '审核意见', content: ['展示审核意见'] },
+                
+                // 功能点24：审核进度列表字段
+                { element: document.querySelectorAll('.card')[5].querySelector('table thead'), feature: 24, title: '审核进度列表字段', content: ['序号', '进度', '操作时间', '操作人', '操作结果', '操作备注'] },
+                
+                // 功能点25-29：审核进度列表详情
+                { element: document.querySelectorAll('.card')[5].querySelectorAll('tbody tr td:nth-child(2)')[0], feature: 25, title: '进度', content: ['依序记录', '提交-代理商提交', '初审-初审', '复审-复审'] },
+                { element: document.querySelectorAll('.card')[5].querySelectorAll('tbody tr td:nth-child(3)')[0], feature: 26, title: '操作时间', content: ['按照操作时间排序，最新在前'] },
+                { element: document.querySelectorAll('.card')[5].querySelectorAll('tbody tr td:nth-child(4)')[0], feature: 27, title: '操作人', content: ['1. 提交：展示提交人', '2. 初审：展示初审提交人', '3. 复审：展示复审提交人'] },
+                { element: document.querySelectorAll('.card')[5].querySelectorAll('tbody tr td:nth-child(5)')[0], feature: 28, title: '操作结果', content: ['1. 提交：展示提交', '2. 初审：展示驳回/通过', '3. 复审：展示驳回/通过'] },
+                { element: document.querySelectorAll('.card')[5].querySelectorAll('tbody tr td:nth-child(6)')[0], feature: 29, title: '操作备注', content: ['1. 提交：展示提交代理商的描述', '2. 初审：初审的审核意见', '3. 复审：复审的审核意见'] }
+            ];
+
+            // 为每个元素添加标记
+            featureElements.forEach(item => {
+                if (item.element) {
+                    // 确保元素具有feature-container类
+                    if (!item.element.classList.contains('feature-container')) {
+                        item.element.classList.add('feature-container');
+                    }
+                    
+                    // 创建标记元素
+                    const marker = document.createElement('div');
+                    marker.className = 'feature-marker';
+                    marker.dataset.feature = item.feature;
+                    marker.textContent = item.feature;
+                    item.element.appendChild(marker);
+                }
+            });
+
+            // 添加悬停事件
+            const markers = document.querySelectorAll('.feature-marker');
+            markers.forEach(marker => {
+                marker.addEventListener('mouseenter', function() {
+                    const feature = this.dataset.feature;
+                    const tooltip = document.getElementById(`tooltip-${feature}`);
+                    if (tooltip) {
+                        const rect = this.getBoundingClientRect();
+                        tooltip.style.left = `${rect.left}px`;
+                        tooltip.style.top = `${rect.bottom + 10}px`;
+                        tooltip.style.display = 'block';
+                    }
+                });
+
+                marker.addEventListener('mouseleave', function() {
+                    const feature = this.dataset.feature;
+                    const tooltip = document.getElementById(`tooltip-${feature}`);
+                    if (tooltip) {
+                        tooltip.style.display = 'none';
+                    }
+                });
+            });
+        });
+    </script>
+
+    <!-- 功能描述工具提示 -->
+    <div class="feature-tooltip" id="tooltip-1">
+        <h4>功能点 1: 返回按钮</h4>
+        <p>业务逻辑：用户点击返回按钮，系统返回上一页</p>
+    </div>
+    <div class="feature-tooltip" id="tooltip-2">
+        <h4>功能点 2: 订单编号字段</h4>
+        <p>业务逻辑：显示订单的唯一标识符</p>
+    </div>
+    <div class="feature-tooltip" id="tooltip-3">
+        <h4>功能点 3: 代理字段</h4>
+        <p>业务逻辑：显示订单的代理商信息</p>
+    </div>
+    <div class="feature-tooltip" id="tooltip-4">
+        <h4>功能点 4: 装机容量字段</h4>
+        <p>业务逻辑：显示订单的装机容量，数字类型，两位小数，单位为kW</p>
+    </div>
+    <div class="feature-tooltip" id="tooltip-5">
+        <h4>功能点 5: 并网时长字段</h4>
+        <p>业务逻辑：显示订单的并网时长，数字类型，根据当天天数进入页面时计算</p>
+    </div>
+    <div class="feature-tooltip" id="tooltip-6">
+        <h4>功能点 6: 申请时间字段</h4>
+        <p>业务逻辑：显示申诉的发起时间，日期时间格式</p>
+    </div>
+    <div class="feature-tooltip" id="tooltip-7">
+        <h4>功能点 7: 申诉开始时间</h4>
+        <p>显示超期记录可发起申诉的周期，如2026/04/12 16:24:00</p>
+    </div>
+    <div class="feature-tooltip" id="tooltip-8">
+        <h4>功能点 8: 申诉结束时间</h4>
+        <p>显示超期记录可发起申诉的周期，如2026/05/06 16:24:00</p>
+    </div>
+    <div class="feature-tooltip" id="tooltip-9">
+        <h4>功能点 9: 并网开始时间</h4>
+        <p>订单流转到待施工领单时，赋值+1的0点作为并网开始时间。示例：订单首次进入待施工领单的时间为2026-04-27 18:40:23，则并网开始时间赋值为2024-04-28 00:00:00</p>
+    </div>
+    <div class="feature-tooltip" id="tooltip-10">
+        <h4>功能点 10: 并网超期开始时间字段</h4>
+        <p>业务逻辑：显示进入超期对应的并网超期开始时间，即梯度1的触发时间，具体到年月日时分秒，如2026-04-29 09:00:00</p>
+    </div>
+    <div class="feature-tooltip" id="tooltip-11">
+        <h4>功能点 11: 梯度字段</h4>
+        <p>业务逻辑：显示超期计划中的梯度编号</p>
+    </div>
+    <div class="feature-tooltip" id="tooltip-12">
+        <h4>功能点 12: 并网时长字段</h4>
+        <p>业务逻辑：显示超期计划中的并网时长</p>
+    </div>
+    <div class="feature-tooltip" id="tooltip-13">
+        <h4>功能点 13: 梯度触发时间</h4>
+        <p>显示梯度对应的触发时间，如2026/05/06 16:24:00</p>
+    </div>
+    <div class="feature-tooltip" id="tooltip-14">
+        <h4>功能点 14: 梯度动作</h4>
+        <p>业务逻辑：显示超期计划中的梯度动作，选项包括：降价、回购</p>
+    </div>
+    <div class="feature-tooltip" id="tooltip-15">
+        <h4>功能点 15: 梯度(元/W)字段</h4>
+        <p>业务逻辑：显示超期计划中的梯度降价幅度，当超期动作为降价时必填，数字类型，单位为元/W</p>
+    </div>
+    <div class="feature-tooltip" id="tooltip-16">
+        <h4>功能点 16: 状态字段</h4>
+        <p>业务逻辑：显示超期计划中每个梯度的状态，选项包括：已生效、未生效</p>
+    </div>
+    <div class="feature-tooltip" id="tooltip-17">
+        <h4>功能点 17: 审核记录编号</h4>
+        <p>展示当前申诉记录的编号</p>
+    </div>
+    <div class="feature-tooltip" id="tooltip-18">
+        <h4>功能点 18: 申诉原因</h4>
+        <p>展示代理商选择的申诉原因</p>
+    </div>
+    <div class="feature-tooltip" id="tooltip-19">
+        <h4>功能点 19: 申诉通过后并网超期开始时间</h4>
+        <p>业务逻辑：显示增加申诉分类延期天数后对应的并网超期开始时间，具体到年月日时分秒，如2026-05-04 09:00:00</p>
+    </div>
+    <div class="feature-tooltip" id="tooltip-20">
+        <h4>功能点 20: 申诉描述</h4>
+        <p>展示代理商填写的申诉原因</p>
+    </div>
+    <div class="feature-tooltip" id="tooltip-21">
+        <h4>功能点 21: 申诉附件</h4>
+        <p>1. 最多支持5个</p>
+        <p>2. 支持预览</p>
+        <p>3. 支持格式：jpg, jpeg, pdf</p>
+    </div>
+    <div class="feature-tooltip" id="tooltip-22">
+        <h4>功能点 22: 审核结果</h4>
+        <p>展示审核结果</p>
+    </div>
+    <div class="feature-tooltip" id="tooltip-23">
+        <h4>功能点 23: 审核意见</h4>
+        <p>展示审核意见</p>
+    </div>
+    <div class="feature-tooltip" id="tooltip-24">
+        <h4>功能点 24: 审核进度列表字段</h4>
+        <p>序号</p>
+        <p>进度</p>
+        <p>操作时间</p>
+        <p>操作人</p>
+        <p>操作结果</p>
+        <p>操作备注</p>
+    </div>
+    <div class="feature-tooltip" id="tooltip-25">
+        <h4>功能点 25: 进度</h4>
+        <p>依序记录</p>
+        <p>提交-代理商提交</p>
+        <p>初审-初审</p>
+        <p>复审-复审</p>
+    </div>
+    <div class="feature-tooltip" id="tooltip-26">
+        <h4>功能点 26: 操作时间</h4>
+        <p>按照操作时间排序，最新在前</p>
+    </div>
+    <div class="feature-tooltip" id="tooltip-27">
+        <h4>功能点 27: 操作人</h4>
+        <p>1. 提交：展示提交人</p>
+        <p>2. 初审：展示初审提交人</p>
+        <p>3. 复审：展示复审提交人</p>
+    </div>
+    <div class="feature-tooltip" id="tooltip-28">
+        <h4>功能点 28: 操作结果</h4>
+        <p>1. 提交：展示提交</p>
+        <p>2. 初审：展示驳回/通过</p>
+        <p>3. 复审：展示驳回/通过</p>
+    </div>
+    <div class="feature-tooltip" id="tooltip-29">
+        <h4>功能点 29: 操作备注</h4>
+        <p>1. 提交：展示提交代理商的描述</p>
+        <p>2. 初审：初审的审核意见</p>
+        <p>3. 复审：复审的审核意见</p>
+    </div>
+    <script>
+        function renderOpenPlatformSidebar(activeItem = 'order_overdue', basePath = '') {
+            return `
+            <div class="side-menu-container">
+                <div class="side-menu">
+                    <div class="side-menu-header">
+                        <h4 class="side-menu-title">业务管理</h4>
+                    </div>
+                    <ul class="side-menu-list">
+                        <li class="side-menu-item">
+                            <a href="#" class="side-menu-link">
+                                订单管理
+                                <i class="fa fa-angle-right side-menu-arrow"></i>
+                            </a>
+                            <ul class="side-menu-list pl-4 mt-2">
+                                <li class="side-menu-item">
+                                    <a href="#" class="side-menu-link">
+                                        超期管理
+                                        <i class="fa fa-angle-right side-menu-arrow"></i>
+                                    </a>
+                                    <ul class="side-menu-list pl-6 mt-2">
+                                        <li class="side-menu-item ${activeItem === 'overdue_list' ? 'active' : ''}">
+                                            <a href="#" class="side-menu-link">并网超期订单</a>
+                                        </li>
+                                        <li class="side-menu-item ${activeItem === 'order_overdue' ? 'active' : ''}">
+                                            <a href="#" class="side-menu-link">申诉审核记录</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            `;
+        }
+
+        function initSidebar(activeItem = 'order_overdue', basePath = '') {
+            const sidebarContainer = document.getElementById('sidebar');
+            if (sidebarContainer) {
+                sidebarContainer.innerHTML = renderOpenPlatformSidebar(activeItem, basePath);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            initSidebar('order_overdue');
+        });
+    </script>

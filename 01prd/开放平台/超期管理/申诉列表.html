@@ -1,0 +1,1217 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>申诉列表 - TCL光伏开放平台</title>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script src="../../../skill-sign-of-html.js"></script>
+    <style>
+        /* 基础样式重置 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* 序号标记样式 */
+        .feature-container {
+            position: relative;
+        }
+
+        .feature-marker {
+            position: absolute;
+            width: 28px;
+            height: 28px;
+            background-color: var(--color-primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 1000;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            font-size: 14px;
+        }
+
+        .feature-marker:hover {
+            transform: scale(1.1);
+        }
+
+        .feature-tooltip {
+            position: fixed;
+            background-color: rgba(44, 48, 56, 0.95);
+            color: white;
+            padding: 16px;
+            border-radius: 8px;
+            z-index: 1001;
+            max-width: 320px;
+            font-size: 14px;
+            display: none;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .feature-tooltip h4 {
+            color: var(--color-primary);
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .feature-tooltip p {
+            font-size: 12px;
+            line-height: 1.5;
+            margin-bottom: 4px;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            font-size: 14px;
+            line-height: 1.5;
+            color: #2C3038;
+            background-color: #F5F5F8;
+        }
+
+        /* 颜色系统 */
+        :root {
+            /* 标准色 */
+            --color-primary: #F52E2E;
+            --color-warning: #FF982F;
+            --color-success: #1DDA1D;
+            --color-info: #4D79FF;
+            
+            /* 文本色 */
+            --color-text-title: #000000;
+            --color-text-primary: #2C3038;
+            --color-text-secondary: #5B5E64;
+            --color-text-tertiary: #8A8C90;
+            --color-text-hint: #B9BABD;
+            
+            /* 背景色 */
+            --color-bg-body: #F5F5F8;
+            --color-bg-card: #FFFFFF;
+            --color-bg-border: #DFE1E5;
+            
+            /* 间距系统 */
+            --spacing-xs: 4px;
+            --spacing-sm: 8px;
+            --spacing-md: 16px;
+            --spacing-lg: 24px;
+            --spacing-xl: 32px;
+            
+            /* 字体大小 */
+            --font-size-xs: 12px;
+            --font-size-sm: 14px;
+            --font-size-md: 16px;
+            --font-size-lg: 18px;
+            --font-size-xl: 20px;
+            --font-size-xxl: 24px;
+            
+            /* 边框半径 */
+            --border-radius-sm: 4px;
+            --border-radius-md: 8px;
+            --border-radius-lg: 12px;
+            
+            /* 阴影 */
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        /* 基础布局类 */
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--spacing-md);
+        }
+
+        .flex {
+            display: flex;
+        }
+
+        .flex-col {
+            flex-direction: column;
+        }
+
+        .justify-between {
+            justify-content: space-between;
+        }
+
+        .items-center {
+            align-items: center;
+        }
+
+        .space-x-4 {
+            gap: var(--spacing-md);
+        }
+
+        .space-x-6 {
+            gap: var(--spacing-lg);
+        }
+
+        .space-x-8 {
+            gap: var(--spacing-xl);
+        }
+
+        .grid {
+            display: grid;
+        }
+
+        .grid-cols-1 {
+            grid-template-columns: repeat(1, minmax(0, 1fr));
+        }
+
+        .md\:grid-cols-2 {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .md\:grid-cols-3 {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+
+        .md\:grid-cols-4 {
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+        }
+
+        .gap-4 {
+            gap: var(--spacing-md);
+        }
+
+        .gap-6 {
+            gap: var(--spacing-lg);
+        }
+
+        /* 间距类 */
+        .px-3 {
+            padding-left: var(--spacing-sm);
+            padding-right: var(--spacing-sm);
+        }
+
+        .px-4 {
+            padding-left: var(--spacing-md);
+            padding-right: var(--spacing-md);
+        }
+
+        .py-2 {
+            padding-top: var(--spacing-xs);
+            padding-bottom: var(--spacing-xs);
+        }
+
+        .py-3 {
+            padding-top: var(--spacing-sm);
+            padding-bottom: var(--spacing-sm);
+        }
+
+        .py-8 {
+            padding-top: var(--spacing-xl);
+            padding-bottom: var(--spacing-xl);
+        }
+
+        .mb-4 {
+            margin-bottom: var(--spacing-md);
+        }
+
+        .mb-6 {
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .mb-8 {
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .mb-12 {
+            margin-bottom: calc(var(--spacing-xl) * 1.5);
+        }
+
+        .mt-2 {
+            margin-top: 8px;
+        }
+
+        .mt-4 {
+            margin-top: var(--spacing-md);
+        }
+
+        /* 缩进样式 */
+        .pl-4 {
+            padding-left: 16px;
+        }
+
+        .pl-6 {
+            padding-left: 24px;
+        }
+
+        /* 文本类 */
+        .text-sm {
+            font-size: var(--font-size-xs);
+        }
+
+        .text-lg {
+            font-size: var(--font-size-lg);
+        }
+
+        .font-medium {
+            font-weight: 500;
+        }
+
+        .font-semibold {
+            font-weight: 600;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .text-gray-500 {
+            color: var(--color-text-tertiary);
+        }
+
+        .text-gray-600 {
+            color: var(--color-text-secondary);
+        }
+
+        .text-gray-900 {
+            color: var(--color-text-primary);
+        }
+
+        .text-red-500 {
+            color: var(--color-primary);
+        }
+
+        .text-white {
+            color: white;
+        }
+
+        /* 背景和边框 */
+        .body-bg {
+            background-color: var(--color-bg-body);
+        }
+
+        .header-bg {
+            background-color: var(--color-bg-card);
+        }
+
+        .header-shadow {
+            box-shadow: var(--shadow-sm);
+        }
+
+        .border {
+            border: 1px solid var(--color-bg-border);
+        }
+
+        .rounded {
+            border-radius: var(--border-radius-sm);
+        }
+
+        .rounded-md {
+            border-radius: var(--border-radius-md);
+        }
+
+        .bg-gray-100 {
+            background-color: var(--color-bg-body);
+        }
+
+        /* 卡片 */
+        .card {
+            background-color: var(--color-bg-card);
+            border-radius: var(--border-radius-md);
+            box-shadow: var(--shadow-sm);
+            padding: var(--spacing-lg);
+        }
+
+        /* 标题 */
+        .header-title {
+            font-size: var(--font-size-xl);
+            font-weight: 700;
+            color: var(--color-text-title);
+        }
+
+        .page-title {
+            font-size: var(--font-size-xxl);
+            font-weight: 700;
+            color: var(--color-text-title);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .section-title {
+            font-size: var(--font-size-lg);
+            font-weight: 700;
+            color: var(--color-text-primary);
+            margin-bottom: var(--spacing-lg);
+            padding-bottom: var(--spacing-sm);
+            border-bottom: 1px solid var(--color-bg-border);
+        }
+
+        /* 按钮 */
+        .btn {
+            padding: var(--spacing-sm) var(--spacing-md);
+            border-radius: var(--border-radius-sm);
+            font-size: var(--font-size-sm);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+        }
+
+        .btn-primary {
+            background-color: var(--color-primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #E02929;
+        }
+
+        .btn-secondary {
+            background-color: var(--color-bg-body);
+            color: var(--color-text-primary);
+            border: 1px solid var(--color-bg-border);
+        }
+
+        .btn-secondary:hover {
+            background-color: #E8E8EB;
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            color: var(--color-text-primary);
+            border: 1px solid var(--color-bg-border);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--color-bg-body);
+        }
+
+        .btn-sm {
+            padding: var(--spacing-xs) var(--spacing-sm);
+            font-size: var(--font-size-xs);
+        }
+
+        /* 标签 */
+        .tag {
+            padding: 2px 8px;
+            border-radius: var(--border-radius-sm);
+            font-size: var(--font-size-xs);
+            font-weight: 500;
+            display: inline-block;
+        }
+
+        .tag-success {
+            background-color: rgba(29, 218, 29, 0.1);
+            color: var(--color-success);
+        }
+
+        .tag-info {
+            background-color: rgba(77, 121, 255, 0.1);
+            color: var(--color-info);
+        }
+
+        .tag-warning {
+            background-color: rgba(255, 152, 47, 0.1);
+            color: var(--color-warning);
+        }
+
+        .tag-danger {
+            background-color: rgba(245, 46, 46, 0.1);
+            color: var(--color-primary);
+        }
+
+        /* 表格 */
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: var(--font-size-sm);
+        }
+
+        .table-header {
+            background-color: var(--color-bg-body);
+        }
+
+        .table-row {
+            border-bottom: 1px solid var(--color-bg-border);
+            transition: background-color 0.3s ease;
+        }
+
+        .table-row:hover {
+            background-color: var(--color-bg-body);
+        }
+
+        .table-cell {
+            padding: var(--spacing-sm) var(--spacing-md);
+            text-align: left;
+            color: var(--color-text-primary);
+        }
+
+        .table-header .table-cell {
+            font-weight: 600;
+            color: var(--color-text-secondary);
+        }
+
+        /* 页脚 */
+        .footer {
+            background-color: var(--color-bg-card);
+            border-top: 1px solid var(--color-bg-border);
+            padding: var(--spacing-lg) 0;
+            margin-top: var(--spacing-xl);
+        }
+
+        .footer p {
+            color: var(--color-text-secondary);
+            font-size: var(--font-size-sm);
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .grid-cols-1 {
+                grid-template-columns: 1fr;
+            }
+            
+            .md\:grid-cols-2,
+            .md\:grid-cols-3,
+            .md\:grid-cols-4 {
+                grid-template-columns: 1fr;
+            }
+            
+            .flex {
+                flex-direction: column;
+            }
+            
+            .form-row {
+                flex-direction: column;
+            }
+        }
+
+        /* 表单 */
+        .form-label {
+            font-size: var(--font-size-sm);
+            color: var(--color-text-primary);
+            font-weight: 500;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: var(--spacing-sm) var(--spacing-md);
+            border: 1px solid var(--color-bg-border);
+            border-radius: var(--border-radius-sm);
+            font-size: var(--font-size-sm);
+            color: var(--color-text-primary);
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 2px rgba(245, 46, 46, 0.1);
+        }
+
+        .form-input:disabled {
+            background-color: var(--color-bg-body);
+            color: var(--color-text-hint);
+            cursor: not-allowed;
+        }
+
+        .form-select {
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='%235B5E64' d='M8 10.6L3.7 6.3l1.4-1.4L8 7.8l2.9-2.9 1.4 1.4z'/%3E%3C/svg%3E");
+            background-position: right var(--spacing-sm) center;
+            background-repeat: no-repeat;
+            background-size: 16px;
+            padding-right: calc(var(--spacing-sm) + 20px);
+        }
+
+        /* 侧边菜单 */
+        .side-menu-container {
+            width: 240px;
+            flex-shrink: 0;
+        }
+
+        .side-menu {
+            background-color: var(--color-bg-card);
+            border-radius: var(--border-radius-md);
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+        }
+
+        .side-menu-header {
+            padding: var(--spacing-md);
+            border-bottom: 1px solid var(--color-bg-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .side-menu-title {
+            font-size: var(--font-size-md);
+            font-weight: 700;
+            color: var(--color-text-title);
+        }
+
+        .side-menu-list {
+            list-style: none;
+        }
+
+        .side-menu-item {
+            position: relative;
+        }
+
+        .side-menu-item.active {
+            background-color: rgba(245, 46, 46, 0.05);
+        }
+
+        .side-menu-item.active::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background-color: var(--color-primary);
+        }
+
+        .side-menu-link {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: var(--spacing-sm) var(--spacing-md);
+            color: var(--color-text-primary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .side-menu-link:hover {
+            background-color: var(--color-bg-body);
+        }
+
+        /* 主内容布局 */
+        .main-layout {
+            display: flex;
+            gap: var(--spacing-md);
+        }
+
+        .main-content {
+            flex: 1;
+        }
+
+        /* 筛选区域 */
+        .filter-section {
+            background-color: var(--color-bg-card);
+            border-radius: var(--border-radius-md);
+            box-shadow: var(--shadow-sm);
+            padding: var(--spacing-lg);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .filter-row {
+            display: flex;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-md);
+            flex-wrap: wrap;
+        }
+
+        .filter-item {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        /* 状态Tab栏 */
+        .status-tabs {
+            display: flex;
+            gap: var(--spacing-sm);
+            margin-bottom: var(--spacing-lg);
+            border-bottom: 1px solid var(--color-bg-border);
+        }
+
+        .status-tab {
+            padding: var(--spacing-sm) var(--spacing-md);
+            border-bottom: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .status-tab.active {
+            border-bottom-color: var(--color-primary);
+            color: var(--color-primary);
+            font-weight: 500;
+        }
+
+        .status-tab:hover {
+            color: var(--color-primary);
+        }
+
+        .status-badge {
+            background-color: var(--color-bg-body);
+            color: var(--color-text-secondary);
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: var(--font-size-xs);
+            margin-left: var(--spacing-xs);
+        }
+
+        /* 分页 */
+        .pagination {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: var(--spacing-sm);
+            margin-top: var(--spacing-lg);
+        }
+
+        .pagination button {
+            padding: var(--spacing-xs) var(--spacing-sm);
+            border: 1px solid var(--color-bg-border);
+            border-radius: var(--border-radius-sm);
+            background-color: var(--color-bg-card);
+            cursor: pointer;
+        }
+
+        .pagination button.active {
+            background-color: var(--color-primary);
+            color: white;
+            border-color: var(--color-primary);
+        }
+
+        /* 文本链接 */
+        .text-link {
+            color: var(--color-primary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .text-link:hover {
+            text-decoration: underline;
+        }
+
+        /* 表格列宽度 */
+        .table th:nth-child(1),
+        .table td:nth-child(1) {
+            width: 180px;
+            min-width: 180px;
+        }
+        
+        .table th:nth-child(2),
+        .table td:nth-child(2) {
+            width: 180px;
+            min-width: 180px;
+        }
+        
+        .table th:nth-child(3),
+        .table td:nth-child(3) {
+            width: 220px;
+            min-width: 220px;
+        }
+        
+        .table th:nth-child(4),
+        .table td:nth-child(4) {
+            width: 160px;
+            min-width: 160px;
+        }
+        
+        .table th:nth-child(5),
+        .table td:nth-child(5) {
+            width: 180px;
+            min-width: 180px;
+        }
+        
+        .table th:nth-child(6),
+        .table td:nth-child(6) {
+            width: 180px;
+            min-width: 180px;
+        }
+        
+        .table th:nth-child(7),
+        .table td:nth-child(7) {
+            width: 120px;
+            min-width: 120px;
+        }
+        
+        .table th:nth-child(8),
+        .table td:nth-child(8) {
+            width: 120px;
+            min-width: 120px;
+        }
+        
+        .table th:nth-child(9),
+        .table td:nth-child(9) {
+            width: 180px;
+            min-width: 180px;
+        }
+        
+        .table th:nth-child(10),
+        .table td:nth-child(10) {
+            width: 180px;
+            min-width: 180px;
+        }
+        
+        .table th:nth-child(11),
+        .table td:nth-child(11) {
+            width: 100px;
+            min-width: 100px;
+        }
+
+        /* 表格内容显示 */
+        .table-cell {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* 确保表格容器可以横向滚动 */
+        .overflow-x-auto {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+    </style>
+</head>
+<body class="body-bg">
+    <div class="min-h-screen flex flex-col">
+        <!-- 顶部导航栏 -->
+        <header class="header-bg header-shadow">
+            <div class="px-4 py-3 flex justify-between items-center">
+                <h1 class="header-title">TCL光伏开放平台</h1>
+                <div class="flex items-center space-x-4">
+                    <span class="text-sm">代理商</span>
+                    <button class="btn btn-outline btn-sm">退出</button>
+                </div>
+            </div>
+        </header>
+
+        <!-- 主要内容 -->
+        <main class="flex-1 px-4 py-8">
+            <div class="main-layout">
+                <!-- 侧边菜单 -->
+            <div id="sidebar"></div>
+            <!-- 主内容区 -->
+                <div class="main-content">
+                    <!-- 页面标题 -->
+                    <h2 class="section-title mb-6">申诉记录</h2>
+                    
+                    <!-- 筛选区域 -->
+                    <div class="filter-section mb-6">
+                        <h3 class="text-lg font-semibold mb-4">列表查询</h3>
+                        <div class="filter-row">
+                            <div class="filter-item feature-container">
+                                <div class="feature-marker" style="top: 0; left: -40px;" data-feature="1">1</div>
+                                <label class="form-label">订单编号</label>
+                                <input type="text" class="form-input" placeholder="请输入订单编号">
+                            </div>
+                            <div class="filter-item feature-container">
+                                <div class="feature-marker" style="top: 0; left: -40px;" data-feature="2">2</div>
+                                <label class="form-label">所属组织</label>
+                                <input type="text" class="form-input" placeholder="请输入所属组织">
+                            </div>
+                            <div class="filter-item feature-container">
+                                <div class="feature-marker" style="top: 0; left: -40px;" data-feature="3">3</div>
+                                <label class="form-label">安装地区</label>
+                                <input type="text" class="form-input" placeholder="请输入安装地区">
+                            </div>
+                            <div class="filter-item feature-container">
+                                <div class="feature-marker" style="top: 0; left: -40px;" data-feature="4">4</div>
+                                <label class="form-label">订单状态</label>
+                                <select class="form-input form-select">
+                                    <option value="">请选择订单状态</option>
+                                    <option value="1">待并网领单</option>
+                                    <option value="2">施工验收退回</option>
+                                    <option value="3">已并网</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="flex justify-end space-x-4 mt-4">
+                            <button class="btn btn-outline">重置</button>
+                            <button class="btn btn-primary">查询</button>
+                        </div>
+                    </div>
+
+                    <!-- 状态Tab栏 -->
+                    <div class="status-tabs mb-6">
+                        <div class="status-tab active feature-container">
+                            <div class="feature-marker" style="top: -10px; left: -10px;" data-feature="5">5</div>
+                            全部 <span class="status-badge">12</span>
+                        </div>
+                        <div class="status-tab feature-container">
+                            <div class="feature-marker" style="top: -10px; left: -10px;" data-feature="6">6</div>
+                            待初审 <span class="status-badge">3</span>
+                        </div>
+                        <div class="status-tab feature-container">
+                            <div class="feature-marker" style="top: -10px; left: -10px;" data-feature="7">7</div>
+                            待复审 <span class="status-badge">2</span>
+                        </div>
+                        <div class="status-tab feature-container">
+                            <div class="feature-marker" style="top: -10px; left: -10px;" data-feature="8">8</div>
+                            待终审 <span class="status-badge">0</span>
+                        </div>
+                        <div class="status-tab feature-container">
+                            <div class="feature-marker" style="top: -10px; left: -10px;" data-feature="9">9</div>
+                            已通过 <span class="status-badge">5</span>
+                        </div>
+                        <div class="status-tab feature-container">
+                            <div class="feature-marker" style="top: -10px; left: -10px;" data-feature="10">10</div>
+                            已拒绝 <span class="status-badge">2</span>
+                        </div>
+                    </div>
+
+                    <!-- 数据列表 -->
+                    <div class="card mb-6">
+                        <div class="overflow-x-auto">
+                            <table class="table">
+                                <thead class="table-header">
+                                    <tr>
+                                        <th class="table-cell feature-container">
+                                            <div class="feature-marker" style="top: -10px; left: -10px;" data-feature="11">11</div>
+                                            审核记录编号
+                                        </th>
+                                        <th class="table-cell feature-container">
+                                            <div class="feature-marker" style="top: -10px; left: -10px;" data-feature="12">12</div>
+                                            订单编号
+                                        </th>
+                                        <th class="table-cell feature-container">
+                                            <div class="feature-marker" style="top: -10px; left: -10px;" data-feature="13">13</div>
+                                            代理商
+                                        </th>
+                                        <th class="table-cell feature-container">
+                                            <div class="feature-marker" style="top: -10px; left: -10px;" data-feature="14">14</div>
+                                            安装地区
+                                        </th>
+                                        <th class="table-cell feature-container">
+                                            <div class="feature-marker" style="top: -10px; left: -10px;" data-feature="15">15</div>
+                                            申诉开始时间
+                                        </th>
+                                        <th class="table-cell feature-container">
+                                            <div class="feature-marker" style="top: -10px; left: -10px;" data-feature="16">16</div>
+                                            并网超期开始时间
+                                        </th>
+                                        <th class="table-cell feature-container">
+                                            <div class="feature-marker" style="top: -10px; left: -10px;" data-feature="17">17</div>
+                                            申诉原因
+                                        </th>
+                                        <th class="table-cell feature-container">
+                                            <div class="feature-marker" style="top: -10px; left: -10px;" data-feature="18">18</div>
+                                            审核状态
+                                        </th>
+                                        <th class="table-cell feature-container">
+                                            <div class="feature-marker" style="top: -10px; left: -10px;" data-feature="19">19</div>
+                                            发起时间
+                                        </th>
+                                        <th class="table-cell feature-container">
+                                            <div class="feature-marker" style="top: -10px; left: -10px;" data-feature="20">20</div>
+                                            操作时间
+                                        </th>
+                                        <th class="table-cell feature-container">
+                                            <div class="feature-marker" style="top: -10px; left: -10px;" data-feature="21">21</div>
+                                            操作
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody class="table-body">
+                                    <tr class="table-row">
+                                        <td class="table-cell">SP2026042700001</td>
+                                        <td class="table-cell">
+                                            <a href="#" class="text-link">GF260324102106071241</a>
+                                        </td>
+                                        <td class="table-cell">高州新易新能源科技有限公司</td>
+                                        <td class="table-cell">广东省茂名市高州市</td>
+                                        <td class="table-cell">2026-04-27 10:00:00</td>
+                                        <td class="table-cell">2026-04-27 09:00:00</td>
+                                        <td class="table-cell">天气原因</td>
+                                        <td class="table-cell">
+                                            <span class="tag tag-info">待初审</span>
+                                        </td>
+                                        <td class="table-cell">2026-04-27 16:24:00</td>
+                                        <td class="table-cell">2026-04-27 16:24:00</td>
+                                        <td class="table-cell">
+                                            <a href="#" class="text-link">查看详情</a>
+                                        </td>
+                                    </tr>
+                                    <tr class="table-row">
+                                        <td class="table-cell">SP2026042600002</td>
+                                        <td class="table-cell">
+                                            <a href="#" class="text-link">GF260325091512345678</a>
+                                        </td>
+                                        <td class="table-cell">南京新能电力科技有限公司</td>
+                                        <td class="table-cell">江苏省南京市</td>
+                                        <td class="table-cell">2026-04-26 11:00:00</td>
+                                        <td class="table-cell">2026-04-26 09:00:00</td>
+                                        <td class="table-cell">供电所问题</td>
+                                        <td class="table-cell">
+                                            <span class="tag tag-warning">待复审</span>
+                                        </td>
+                                        <td class="table-cell">2026-04-26 14:30:00</td>
+                                        <td class="table-cell">2026-04-27 10:15:00</td>
+                                        <td class="table-cell">
+                                            <a href="#" class="text-link">查看详情</a>
+                                        </td>
+                                    </tr>
+                                    <tr class="table-row">
+                                        <td class="table-cell">SP2026042500003</td>
+                                        <td class="table-cell">
+                                            <a href="#" class="text-link">GF260326143098765432</a>
+                                        </td>
+                                        <td class="table-cell">济南绿色能源有限公司</td>
+                                        <td class="table-cell">山东省济南市</td>
+                                        <td class="table-cell">2026-04-25 10:15:00</td>
+                                        <td class="table-cell">2026-04-25 09:00:00</td>
+                                        <td class="table-cell">等容量</td>
+                                        <td class="table-cell">
+                                            <span class="tag tag-success">已通过</span>
+                                        </td>
+                                        <td class="table-cell">2026-04-25 09:15:00</td>
+                                        <td class="table-cell">2026-04-26 16:45:00</td>
+                                        <td class="table-cell">
+                                            <a href="#" class="text-link">查看详情</a>
+                                        </td>
+                                    </tr>
+                                    <tr class="table-row">
+                                        <td class="table-cell">SP2026042400004</td>
+                                        <td class="table-cell">
+                                            <a href="#" class="text-link">GF260327102012345678</a>
+                                        </td>
+                                        <td class="table-cell">广州光伏科技有限公司</td>
+                                        <td class="table-cell">广东省广州市</td>
+                                        <td class="table-cell">2026-04-24 12:20:00</td>
+                                        <td class="table-cell">2026-04-24 09:00:00</td>
+                                        <td class="table-cell">风管管控</td>
+                                        <td class="table-cell">
+                                            <span class="tag tag-danger">已拒绝</span>
+                                        </td>
+                                        <td class="table-cell">2026-04-24 11:20:00</td>
+                                        <td class="table-cell">2026-04-25 14:30:00</td>
+                                        <td class="table-cell">
+                                            <a href="#" class="text-link">查看详情</a>
+                                        </td>
+                                    </tr>
+                                    <tr class="table-row">
+                                        <td class="table-cell">SP2026042300005</td>
+                                        <td class="table-cell">
+                                            <a href="#" class="text-link">GF260328091512345678</a>
+                                        </td>
+                                        <td class="table-cell">深圳阳光能源有限公司</td>
+                                        <td class="table-cell">广东省深圳市</td>
+                                        <td class="table-cell">2026-04-23 11:45:00</td>
+                                        <td class="table-cell">2026-04-23 09:00:00</td>
+                                        <td class="table-cell">暂停申报</td>
+                                        <td class="table-cell">
+                                            <span class="tag tag-success">已通过</span>
+                                        </td>
+                                        <td class="table-cell">2026-04-23 10:45:00</td>
+                                        <td class="table-cell">2026-04-24 15:20:00</td>
+                                        <td class="table-cell">
+                                            <a href="#" class="text-link">查看详情</a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- 分页 -->
+                    <div class="pagination feature-container">
+                        <div class="feature-marker" style="top: -10px; right: -10px;" data-feature="22">22</div>
+                        <span class="text-sm text-gray-600">共 12 条记录</span>
+                        <button disabled>上一页</button>
+                        <button class="active">1</button>
+                        <button>2</button>
+                        <button>3</button>
+                        <button>下一页</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- 页脚 -->
+        <footer class="footer">
+            <div class="container text-center">
+                <p>© 2026 TCL光伏开放平台</p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- 序号标记已集成到对应元素中 -->
+
+    <!-- 功能描述工具提示 -->
+    <div class="feature-tooltip" id="tooltip-1">
+        <h4>功能点 1: 订单编号查询</h4>
+        <p>用户输入订单编号，精确查询</p>
+    </div>
+    <div class="feature-tooltip" id="tooltip-2">
+        <h4>功能点 2: 所属组织查询</h4>
+        <p>输入规则：多级级联；支持模糊输入进行关联；支持多选</p>
+        <p>查询规则：支持精确匹配</p>
+    </div>
+    <div class="feature-tooltip" id="tooltip-3">
+        <h4>功能点 3: 安装地区查询</h4>
+        <p>输入规则：多级级联；支持模糊输入进行关联；支持多选</p>
+        <p>查询规则：支持精确匹配</p>
+    </div>
+    <div class="feature-tooltip" id="tooltip-4">
+        <h4>功能点 4: 订单状态查询</h4>
+        <p>输入规则：多级级联；支持模糊输入进行关联；支持多选</p>
+        <p>查询规则：支持精确匹配</p>
+    </div>
+    <div class="feature-tooltip" id="tooltip-5">
+        <h4>功能点 5: 全部</h4>
+        <p>统计该状态的审核记录数</p>
+    </div>
+    <div class="feature-tooltip" id="tooltip-6">
+        <h4>功能点 6: 待初审</h4>
+        <p>统计该状态的审核记录数</p>
+    </div>
+    <div class="feature-tooltip" id="tooltip-7">
+        <h4>功能点 7: 待复审</h4>
+        <p>统计该状态的审核记录数</p>
+    </div>
+    <div class="feature-tooltip" id="tooltip-8">
+        <h4>功能点 8: 待终审</h4>
+        <p>统计该状态的审核记录数</p>
+    </div>
+    <div class="feature-tooltip" id="tooltip-9">
+        <h4>功能点 9: 已通过</h4>
+        <p>统计该状态的审核记录数</p>
+    </div>
+    <div class="feature-tooltip" id="tooltip-10">
+        <h4>功能点 10: 已拒绝</h4>
+        <p>统计该状态的审核记录数</p>
+    </div>
+    <div class="feature-tooltip" id="tooltip-11">
+        <h4>功能点 11: 审核记录编号</h4>
+        <p>1. 显示审核记录的唯一标识符，生成规则 SP+年月日+五位流水号，如SP2026042700001</p>
+        <p>2. 按照该字段倒序排序，最新在前</p>
+    </div>
+    <div class="feature-tooltip" id="tooltip-12">
+        <h4>功能点 12: 订单编号</h4>
+        <p>显示审核记录对应的订单编号</p>
+    </div>
+    <div class="feature-tooltip" id="tooltip-13">
+        <h4>功能点 13: 代理商</h4>
+        <p>显示审核记录对应的代理商信息</p>
+    </div>
+    <div class="feature-tooltip" id="tooltip-14">
+        <h4>功能点 14: 安装地区</h4>
+        <p>显示审核记录对应的安装地区</p>
+    </div>
+    <div class="feature-tooltip" id="tooltip-15">
+        <h4>功能点 15: 申诉开始时间</h4>
+        <p>显示订单对应的申诉开始时间，具体到年月日时分秒，如2026-04-27 09:00:00</p>
+    </div>
+    <div class="feature-tooltip" id="tooltip-16">
+        <h4>功能点 16: 并网超期开始时间</h4>
+        <p>显示审核记录对应的并网超期开始时间，具体到年月日时分秒，如2026-04-27 09:00:00</p>
+    </div>
+    <div class="feature-tooltip" id="tooltip-17">
+        <h4>功能点 17: 申诉原因</h4>
+        <p>显示代理商选择的申诉原因</p>
+    </div>
+    <div class="feature-tooltip" id="tooltip-18">
+        <h4>功能点 18: 审核状态</h4>
+        <p>业务逻辑：显示审核记录的审核结果</p>
+    </div>
+    <div class="feature-tooltip" id="tooltip-19">
+        <h4>功能点 19: 发起时间</h4>
+        <p>显示代理商的发起时间</p>
+    </div>
+    <div class="feature-tooltip" id="tooltip-20">
+        <h4>功能点 20: 操作时间</h4>
+        <p>显示审核记录最近一条进度的操作时间</p>
+    </div>
+    <div class="feature-tooltip" id="tooltip-21">
+        <h4>功能点 21: 查看详情</h4>
+        <p>业务逻辑：用户点击查看详情按钮，系统跳转到审核详情页面</p>
+    </div>
+    <div class="feature-tooltip" id="tooltip-22">
+        <h4>功能点 22: 分页控件</h4>
+        <p>业务逻辑：用户点击分页控件，系统显示不同页的审核记录</p>
+    </div>
+
+    <script>
+        // 功能标记交互
+        document.addEventListener('DOMContentLoaded', function() {
+            const markers = document.querySelectorAll('.feature-marker');
+            
+            markers.forEach(marker => {
+                marker.addEventListener('mouseenter', function() {
+                    const featureId = this.getAttribute('data-feature');
+                    const tooltip = document.getElementById(`tooltip-${featureId}`);
+                    
+                    if (tooltip) {
+                        const rect = this.getBoundingClientRect();
+                        tooltip.style.left = `${rect.left}px`;
+                        tooltip.style.top = `${rect.bottom + 10}px`;
+                        tooltip.style.display = 'block';
+                    }
+                });
+                
+                marker.addEventListener('mouseleave', function() {
+                    const featureId = this.getAttribute('data-feature');
+                    const tooltip = document.getElementById(`tooltip-${featureId}`);
+                    
+                    if (tooltip) {
+                        tooltip.style.display = 'none';
+                    }
+                });
+            });
+        });
+
+        // 状态Tab切换
+        document.addEventListener('DOMContentLoaded', function() {
+            const tabs = document.querySelectorAll('.status-tab');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    tabs.forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+        });
+    </script>
+
+    <script>
+        function renderOpenPlatformSidebar(activeItem = 'order_overdue', basePath = '') {
+            return `
+            <div class="side-menu-container">
+                <div class="side-menu">
+                    <div class="side-menu-header">
+                        <h4 class="side-menu-title">业务管理</h4>
+                    </div>
+                    <ul class="side-menu-list">
+                        <li class="side-menu-item">
+                            <a href="#" class="side-menu-link">
+                                订单管理
+                                <i class="fa fa-angle-right side-menu-arrow"></i>
+                            </a>
+                            <ul class="side-menu-list pl-4 mt-2">
+                                <li class="side-menu-item">
+                                    <a href="#" class="side-menu-link">
+                                        超期管理
+                                        <i class="fa fa-angle-right side-menu-arrow"></i>
+                                    </a>
+                                    <ul class="side-menu-list pl-6 mt-2">
+                                        <li class="side-menu-item ${activeItem === 'overdue_list' ? 'active' : ''}">
+                                            <a href="#" class="side-menu-link">并网超期订单</a>
+                                        </li>
+                                        <li class="side-menu-item ${activeItem === 'order_overdue' ? 'active' : ''}">
+                                            <a href="#" class="side-menu-link">申诉审核记录</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            `;
+        }
+
+        function initSidebar(activeItem = 'order_overdue', basePath = '') {
+            const sidebarContainer = document.getElementById('sidebar');
+            if (sidebarContainer) {
+                sidebarContainer.innerHTML = renderOpenPlatformSidebar(activeItem, basePath);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            initSidebar('order_overdue');
+        });
+    </script>
+    </body>
+</html>

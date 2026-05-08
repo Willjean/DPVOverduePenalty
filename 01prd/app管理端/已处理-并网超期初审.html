@@ -1,0 +1,1046 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>已处理-并网超期初审</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.4;
+            padding-bottom: 56px;
+        }
+
+        .header-tabs {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: #fff;
+            z-index: 100;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+        }
+
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid #eee;
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+
+        .tab-item {
+            padding: 10px 12px;
+            font-size: 13px;
+            color: #666;
+            position: relative;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .tab-item.active {
+            color: #333;
+            font-weight: 600;
+        }
+
+        .tab-item.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 12px;
+            right: 12px;
+            height: 2px;
+            background: #e53935;
+        }
+
+        .status-tabs {
+            display: flex;
+            padding: 6px 10px;
+            gap: 6px;
+        }
+
+        .status-tab {
+            flex: 1;
+            padding: 5px 6px;
+            text-align: center;
+            border-radius: 14px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .status-tab.active {
+            background: #fff3f3;
+            color: #e53935;
+            font-weight: 600;
+        }
+
+        .status-tab.inactive {
+            background: #f5f5f5;
+            color: #999;
+        }
+
+        .badge {
+            background: #e53935;
+            color: #fff;
+            font-size: 10px;
+            padding: 1px 4px;
+            border-radius: 8px;
+            min-width: 16px;
+            text-align: center;
+            margin-left: 3px;
+        }
+
+        .badge-zero {
+            background: #ddd;
+            color: #999;
+        }
+
+        .main-container {
+            display: flex;
+            margin-top: 72px;
+        }
+
+        .sidebar {
+            width: 80px;
+            background: #fff;
+            padding: 8px 0;
+            flex-shrink: 0;
+            position: fixed;
+            left: 0;
+            top: 72px;
+            bottom: 56px;
+            overflow-y: auto;
+            border-right: 1px solid #eee;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .sidebar-item {
+            padding: 10px 6px;
+            font-size: 11px;
+            color: #666;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            transition: all 0.2s;
+            border-left: 2px solid transparent;
+            gap: 4px;
+        }
+
+        .sidebar-item.active {
+            background: #fff3f3;
+            color: #e53935;
+            font-weight: 600;
+            border-left-color: #e53935;
+        }
+
+        .sidebar-item .badge {
+            margin-left: 0;
+            font-size: 9px;
+            padding: 1px 3px;
+        }
+
+        .content {
+            flex: 1;
+            margin-left: 80px;
+            padding: 8px;
+            min-height: calc(100vh - 128px);
+        }
+
+        .search-bar {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 8px;
+            align-items: center;
+            background: #fff;
+            padding: 6px 8px;
+            border-radius: 6px;
+            border: 1px solid #eee;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 6px 10px;
+            border: 1px solid #ddd;
+            border-radius: 16px;
+            font-size: 12px;
+            outline: none;
+            min-width: 0;
+        }
+
+        .search-input:focus {
+            border-color: #e53935;
+        }
+
+        .btn-search {
+            padding: 6px 12px;
+            background: #e53935;
+            color: #fff;
+            border: none;
+            border-radius: 16px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .order-card {
+            background: #fff;
+            border-radius: 6px;
+            padding: 10px;
+            margin-bottom: 8px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+            border: 1px solid #eee;
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+
+        .agent-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .order-info-row {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 4px;
+            flex-wrap: wrap;
+        }
+
+        .customer-name {
+            font-size: 12px;
+            color: #333;
+        }
+
+        .order-no {
+            font-size: 11px;
+            color: #1e88e5;
+            font-weight: 600;
+        }
+
+        .copy-icon {
+            font-size: 12px;
+            color: #999;
+            cursor: pointer;
+        }
+
+        .sub-info {
+            font-size: 10px;
+            color: #999;
+            line-height: 1.4;
+            margin-bottom: 6px;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 6px;
+            margin-bottom: 8px;
+        }
+
+        .info-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .info-label {
+            font-size: 10px;
+            color: #999;
+            margin-bottom: 1px;
+        }
+
+        .info-value {
+            font-size: 11px;
+            color: #333;
+            word-break: break-all;
+        }
+
+        .status-tag {
+            display: inline-block;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 10px;
+            font-weight: 500;
+        }
+
+        .status-tag.appealing {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .status-tag.can-appeal {
+            background: #fff3e0;
+            color: #f57c00;
+        }
+
+        .audit-section {
+            border-top: 1px dashed #eee;
+            padding-top: 8px;
+            margin-top: 8px;
+        }
+
+        .audit-title {
+            font-size: 11px;
+            color: #666;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .toggle-btn {
+            font-size: 10px;
+            color: #e53935;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 0;
+        }
+
+        .audit-row {
+            display: flex;
+            margin-bottom: 4px;
+        }
+
+        .audit-label {
+            font-size: 10px;
+            color: #999;
+            width: 56px;
+            flex-shrink: 0;
+        }
+
+        .audit-value {
+            font-size: 10px;
+            color: #333;
+            flex: 1;
+            word-break: break-all;
+        }
+
+        .audit-result-pass {
+            color: #43a047;
+            font-weight: 500;
+        }
+
+        .audit-result-reject {
+            color: #e53935;
+            font-weight: 500;
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 56px;
+            background: #fff;
+            display: flex;
+            box-shadow: 0 -1px 3px rgba(0, 0, 0, 0.08);
+            z-index: 100;
+        }
+
+        .nav-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            text-decoration: none;
+            font-size: 9px;
+            position: relative;
+        }
+
+        .nav-item.active {
+            color: #e53935;
+        }
+
+        .nav-icon {
+            font-size: 18px;
+            margin-bottom: 1px;
+        }
+
+        .nav-badge {
+            position: absolute;
+            top: 2px;
+            right: 50%;
+            transform: translateX(14px);
+            background: #e53935;
+            color: #fff;
+            font-size: 8px;
+            padding: 1px 3px;
+            border-radius: 8px;
+            min-width: 12px;
+            text-align: center;
+        }
+
+        .toast {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.75);
+            color: #fff;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 12px;
+            z-index: 300;
+            opacity: 0;
+            transition: opacity 0.2s;
+            text-align: center;
+            max-width: 80%;
+        }
+
+        .toast.show {
+            opacity: 1;
+        }
+
+        .toast.success {
+            background: rgba(76, 175, 80, 0.9);
+        }
+
+        .toast.error {
+            background: rgba(244, 67, 54, 0.9);
+        }
+
+        .feature-marker {
+            position: absolute;
+            left: -36px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 28px;
+            height: 28px;
+            background: #F52E2E;
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+            z-index: 10;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(245, 46, 46, 0.4);
+        }
+
+        .feature-marker:hover + .feature-tooltip {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(-50%) translateX(10px);
+        }
+
+        .feature-tooltip {
+            position: absolute;
+            left: -36px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(44, 48, 56, 0.95);
+            color: #fff;
+            padding: 12px;
+            border-radius: 8px;
+            width: 280px;
+            z-index: 20;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            font-size: 12px;
+            line-height: 1.5;
+            pointer-events: none;
+        }
+
+        .feature-tooltip .tooltip-title {
+            color: #F52E2E;
+            font-weight: 600;
+            font-size: 13px;
+            margin-bottom: 8px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 6px;
+        }
+
+        .feature-tooltip .tooltip-content {
+            color: #ddd;
+        }
+
+        .feature-tooltip .tooltip-content li {
+            margin-bottom: 4px;
+            list-style: disc;
+            margin-left: 16px;
+        }
+
+        .feature-tooltip::after {
+            content: '';
+            position: absolute;
+            right: -8px;
+            top: 50%;
+            transform: translateY(-50%) rotate(45deg);
+            width: 16px;
+            height: 16px;
+            background: rgba(44, 48, 56, 0.95);
+        }
+
+        .feature-container {
+            position: relative;
+            padding-left: 40px;
+        }
+
+        .card-feature-container {
+            position: relative;
+        }
+
+        .audit-process {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 8px;
+        }
+
+        .audit-step {
+            display: flex;
+            gap: 12px;
+            position: relative;
+        }
+
+        .audit-step-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #e53935;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+            flex-shrink: 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        .audit-step-icon.pass {
+            background: #43a047;
+        }
+
+        .audit-step-icon.reject {
+            background: #e53935;
+        }
+
+        .audit-step-content {
+            flex: 1;
+            background: #f9f9f9;
+            border-radius: 8px;
+            padding: 10px;
+        }
+
+        .audit-step-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 6px;
+        }
+
+        .audit-step-info {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 6px;
+        }
+
+        .audit-step-info-item {
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .audit-step-info-label {
+            font-size: 10px;
+            color: #999;
+            margin-bottom: 2px;
+        }
+
+        .audit-step-info-value {
+            font-size: 11px;
+            color: #333;
+        }
+
+        .audit-step-line {
+            position: absolute;
+            left: 15px;
+            top: 32px;
+            bottom: -12px;
+            width: 2px;
+            background: #e0e0e0;
+        }
+
+        .audit-step:last-child .audit-step-line {
+            display: none;
+        }
+
+        .inline-feature-container {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .grid-item-feature {
+            position: relative;
+            padding-left: 32px;
+        }
+
+        .grid-feature-marker {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 24px;
+            height: 24px;
+            background: #F52E2E;
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 600;
+            z-index: 10;
+        }
+
+        .audit-item-feature {
+            position: relative;
+            padding-left: 32px;
+        }
+
+        .audit-feature-marker {
+            position: absolute;
+            left: 0;
+            top: 2px;
+            width: 24px;
+            height: 24px;
+            background: #F52E2E;
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 600;
+            z-index: 10;
+        }
+    </style>
+</head>
+<body>
+    <div class="header-tabs">
+        <div class="tabs">
+            <div class="tab-item active">订单审批</div>
+            <div class="tab-item">业务审批</div>
+            <div class="tab-item">事件中心</div>
+            <div class="tab-item">客服工单</div>
+        </div>
+        <div class="status-tabs">
+            <div class="status-tab inactive">待处理<span class="badge">349</span></div>
+            <div class="status-tab active">已处理<span>(12)</span></div>
+        </div>
+    </div>
+
+    <div class="main-container">
+        <aside class="sidebar">
+            <ul class="sidebar-menu">
+                <li class="sidebar-item">
+                    <span>订单信息变更</span>
+                    <span class="badge badge-zero">0</span>
+                </li>
+                <li class="sidebar-item">
+                    <span>取消订单</span>
+                    <span class="badge badge-zero">0</span>
+                </li>
+                <li class="sidebar-item active">
+                    <span>并网超期审核</span>
+                    <span class="badge">12</span>
+                </li>
+                <li class="sidebar-item">
+                    <span>物流审批</span>
+                    <span class="badge badge-zero">0</span>
+                </li>
+            </ul>
+        </aside>
+
+        <main class="content">
+            <div class="feature-container">
+                <div class="feature-marker">1</div>
+                <div class="feature-tooltip">
+                    <div class="tooltip-title">输入搜索框</div>
+                    <div class="tooltip-content">
+                        <ul>
+                            <li>输入限制：最多录入99字符</li>
+                            <li>支持订单号精确查询</li>
+                            <li>支持姓名模糊查询</li>
+                            <li>支持代理商模糊查询</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="search-bar">
+                    <input type="text" class="search-input" id="searchInput" placeholder="搜索代理商/姓名/订单号" maxlength="99">
+                    <button class="btn-search" id="searchBtn">搜索</button>
+                </div>
+            </div>
+
+            <div class="feature-container">
+                <div class="feature-marker">2</div>
+                <div class="feature-tooltip">
+                    <div class="tooltip-title">排序</div>
+                    <div class="tooltip-content">按照申诉通道关闭剩余时长排序</div>
+                </div>
+                <button class="btn-search" id="sortBtn" style="width: 100%; margin-bottom: 8px; border-radius: 6px;">
+                    ↓ 按申诉通道关闭剩余时长排序
+                </button>
+            </div>
+
+            <div class="order-card">
+                <div class="card-feature-container">
+                    <div class="card-header" style="position: relative; padding-left: 40px;">
+                        <div class="feature-marker">4</div>
+                        <div class="feature-tooltip">
+                            <div class="tooltip-title">代理商名称</div>
+                            <div class="tooltip-content">展示订单代理商名称</div>
+                        </div>
+                        <span class="agent-name">河南亦晨新能源有限公司</span>
+                    </div>
+                </div>
+                
+                <div class="order-info-row">
+                    <div class="inline-feature-container">
+                        <div class="grid-feature-marker">5</div>
+                        <span class="customer-name">叶玉宝</span>
+                    </div>
+                    <div class="inline-feature-container">
+                        <div class="grid-feature-marker">6</div>
+                        <span class="order-no">GF260325165958337877</span>
+                    </div>
+                    <span class="copy-icon">📋</span>
+                </div>
+                <div class="sub-info">
+                    <div class="inline-feature-container">
+                        <div class="grid-feature-marker">7</div>
+                        <span>河南-邓志良</span>
+                    </div>
+                    <div class="inline-feature-container" style="margin-left: 8px;">
+                        <div class="grid-feature-marker">8</div>
+                        <span>HNQP/南阳凯奥新能源有限公司</span>
+                    </div>
+                </div>
+
+                <div class="info-grid">
+                    <div class="grid-item-feature">
+                        <div class="grid-feature-marker">9</div>
+                        <div class="info-item">
+                            <span class="info-label">申诉通道</span>
+                            <span class="info-value">2026-04-27 ~ 2026-05-06</span>
+                        </div>
+                    </div>
+                    <div class="grid-item-feature">
+                        <div class="grid-feature-marker">10</div>
+                        <div class="info-item">
+                            <span class="info-label">并网开始时间</span>
+                            <span class="info-value">2026-04-01</span>
+                        </div>
+                    </div>
+                    <div class="grid-item-feature">
+                        <div class="grid-feature-marker">11</div>
+                        <div class="info-item">
+                            <span class="info-label">并网天数</span>
+                            <span class="info-value">28天</span>
+                        </div>
+                    </div>
+                    <div class="grid-item-feature">
+                        <div class="grid-feature-marker">12</div>
+                        <div class="info-item">
+                            <span class="info-label">超期记录状态</span>
+                            <span class="info-value">申诉中</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="audit-section" id="audit-section-1">
+                    <div class="card-feature-container">
+                        <div class="audit-title" style="position: relative; padding-left: 40px;">
+                            <div class="feature-marker">25</div>
+                            <div class="feature-tooltip">
+                                <div class="tooltip-title">展示更多</div>
+                                <div class="tooltip-content">默认展示最新的审核信息，如终审/复审/初审，可点击展示更多，将卡片高度托高，展示完整审核信息</div>
+                            </div>
+                            审核信息
+                            <button class="toggle-btn" onclick="toggleAudit(1)">收起</button>
+                        </div>
+                    </div>
+
+                    <div class="audit-process" data-audit="1">
+                        <div class="audit-step">
+                            <div class="audit-step-line"></div>
+                            <div class="audit-step-icon pass">终</div>
+                            <div class="audit-step-content">
+                                <div class="audit-step-title">终审</div>
+                                <div class="audit-step-info">
+                                    <div class="audit-item-feature">
+                                        <div class="audit-feature-marker">21</div>
+                                        <div class="audit-step-info-item">
+                                            <span class="audit-step-info-label">结果</span>
+                                            <span class="audit-step-info-value"><span class="audit-result-pass">通过</span></span>
+                                        </div>
+                                    </div>
+                                    <div class="audit-item-feature">
+                                        <div class="audit-feature-marker">22</div>
+                                        <div class="audit-step-info-item">
+                                            <span class="audit-step-info-label">备注</span>
+                                            <span class="audit-step-info-value">同意通过</span>
+                                        </div>
+                                    </div>
+                                    <div class="audit-item-feature">
+                                        <div class="audit-feature-marker">23</div>
+                                        <div class="audit-step-info-item">
+                                            <span class="audit-step-info-label">审核人</span>
+                                            <span class="audit-step-info-value">王**</span>
+                                        </div>
+                                    </div>
+                                    <div class="audit-item-feature">
+                                        <div class="audit-feature-marker">24</div>
+                                        <div class="audit-step-info-item">
+                                            <span class="audit-step-info-label">时间</span>
+                                            <span class="audit-step-info-value">2026-04-28 09:15:00</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="audit-step">
+                            <div class="audit-step-line"></div>
+                            <div class="audit-step-icon pass">复</div>
+                            <div class="audit-step-content">
+                                <div class="audit-step-title">复审</div>
+                                <div class="audit-step-info">
+                                    <div class="audit-item-feature">
+                                        <div class="audit-feature-marker">17</div>
+                                        <div class="audit-step-info-item">
+                                            <span class="audit-step-info-label">结果</span>
+                                            <span class="audit-step-info-value"><span class="audit-result-pass">通过</span></span>
+                                        </div>
+                                    </div>
+                                    <div class="audit-item-feature">
+                                        <div class="audit-feature-marker">18</div>
+                                        <div class="audit-step-info-item">
+                                            <span class="audit-step-info-label">备注</span>
+                                            <span class="audit-step-info-value">同意初审意见</span>
+                                        </div>
+                                    </div>
+                                    <div class="audit-item-feature">
+                                        <div class="audit-feature-marker">19</div>
+                                        <div class="audit-step-info-item">
+                                            <span class="audit-step-info-label">审核人</span>
+                                            <span class="audit-step-info-value">李**</span>
+                                        </div>
+                                    </div>
+                                    <div class="audit-item-feature">
+                                        <div class="audit-feature-marker">20</div>
+                                        <div class="audit-step-info-item">
+                                            <span class="audit-step-info-label">时间</span>
+                                            <span class="audit-step-info-value">2026-04-27 14:20:30</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="audit-step">
+                            <div class="audit-step-icon pass">初</div>
+                            <div class="audit-step-content">
+                                <div class="audit-step-title">初审</div>
+                                <div class="audit-step-info">
+                                    <div class="audit-item-feature">
+                                        <div class="audit-feature-marker">13</div>
+                                        <div class="audit-step-info-item">
+                                            <span class="audit-step-info-label">结果</span>
+                                            <span class="audit-step-info-value"><span class="audit-result-pass">通过</span></span>
+                                        </div>
+                                    </div>
+                                    <div class="audit-item-feature">
+                                        <div class="audit-feature-marker">14</div>
+                                        <div class="audit-step-info-item">
+                                            <span class="audit-step-info-label">备注</span>
+                                            <span class="audit-step-info-value">情况属实，符合延期条件</span>
+                                        </div>
+                                    </div>
+                                    <div class="audit-item-feature">
+                                        <div class="audit-feature-marker">15</div>
+                                        <div class="audit-step-info-item">
+                                            <span class="audit-step-info-label">审核人</span>
+                                            <span class="audit-step-info-value">张**</span>
+                                        </div>
+                                    </div>
+                                    <div class="audit-item-feature">
+                                        <div class="audit-feature-marker">16</div>
+                                        <div class="audit-step-info-item">
+                                            <span class="audit-step-info-label">时间</span>
+                                            <span class="audit-step-info-value">2026-04-27 10:30:15</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="order-card">
+                <div class="card-header">
+                    <span class="agent-name">南阳凯奥新能源有限公司</span>
+                </div>
+                
+                <div class="order-info-row">
+                    <span class="customer-name">许加</span>
+                    <span class="order-no">GF260330153207253156</span>
+                    <span class="copy-icon">📋</span>
+                </div>
+                <div class="sub-info">河南-张三-HNQP/郑州光伏科技有限公司</div>
+
+                <div class="info-grid">
+                    <div class="info-item">
+                        <span class="info-label">申诉通道</span>
+                        <span class="info-value">2026-04-28 ~ 2026-05-07</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">并网开始时间</span>
+                        <span class="info-value">2026-04-05</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">并网天数</span>
+                        <span class="info-value">24天</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">超期记录状态</span>
+                        <span class="info-value">可申诉</span>
+                    </div>
+                </div>
+
+                <div class="audit-section" id="audit-section-2">
+                    <div class="card-feature-container">
+                        <div class="audit-title" style="position: relative; padding-left: 40px;">
+                            <div class="feature-marker">26</div>
+                            <div class="feature-tooltip">
+                                <div class="tooltip-title">收起</div>
+                                <div class="tooltip-content">当展示更多后，可点击收起，收起审核信息，仅展示最新审核信息</div>
+                            </div>
+                            审核信息
+                            <button class="toggle-btn" onclick="toggleAudit(2)">展开</button>
+                        </div>
+                    </div>
+
+                    <div class="audit-process" data-audit="2" style="display: none;">
+                        <div class="audit-step">
+                            <div class="audit-step-line"></div>
+                            <div class="audit-step-icon reject">终</div>
+                            <div class="audit-step-content">
+                                <div class="audit-step-title">终审</div>
+                                <div class="audit-step-info">
+                                    <div class="audit-step-info-item">
+                                        <span class="audit-step-info-label">结果</span>
+                                        <span class="audit-step-info-value"><span class="audit-result-reject">驳回</span></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="audit-step">
+                            <div class="audit-step-icon reject">初</div>
+                            <div class="audit-step-content">
+                                <div class="audit-step-title">初审</div>
+                                <div class="audit-step-info">
+                                    <div class="audit-step-info-item">
+                                        <span class="audit-step-info-label">结果</span>
+                                        <span class="audit-step-info-value"><span class="audit-result-reject">驳回</span></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <nav class="bottom-nav">
+        <a href="#" class="nav-item active">
+            <span class="nav-icon">✅</span>
+            <span>待办</span>
+            <span class="nav-badge">2</span>
+        </a>
+        <a href="#" class="nav-item">
+            <span class="nav-icon">📊</span>
+            <span>数据</span>
+        </a>
+        <a href="#" class="nav-item">
+            <span class="nav-icon">⚙️</span>
+            <span>管理</span>
+        </a>
+        <a href="#" class="nav-item">
+            <span class="nav-icon">📋</span>
+            <span>订单</span>
+        </a>
+        <a href="#" class="nav-item">
+            <span class="nav-icon">👤</span>
+            <span>我的</span>
+            <span class="nav-badge">1</span>
+        </a>
+    </nav>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        const auditExpanded = {1: true};
+
+        function toggleAudit(id) {
+            const process = document.querySelector(`#audit-section-${id} .audit-process`);
+            const btn = document.querySelector(`#audit-section-${id} .toggle-btn`);
+            auditExpanded[id] = !auditExpanded[id];
+
+            if (auditExpanded[id]) {
+                process.style.display = 'flex';
+                btn.textContent = '收起';
+            } else {
+                process.style.display = 'none';
+                btn.textContent = '展开';
+            }
+        }
+
+        function showToast(message, type) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = `toast ${type} show`;
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        document.getElementById('searchBtn').addEventListener('click', function() {
+            const value = document.getElementById('searchInput').value;
+            if (value.length > 99) {
+                showToast('搜索内容最多录入99字符', 'error');
+            } else if (value.trim()) {
+                showToast('搜索完成', 'success');
+            }
+        });
+    </script>
+</body>
+</html>

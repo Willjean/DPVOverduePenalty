@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>回购宽限 - TCL数字化运营平台</title>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            font-size: 14px;
+            line-height: 1.5;
+            color: #2C3038;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        /* 弹窗容器 */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal {
+            background-color: #FFFFFF;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            width: 500px;
+            max-width: 90%;
+        }
+
+        /* 弹窗头部 */
+        .modal-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid #E5E5E5;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .modal-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #000000;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 20px;
+            color: #8A8C90;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .modal-close:hover {
+            color: #2C3038;
+        }
+
+        /* 弹窗内容 */
+        .modal-body {
+            padding: 24px 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            font-size: 14px;
+            font-weight: 500;
+            color: #2C3038;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #D9D9D9;
+            border-radius: 4px;
+            font-size: 14px;
+            color: #2C3038;
+            background-color: #F5F5F5;
+            transition: border-color 0.3s;
+        }
+
+        .form-input.editable {
+            background-color: #FFFFFF;
+        }
+
+        .form-input.editable:focus {
+            outline: none;
+            border-color: #F52E2E;
+        }
+
+        .form-input:disabled {
+            cursor: not-allowed;
+        }
+
+        .form-hint {
+            font-size: 12px;
+            color: #8A8C90;
+            margin-top: 4px;
+        }
+
+        .form-hint.error {
+            color: #F52E2E;
+        }
+
+        /* 弹窗底部 */
+        .modal-footer {
+            padding: 16px 20px;
+            border-top: 1px solid #E5E5E5;
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+        }
+
+        .btn {
+            padding: 8px 20px;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+        }
+
+        .btn-secondary {
+            background-color: #FFFFFF;
+            color: #2C3038;
+            border: 1px solid #D9D9D9;
+        }
+
+        .btn-secondary:hover {
+            background-color: #F5F5F5;
+        }
+
+        .btn-primary {
+            background-color: #F52E2E;
+            color: #FFFFFF;
+        }
+
+        .btn-primary:hover {
+            background-color: #E02929;
+        }
+
+        /* 功能点标记 */
+        .feature-marker {
+            position: absolute;
+            width: 28px;
+            height: 28px;
+            background-color: #F52E2E;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+            z-index: 100;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .feature-marker:hover {
+            transform: scale(1.1);
+        }
+
+        .feature-tooltip {
+            position: absolute;
+            background-color: rgba(44, 48, 56, 0.95);
+            color: white;
+            padding: 16px;
+            border-radius: 8px;
+            max-width: 320px;
+            z-index: 1000;
+            display: none;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            left: 40px;
+            top: 0;
+        }
+
+        .feature-tooltip h4 {
+            color: #F52E2E;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .feature-tooltip p {
+            font-size: 12px;
+            line-height: 1.5;
+            margin-bottom: 4px;
+        }
+
+        .feature-container {
+            position: relative;
+        }
+    </style>
+</head>
+<body>
+    <div class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">回购宽限</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <div id="feature1" class="feature-container">
+                        <label class="form-label">回购日</label>
+                        <input type="text" class="form-input" value="2026/05/06 00:00:00" disabled>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div id="feature2" class="feature-container">
+                        <label class="form-label">回购宽限天数</label>
+                        <input type="number" class="form-input editable" id="graceDays" min="1" max="99" value="1">
+                        <div class="form-hint">必填，支持录入1-99天</div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div id="feature3" class="feature-container">
+                        <label class="form-label">宽限后回购日</label>
+                        <input type="text" class="form-input" id="newRepurchaseDate" value="2026/05/07 00:00:00" disabled>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="feature4" class="btn btn-secondary feature-container">取消</button>
+                <button id="feature5" class="btn btn-primary feature-container">确认</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const featureElements = [
+                { element: document.getElementById('feature1'), feature: 1, title: '回购日', content: ['展示订单约定的回购日', '如2026/05/06 00:00:00'] },
+                { element: document.getElementById('feature2'), feature: 2, title: '回购宽限天数', content: ['必填', '支持录入1-99天'] },
+                { element: document.getElementById('feature3'), feature: 3, title: '宽限后回购日', content: ['展示用，填入回购宽限天数后，根据回购日累加，计算出宽限后回购日', '如2026/05/07 00:00:00'] },
+                { element: document.getElementById('feature4'), feature: 4, title: '取消', content: ['关闭弹窗'] },
+                { element: document.getElementById('feature5'), feature: 5, title: '确认', content: ['确认校验：分类名称唯一性，否则提示：分类名称已存在，无需创建~'] }
+            ];
+
+            featureElements.forEach(item => {
+                if (item.element) {
+                    item.element.classList.add('feature-container');
+
+                    const marker = document.createElement('div');
+                    marker.className = 'feature-marker';
+                    marker.dataset.feature = item.feature;
+                    marker.textContent = item.feature;
+                    item.element.appendChild(marker);
+
+                    const tooltip = document.createElement('div');
+                    tooltip.className = 'feature-tooltip';
+                    tooltip.id = `tooltip-${item.feature}`;
+                    tooltip.innerHTML = `<h4>功能点 ${item.feature}: ${item.title}</h4>`;
+                    item.content.forEach(line => {
+                        tooltip.innerHTML += `<p>${line}</p>`;
+                    });
+                    item.element.appendChild(tooltip);
+                }
+            });
+
+            const markers = document.querySelectorAll('.feature-marker');
+            markers.forEach(marker => {
+                marker.addEventListener('mouseenter', function() {
+                    const feature = this.dataset.feature;
+                    const tooltip = document.getElementById(`tooltip-${feature}`);
+                    if (tooltip) {
+                        tooltip.style.display = 'block';
+                    }
+                });
+
+                marker.addEventListener('mouseleave', function() {
+                    const feature = this.dataset.feature;
+                    const tooltip = document.getElementById(`tooltip-${feature}`);
+                    if (tooltip) {
+                        tooltip.style.display = 'none';
+                    }
+                });
+            });
+
+            // 回购宽限天数变化时计算宽限后回购日
+            const graceDaysInput = document.getElementById('graceDays');
+            const newRepurchaseDateInput = document.getElementById('newRepurchaseDate');
+
+            graceDaysInput.addEventListener('input', function() {
+                const days = parseInt(this.value);
+                if (days >= 1 && days <= 99) {
+                    const baseDate = new Date('2026-05-06');
+                    baseDate.setDate(baseDate.getDate() + days);
+                    const year = baseDate.getFullYear();
+                    const month = String(baseDate.getMonth() + 1).padStart(2, '0');
+                    const day = String(baseDate.getDate()).padStart(2, '0');
+                    newRepurchaseDateInput.value = `${year}/${month}/${day} 00:00:00`;
+                }
+            });
+        });
+    </script>
+</body>
+</html>

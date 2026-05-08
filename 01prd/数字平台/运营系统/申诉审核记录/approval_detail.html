@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>申诉详情 - TCL数字化运营平台</title>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            font-size: 14px; line-height: 1.5;
+            color: #2C3038; background-color: #F5F5F8;
+        }
+        :root {
+            --color-primary: #F52E2E;
+            --color-warning: #FF982F;
+            --color-success: #1DDA1D;
+            --color-info: #4D79FF;
+            --color-text-title: #000000;
+            --color-text-primary: #2C3038;
+            --color-text-secondary: #5B5E64;
+            --color-text-tertiary: #8A8C90;
+            --color-bg-body: #F5F5F8;
+            --color-bg-card: #FFFFFF;
+            --color-bg-border: #DFE1E5;
+            --spacing-xs: 4px; --spacing-sm: 8px; --spacing-md: 16px;
+            --spacing-lg: 24px; --spacing-xl: 32px;
+            --font-size-xs: 12px; --font-size-sm: 14px;
+            --font-size-md: 16px; --font-size-lg: 18px;
+            --font-size-xl: 20px; --font-size-xxl: 24px;
+            --border-radius-sm: 4px; --border-radius-md: 8px;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        .flex { display: flex; }
+        .flex-col { flex-direction: column; }
+        .justify-between { justify-content: space-between; }
+        .items-center { align-items: center; }
+        .space-x-4 { gap: var(--spacing-md); }
+        .grid { display: grid; }
+        .md\:grid-cols-3 { grid-template-columns: repeat(3, 1fr); }
+        .gap-4 { gap: var(--spacing-md); }
+        .px-4 { padding-left: var(--spacing-md); padding-right: var(--spacing-md); }
+        .py-8 { padding-top: var(--spacing-xl); padding-bottom: var(--spacing-xl); }
+        .mb-6 { margin-bottom: var(--spacing-lg); }
+        .text-link { color: var(--color-info); text-decoration: underline; cursor: pointer; }
+        .body-bg { background-color: var(--color-bg-body); }
+        .header-bg { background-color: var(--color-bg-card); }
+        .header-shadow { box-shadow: var(--shadow-sm); }
+        .rounded-md { border-radius: var(--border-radius-md); }
+        .card {
+            background-color: var(--color-bg-card);
+            border-radius: var(--border-radius-md);
+            box-shadow: var(--shadow-sm);
+            padding: var(--spacing-lg);
+        }
+        .page-title {
+            font-size: var(--font-size-xxl); font-weight: 700;
+            color: var(--color-text-title); margin-bottom: var(--spacing-lg);
+        }
+        .section-title {
+            font-size: var(--font-size-lg); font-weight: 700;
+            color: var(--color-text-primary); margin-bottom: var(--spacing-lg);
+        }
+        .btn {
+            padding: var(--spacing-sm) var(--spacing-md);
+            border-radius: var(--border-radius-sm);
+            font-size: var(--font-size-sm); font-weight: 500;
+            cursor: pointer; transition: all 0.3s ease;
+            border: none; display: inline-flex;
+            align-items: center; gap: var(--spacing-xs);
+        }
+        .btn-primary { background-color: var(--color-primary); color: white; }
+        .btn-outline { background-color: transparent; color: var(--color-text-primary); border: 1px solid var(--color-bg-border); }
+        .btn-outline:hover { background-color: var(--color-bg-body); }
+        .table { width: 100%; border-collapse: collapse; font-size: var(--font-size-sm); }
+        .table-header { background-color: var(--color-bg-body); }
+        .table-row { border-bottom: 1px solid var(--color-bg-border); }
+        .table-cell { padding: var(--spacing-sm) var(--spacing-md); text-align: left; color: var(--color-text-primary); }
+        .table-header .table-cell { font-weight: 600; color: var(--color-text-secondary); }
+        .side-menu-container {
+            width: 240px; flex-shrink: 0;
+            background-color: #FFFFFF; border-radius: var(--border-radius-md);
+            box-shadow: var(--shadow-sm); overflow: hidden;
+            height: fit-content; position: sticky; top: var(--spacing-lg);
+        }
+        .side-menu-header { padding: var(--spacing-md); border-bottom: 1px solid var(--color-bg-border); }
+        .side-menu-title { font-size: var(--font-size-md); font-weight: 700; color: var(--color-text-title); }
+        .side-menu-list { list-style: none; padding: var(--spacing-sm); }
+        .side-menu-item { position: relative; }
+        .side-menu-item.active { background-color: rgba(245, 46, 46, 0.05); }
+        .side-menu-item.active::before {
+            content: ''; position: absolute; left: 0; top: 0; bottom: 0;
+            width: 3px; background-color: var(--color-primary);
+        }
+        .side-menu-link {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: var(--spacing-sm) var(--spacing-md);
+            color: var(--color-text-primary); text-decoration: none;
+            transition: all 0.3s ease; border-radius: var(--border-radius-sm);
+        }
+        .side-menu-link:hover { background-color: var(--color-bg-body); }
+        .main-layout { display: flex; gap: var(--spacing-md); }
+        .main-content { flex: 1; padding-bottom: 80px; }
+        .grid-item {
+            padding: var(--spacing-md); background-color: #f7f7f7;
+            border-radius: var(--border-radius-md);
+        }
+        .grid-item label {
+            display: block; font-weight: 500; margin-bottom: var(--spacing-xs);
+            color: var(--color-text-secondary); font-size: var(--font-size-xs);
+        }
+        .grid-item .value {
+            color: var(--color-text-primary); font-size: var(--font-size-sm); font-weight: 500;
+        }
+        .attachment-item {
+            display: flex; flex-direction: column; align-items: center;
+            width: 100px; margin-right: 16px; margin-bottom: 16px;
+        }
+        .attachment-thumbnail {
+            width: 80px; height: 80px; border-radius: var(--border-radius-sm);
+            display: flex; align-items: center; justify-content: center;
+            margin-bottom: 8px; overflow: hidden;
+            border: 1px solid var(--color-bg-border); background-color: #f7f7f7;
+        }
+        .attachment-thumbnail img { width: 100%; height: 100%; object-fit: cover; }
+        .attachment-thumbnail i { font-size: 32px; color: var(--color-info); }
+        .attachment-info { text-align: center; width: 100%; }
+        .attachment-name {
+            display: block; font-size: 12px; color: var(--color-text-secondary);
+            white-space: nowrap; overflow: hidden;
+            text-overflow: ellipsis; max-width: 100px;
+        }
+        .attachment-actions { display: flex; justify-content: center; gap: 8px; margin-top: 4px; }
+        .feature-container { position: relative; }
+        .feature-marker {
+            position: absolute; top: -8px; right: -8px;
+            width: 28px; height: 28px;
+            background-color: var(--color-primary); color: white;
+            border-radius: 50%; display: flex;
+            align-items: center; justify-content: center;
+            font-size: 12px; font-weight: bold;
+            z-index: 100; cursor: pointer; transition: transform 0.2s;
+        }
+        .feature-marker:hover { transform: scale(1.1); }
+        .feature-tooltip {
+            position: absolute; background-color: white;
+            color: var(--color-text-primary);
+            border: 1px solid var(--color-bg-border);
+            padding: 16px; border-radius: 8px;
+            max-width: 320px; z-index: 1000; display: none;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            top: 100%; left: 0; margin-top: 8px;
+        }
+        .feature-tooltip h4 { color: var(--color-primary); margin-bottom: 8px; font-size: 14px; font-weight: 600; }
+        .feature-tooltip p { font-size: 12px; line-height: 1.5; margin-bottom: 4px; color: var(--color-text-secondary); }
+        @media (max-width: 768px) {
+            .md\:grid-cols-3 { grid-template-columns: 1fr; }
+            .side-menu-container { width: 100%; margin-bottom: var(--spacing-md); position: static; }
+            .main-layout { flex-direction: column; }
+        }
+    </style>
+</head>
+<body class="body-bg">
+    <div class="min-h-screen flex flex-col">
+        <header class="header-bg header-shadow">
+            <div class="px-4 py-3 flex justify-between items-center">
+                <h1 style="font-size: 20px; font-weight: 700;">TCL数字化运营平台</h1>
+                <div class="flex items-center space-x-4">
+                    <span style="font-size: 14px;">管理员</span>
+                    <button class="btn btn-outline btn-sm">退出</button>
+                </div>
+            </div>
+        </header>
+
+        <main class="flex-1 px-4 py-8">
+            <div class="main-layout">
+                <div id="sidebar"><div class="side-menu-container"><div class="side-menu"><div class="side-menu-header"><h4 class="side-menu-title">业务管理</h4></div><ul class="side-menu-list"><li class="side-menu-item"><a href="#" class="side-menu-link">运营系统 <i class="fa fa-angle-right"></i></a><ul class="side-menu-submenu" style="display:block;"><li class="side-menu-subitem"><a href="#" class="side-menu-sublink">并网超期管理</a><ul class="side-menu-submenu" style="display:block;"><li class="side-menu-subitem"><a href="../并网超期订单/auto_overdue.html" class="side-menu-sublink">并网超期订单</a></li><li class="side-menu-subitem active"><a href="./approval_list.html" class="side-menu-sublink">申诉审核记录</a></li><li class="side-menu-subitem"><a href="../超期策略管理/list.html" class="side-menu-sublink">超期策略管理</a></li><li class="side-menu-subitem"><a href="../申诉原因管理/申诉原因创建.html" class="side-menu-sublink">申诉原因管理</a></li></ul></li></ul></li></ul></div></div></div>
+                <div class="main-content">
+                    <div class="mb-6 flex justify-between items-center">
+                        <div>
+                            <h2 class="page-title">申诉详情</h2>
+                        </div>
+                        <div class="flex items-center space-x-4">
+                            <button id="feature2" class="btn btn-outline flex items-center space-x-2 feature-container" onclick="window.open('approval_list.html?orderId=GF260324102106071241', '_blank')">
+                                <i class="fa fa-history"></i>
+                                <span>查看审核记录</span>
+                            </button>
+                            <button id="feature1" class="btn btn-outline flex items-center space-x-2 feature-container" onclick="window.history.back()">
+                                <i class="fa fa-arrow-left"></i>
+                                <span>返回</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="card mb-6">
+                        <h3 class="section-title">订单信息</h3>
+                        <div class="grid md:grid-cols-3 gap-4">
+                            <div id="feature3" class="grid-item feature-container">
+                                <label>订单编号</label>
+                                <div class="value"><a href="#" class="text-link" target="_blank">GF260324102106071241</a></div>
+                            </div>
+                            <div id="feature4" class="grid-item feature-container">
+                                <label>代理商</label>
+                                <div class="value">广东TCL光伏科技有限公司</div>
+                            </div>
+                            <div id="feature5" class="grid-item feature-container">
+                                <label>装机容量</label>
+                                <div class="value">10.5kW</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card mb-6">
+                        <h3 class="section-title">超期信息</h3>
+                        <div class="grid md:grid-cols-3 gap-4">
+                            <div id="feature6" class="grid-item feature-container">
+                                <label>并网时长</label>
+                                <div class="value">45天</div>
+                            </div>
+                            <div id="feature7" class="grid-item feature-container">
+                                <label>申请时间</label>
+                                <div class="value">2026-04-27 16:24:00</div>
+                            </div>
+                            <div id="feature8" class="grid-item feature-container">
+                                <label>申诉开始时间</label>
+                                <div class="value">2026-04-27 16:24:00</div>
+                            </div>
+                            <div id="feature9" class="grid-item feature-container">
+                                <label>申诉结束时间</label>
+                                <div class="value">2026-05-06 16:24:00</div>
+                            </div>
+                            <div id="feature10" class="grid-item feature-container">
+                                <label>并网超期开始时间</label>
+                                <div class="value">2026-02-05 09:00:00</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card mb-6">
+                        <h3 class="section-title">超期计划</h3>
+                        <div class="overflow-x-auto">
+                            <table class="table">
+                                <thead class="table-header">
+                                    <tr>
+                                        <th class="table-cell feature-container" id="feature11">梯度</th>
+                                        <th class="table-cell feature-container" id="feature12">并网时长</th>
+                                        <th class="table-cell feature-container" id="feature13">梯度触发时间</th>
+                                        <th class="table-cell feature-container" id="feature14">超期动作</th>
+                                        <th class="table-cell feature-container" id="feature15">降价幅度(元/W)</th>
+                                        <th class="table-cell feature-container" id="feature16">状态</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="table-body">
+                                    <tr class="table-row">
+                                        <td class="table-cell">梯度1</td>
+                                        <td class="table-cell">0天</td>
+                                        <td class="table-cell">2026-02-05 09:00:00</td>
+                                        <td class="table-cell">降价</td>
+                                        <td class="table-cell">0.00</td>
+                                        <td class="table-cell">未生效</td>
+                                    </tr>
+                                    <tr class="table-row">
+                                        <td class="table-cell">梯度2</td>
+                                        <td class="table-cell">30天</td>
+                                        <td class="table-cell">2026-03-07 09:00:00</td>
+                                        <td class="table-cell">降价</td>
+                                        <td class="table-cell">0.01</td>
+                                        <td class="table-cell">未生效</td>
+                                    </tr>
+                                    <tr class="table-row">
+                                        <td class="table-cell">梯度3</td>
+                                        <td class="table-cell">60天</td>
+                                        <td class="table-cell">2026-04-06 09:00:00</td>
+                                        <td class="table-cell">降价</td>
+                                        <td class="table-cell">0.02</td>
+                                        <td class="table-cell">未生效</td>
+                                    </tr>
+                                    <tr class="table-row">
+                                        <td class="table-cell">梯度4</td>
+                                        <td class="table-cell">90天</td>
+                                        <td class="table-cell">2026-05-06 09:00:00</td>
+                                        <td class="table-cell">降价</td>
+                                        <td class="table-cell">0.03</td>
+                                        <td class="table-cell">未生效</td>
+                                    </tr>
+                                    <tr class="table-row">
+                                        <td class="table-cell">梯度5</td>
+                                        <td class="table-cell">120天</td>
+                                        <td class="table-cell">2026-06-05 09:00:00</td>
+                                        <td class="table-cell">回购</td>
+                                        <td class="table-cell">-</td>
+                                        <td class="table-cell">未生效</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="card mb-6">
+                        <h3 class="section-title">申诉信息</h3>
+                        <div class="grid md:grid-cols-3 gap-4">
+                            <div id="feature17" class="grid-item feature-container">
+                                <label>申诉编号</label>
+                                <div class="value">SS260427162400001</div>
+                            </div>
+                            <div id="feature18" class="grid-item feature-container">
+                                <label>申诉次数</label>
+                                <div class="value">1次(含该申诉)</div>
+                            </div>
+                            <div id="feature19" class="grid-item feature-container">
+                                <label>申诉原因</label>
+                                <div class="value">梯度1-0.00元/W</div>
+                            </div>
+                            <div id="feature20" class="grid-item feature-container">
+                                <label>申诉原因延期天数</label>
+                                <div class="value">7天</div>
+                            </div>
+                            <div id="feature21" class="grid-item feature-container">
+                                <label>申诉通过后并网超期开始时间</label>
+                                <div class="value">2026-02-12 09:00:00</div>
+                            </div>
+                            <div id="feature22" class="grid-item feature-container" style="grid-column: 1 / -1;">
+                                <label>申诉描述</label>
+                                <div class="value">因连续暴雨天气，导致施工无法正常进行，申请延期并网。</div>
+                            </div>
+                            <div id="feature23" class="feature-container" style="grid-column: 1 / -1;">
+                                <label style="display: block; font-weight: 500; margin-bottom: var(--spacing-xs); color: var(--color-text-secondary); font-size: var(--font-size-xs);">申诉附件</label>
+                                <div class="flex flex-wrap">
+                                    <div class="attachment-item">
+                                        <div class="attachment-thumbnail">
+                                            <img src="https://via.placeholder.com/80x80?text=IMG1" alt="现场照片1">
+                                        </div>
+                                        <div class="attachment-info">
+                                            <span class="attachment-name">rainy_weather_1.jpg</span>
+                                            <div class="attachment-actions">
+                                                <a href="#" class="text-link text-xs mr-2">预览</a>
+                                                <a href="#" class="text-link text-xs">下载</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="attachment-item">
+                                        <div class="attachment-thumbnail">
+                                            <img src="https://via.placeholder.com/80x80?text=IMG2" alt="现场照片2">
+                                        </div>
+                                        <div class="attachment-info">
+                                            <span class="attachment-name">rainy_weather_2.jpg</span>
+                                            <div class="attachment-actions">
+                                                <a href="#" class="text-link text-xs mr-2">预览</a>
+                                                <a href="#" class="text-link text-xs">下载</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="attachment-item">
+                                        <div class="attachment-thumbnail">
+                                            <i class="fa fa-file-pdf-o" style="color: #dc2626;"></i>
+                                        </div>
+                                        <div class="attachment-info">
+                                            <span class="attachment-name">weather_report.pdf</span>
+                                            <div class="attachment-actions">
+                                                <a href="#" class="text-link text-xs">下载</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card mb-6">
+                        <h3 class="section-title">审核进度</h3>
+                        <div class="overflow-x-auto">
+                            <table class="table">
+                                <thead class="table-header">
+                                    <tr>
+                                        <th class="table-cell feature-container" id="feature24">序号</th>
+                                        <th class="table-cell feature-container" id="feature25">进度</th>
+                                        <th class="table-cell feature-container" id="feature26">操作时间</th>
+                                        <th class="table-cell feature-container" id="feature27">操作人</th>
+                                        <th class="table-cell feature-container" id="feature28">操作结果</th>
+                                        <th class="table-cell feature-container" id="feature29">操作备注</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="table-body">
+                                    <tr class="table-row">
+                                        <td class="table-cell">1</td>
+                                        <td class="table-cell">提交</td>
+                                        <td class="table-cell">2026-04-27 16:24:00</td>
+                                        <td class="table-cell">代理商</td>
+                                        <td class="table-cell">提交</td>
+                                        <td class="table-cell">因连续暴雨天气，导致施工无法正常进行，申请延期并网。</td>
+                                    </tr>
+                                    <tr class="table-row">
+                                        <td class="table-cell">2</td>
+                                        <td class="table-cell">初审领单</td>
+                                        <td class="table-cell">2026-04-27 17:00:00</td>
+                                        <td class="table-cell">初审员</td>
+                                        <td class="table-cell">领单</td>
+                                        <td class="table-cell">-</td>
+                                    </tr>
+                                    <tr class="table-row">
+                                        <td class="table-cell">3</td>
+                                        <td class="table-cell">初审</td>
+                                        <td class="table-cell">2026-04-27 18:30:00</td>
+                                        <td class="table-cell">初审员</td>
+                                        <td class="table-cell">通过</td>
+                                        <td class="table-cell">情况属实，同意申诉</td>
+                                    </tr>
+                                    <tr class="table-row">
+                                        <td class="table-cell">4</td>
+                                        <td class="table-cell">复审领单</td>
+                                        <td class="table-cell">2026-04-28 09:00:00</td>
+                                        <td class="table-cell">复审员</td>
+                                        <td class="table-cell">领单</td>
+                                        <td class="table-cell">-</td>
+                                    </tr>
+                                    <tr class="table-row">
+                                        <td class="table-cell">5</td>
+                                        <td class="table-cell">复审</td>
+                                        <td class="table-cell">2026-04-28 10:30:00</td>
+                                        <td class="table-cell">复审员</td>
+                                        <td class="table-cell">通过</td>
+                                        <td class="table-cell">同意初审意见</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const featureElements = [
+                { element: document.getElementById('feature1'), feature: 1, title: '返回按钮', content: ['业务逻辑：用户点击返回按钮，系统返回上一页'] },
+                { element: document.getElementById('feature2'), feature: 2, title: '查看审核记录', content: ['当该订单存在多个审核记录时，显示该按钮，点击新窗口跳转到申诉审核记录，携带订单号查询'] },
+                { element: document.getElementById('feature3'), feature: 3, title: '订单编号字段', content: ['支持点击跳转在新窗口打开订单详情'] },
+                { element: document.getElementById('feature4'), feature: 4, title: '代理商字段', content: ['业务逻辑：显示订单的代理商信息'] },
+                { element: document.getElementById('feature5'), feature: 5, title: '装机容量字段', content: ['业务逻辑：显示订单的装机容量，数字类型，两位小数，单位为kW'] },
+                { element: document.getElementById('feature6'), feature: 6, title: '并网时长字段', content: ['业务逻辑：显示订单的并网时长，数字类型，根据当前天数进入页面时计算'] },
+                { element: document.getElementById('feature7'), feature: 7, title: '申请时间字段', content: ['业务逻辑：显示申诉的发起时间，日期时间格式'] },
+                { element: document.getElementById('feature8'), feature: 8, title: '申诉开始时间', content: ['显示超期记录可发起申诉的周期，如2026/04/27 16:24:00'] },
+                { element: document.getElementById('feature9'), feature: 9, title: '申诉结束时间', content: ['显示超期记录可发起申诉的周期，如2026/05/06 16:24:00'] },
+                { element: document.getElementById('feature10'), feature: 10, title: '并网超期开始时间', content: ['业务逻辑：显示超期记录对应的并网超期开始时间，即梯度1的触发时间，具体到年月日时分秒'] },
+                { element: document.getElementById('feature11'), feature: 11, title: '梯度', content: ['业务逻辑：显示超期计划中的梯度编号'] },
+                { element: document.getElementById('feature12'), feature: 12, title: '并网时长', content: ['业务逻辑：显示超期计划中的并网时长'] },
+                { element: document.getElementById('feature13'), feature: 13, title: '梯度触发时间', content: ['显示梯队对应的触发时间，如2026/05/06 16:24:00'] },
+                { element: document.getElementById('feature14'), feature: 14, title: '超期动作', content: ['业务逻辑：显示超期计划中的超期动作，选项包括：降价、回购'] },
+                { element: document.getElementById('feature15'), feature: 15, title: '降价幅度(元/W)', content: ['业务逻辑：显示超期计划中的梯度降价幅度，当超期动作为降价时必填，数字类型，单位为元/W'] },
+                { element: document.getElementById('feature16'), feature: 16, title: '状态', content: ['业务逻辑：显示超期计划中每个梯度的状态，选项包括：已生效、未生效'] },
+                { element: document.getElementById('feature17'), feature: 17, title: '申诉编号', content: ['展示当前申诉记录的编号'] },
+                { element: document.getElementById('feature18'), feature: 18, title: '申诉次数', content: ['展示当前订单的申诉记录数(含该申诉)'] },
+                { element: document.getElementById('feature19'), feature: 19, title: '申诉原因', content: ['展示代理商选择的申诉原因'] },
+                { element: document.getElementById('feature20'), feature: 20, title: '申诉原因延期天数', content: ['业务逻辑：显示申诉的原因'] },
+                { element: document.getElementById('feature21'), feature: 21, title: '申诉通过后并网超期开始时间', content: ['业务逻辑：显示增加申诉原因延期天数后对应的并网超期开始时间，具体到年月日时分秒'] },
+                { element: document.getElementById('feature22'), feature: 22, title: '申诉描述', content: ['展示代理商填写的申诉原因'] },
+                { element: document.getElementById('feature23'), feature: 23, title: '申诉附件', content: ['展示代理商上传的申诉附件', '1. 最多支持5个', '2. 支持预览png、jpg、jpeg、pdf，在页面中以缩略图的形式展示', '3. 支持下载'] },
+                { element: document.getElementById('feature24'), feature: 24, title: '序号', content: ['依序记录'] },
+                { element: document.getElementById('feature25'), feature: 25, title: '进度', content: ['依序记录', '提交', '初审领单', '初审', '复审领单', '复审', '终审领单', '终审', '转单', '示例数据中需要包含所有进度的数据'] },
+                { element: document.getElementById('feature26'), feature: 26, title: '操作时间', content: ['按照操作时间排序，最新在前'] },
+                { element: document.getElementById('feature27'), feature: 27, title: '操作人', content: ['1. 提交：展示提交人', '2. 初审/复审/终审：展示审核人'] },
+                { element: document.getElementById('feature28'), feature: 28, title: '操作结果', content: ['1. 提交：展示提交', '2. 初审/复审/终审：展示驳回/通过', '3. 领单', '4. 转单'] },
+                { element: document.getElementById('feature29'), feature: 29, title: '操作备注', content: ['1. 提交：展示提交时代理商的描述', '2. 初审/复审/终审：审核意见', '3. 转单：转单备注'] }
+            ];
+
+            featureElements.forEach(item => {
+                if (item.element) {
+                    const marker = document.createElement('div');
+                    marker.className = 'feature-marker';
+                    marker.textContent = item.feature;
+                    item.element.appendChild(marker);
+
+                    const tooltip = document.createElement('div');
+                    tooltip.className = 'feature-tooltip';
+                    tooltip.innerHTML = `<h4>功能点 ${item.feature}: ${item.title}</h4>`;
+                    item.content.forEach(line => {
+                        tooltip.innerHTML += `<p>${line}</p>`;
+                    });
+                    item.element.appendChild(tooltip);
+                }
+            });
+
+            const markers = document.querySelectorAll('.feature-marker');
+            markers.forEach(marker => {
+                marker.addEventListener('mouseenter', function() {
+                    const tooltip = this.parentElement.querySelector('.feature-tooltip');
+                    if (tooltip) tooltip.style.display = 'block';
+                });
+                marker.addEventListener('mouseleave', function() {
+                    const tooltip = this.parentElement.querySelector('.feature-tooltip');
+                    if (tooltip) tooltip.style.display = 'none';
+                });
+            });
+        });
+    </script>
+
+    
+</body>
+</html>
